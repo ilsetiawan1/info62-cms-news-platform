@@ -72,4 +72,12 @@ class User extends Authenticatable
     {
         return $this->status === true;
     }
+
+    /**
+     * Get the articles written by the user.
+     */
+    public function articles(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Article::class, 'author_id');
+    }
 }

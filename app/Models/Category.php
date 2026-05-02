@@ -38,4 +38,12 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
+
+    /**
+     * Get the articles for the category.
+     */
+    public function articles(): HasMany
+    {
+        return $this->hasMany(Article::class);
+    }
 }
