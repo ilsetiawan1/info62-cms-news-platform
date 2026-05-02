@@ -1,21 +1,48 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// ══════════════════════════════════════════════
+// PUBLIC ROUTES
+// ══════════════════════════════════════════════
+Route::get('/', [\App\Http\Controllers\PublicController::class, 'index'])->name('home');
+Route::get('/artikel/{slug}', [\App\Http\Controllers\PublicController::class, 'show'])->name('article.show');
+Route::get('/kategori/{slug}', [\App\Http\Controllers\PublicController::class, 'category'])->name('category.show');
 
-Route::prefix('seputaradmin')->middleware(['auth', 'admin'])->group(function () {
-    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
-    
-    // User Management
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except(['show']);
-    Route::patch('users/{user}/toggle-status', [\App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle-status');
 
-    // Category Management
-    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class)->except(['show']);
-});
+// ══════════════════════════════════════════════
+// ADMIN ROUTES
+// ══════════════════════════════════════════════
+Route::prefix('seputaradmin')
+    ->middleware(['auth', 'admin'])
+    ->group(function () {
+
+        // Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])
+            ->name('admin.dashboard');
+
+        // ── User Management ──────────────────────────
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class)
+            ->except(['show']);
+        Route::patch('users/{user}/toggle-status',
+            [\App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])
+            ->name('users.toggle-status');
+
+        // ── Category Management ──────────────────────
+        Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class)
+            ->except(['show']);
+
+        // ── Article Management ───────────────────────
+        // ⚠️ PENTING: Route fetch-url WAJIB didefinisikan SEBELUM resource route.
+        // Jika diletakkan sesudah, Laravel akan mencocokkan "fetch-url" sebagai
+        // parameter {article} di route articles/{article} → 404 / model not found.
+        Route::post('articles/fetch-url',
+            [\App\Http\Controllers\Admin\ArticleController::class, 'fetchFromUrl'])
+            ->name('articles.fetch');
+
+        Route::resource('articles', \App\Http\Controllers\Admin\ArticleController::class)
+            ->except(['show']);
+    });
+
 
 require __DIR__.'/auth.php';

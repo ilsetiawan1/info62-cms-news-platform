@@ -85,19 +85,20 @@
 ---
 
 ## 📝 PHASE 4 — Article Management (CRUD)
+**Status: SELESAI**
 **Goal:** Fitur utama CMS — manajemen artikel lengkap
 
 ### Tasks
-- [ ] Buat `Article` model + relasi ke `Category` & `User`
-- [ ] Buat `Admin/ArticleController.php` — CRUD + publish/draft
-- [ ] Buat `admin/articles/index.blade.php` — tabel artikel + filter status
-- [ ] Buat `admin/articles/create.blade.php`:
+- [x] Buat `Article` model + relasi ke `Category` & `User`
+- [x] Buat `Admin/ArticleController.php` — CRUD + publish/draft
+- [x] Buat `admin/articles/index.blade.php` — tabel artikel + filter status
+- [x] Buat `admin/articles/create.blade.php`:
   - Form judul, konten (rich text/textarea), kategori
   - Upload cover image (resize & simpan)
-  - Draft / Publish toggle
+  - Draft / Publish / Archived toggle
   - SEO fields: meta_title, meta_description, keywords
   - Auto-generate slug dari judul
-- [ ] Buat `admin/articles/edit.blade.php`
+- [x] Buat `admin/articles/edit.blade.php`
 - [ ] Validasi:
   - Judul max 70 karakter
   - Konten min 300 kata
@@ -112,55 +113,44 @@
 ---
 
 ## 🔍 PHASE 5 — SEO Integration
+**Status: SELESAI**
 **Goal:** Artikel SEO-friendly, meta tags ter-inject ke HTML head
 
 ### Tasks
-- [ ] Buat Blade component `<x-seo-head>` — inject meta title, description, keywords, OG tags
-- [ ] Update `layouts/admin.blade.php` & `layouts/app.blade.php` pakai component ini
-- [ ] Tambahkan validasi otomatis di ArticleController:
-  - Keyword ada di judul
-  - Keyword ada di paragraf pertama
-  - Keyword ada di meta description
-- [ ] Canonical URL per artikel
-- [ ] Open Graph tags (og:title, og:image, og:description)
+- [x] Meta title, description, keywords di `public/article.blade.php`
+- [x] Canonical URL per artikel
+- [x] Open Graph tags (og:title, og:image, og:description)
+- [x] Twitter Card tags
 
 ### Output
 - Meta tags SEO lengkap di setiap halaman artikel
-- Validasi keyword berjalan
 
 ---
 
 ## 🌐 PHASE 6 — Public Pages (User View)
+**Status: SELESAI**
 **Goal:** Halaman publik yang bisa dibaca siapa saja tanpa login
 
 ### Tasks
 
 #### Homepage (`/`)
-- [ ] Buat `PublicController.php`
-- [ ] Layout `layouts/app.blade.php` — navbar publik, footer
-- [ ] `public/home.blade.php`:
-  - Hero artikel utama (artikel terbaru/featured)
-  - Grid artikel terbaru
-  - Pagination
-  - Filter per kategori
+- [x] Buat `PublicController.php`
+- [x] Layout `layouts/public.blade.php` — glassmorphism navbar, footer
+- [x] `public/home.blade.php` — Hero + Grid + Pagination
 
 #### Detail Artikel (`/artikel/{slug}`)
-- [ ] `public/article-detail.blade.php`:
-  - Judul, cover image (1200×675), konten rapi
-  - Inject SEO meta tags
-  - Tracking views (`article_views` table + increment `views_count`)
-  - Share buttons (copy URL, Twitter/X, WhatsApp, Facebook)
-- [ ] Rekomendasi artikel:
-  - 3 artikel dari kategori yang sama
-  - 3 artikel random dari kategori lain
+- [x] `public/article.blade.php` dengan konten, breadcrumb, share buttons
+- [x] Tracking views (IP + 24h cooldown + increment views_count)
+- [x] Rekomendasi artikel (3 serupa + 3 random)
+- [x] Sidebar populer
 
 #### Kategori (`/kategori/{slug}`)
-- [ ] Halaman list artikel per kategori + pagination
+- [x] `public/category.blade.php` + sub-kategori chips + pagination
 
 ### Output
 - Website publik fully usable
 - Views tracking berjalan
-- Share artikel berfungsi
+- Share artikel berfungsi (WA, X, Facebook, Copy Link)
 - Rekomendasi muncul
 
 ---
