@@ -70,7 +70,7 @@
                     Kategori
                 </a>
                 
-                <a href="#" class="flex items-center px-4 py-3 rounded-xl text-slate-600 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-gray-700/50 transition-colors opacity-60 cursor-not-allowed" title="Coming Soon">
+                <a href="{{ route('articles.index') }}" class="flex items-center px-4 py-3 rounded-xl transition-colors {{ request()->routeIs('articles.*') ? 'bg-primary/10 text-primary dark:bg-primary-500/10 dark:text-primary-500 font-semibold' : 'text-slate-600 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-gray-700/50' }}">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5L18.5 7H20"></path></svg>
                     Artikel
                 </a>
