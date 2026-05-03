@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 // PUBLIC ROUTES
 // ══════════════════════════════════════════════
 Route::get('/', [\App\Http\Controllers\PublicController::class, 'index'])->name('home');
+Route::get('/search', [\App\Http\Controllers\PublicController::class, 'search'])->name('search');
 Route::get('/artikel/{slug}', [\App\Http\Controllers\PublicController::class, 'show'])->name('article.show');
 Route::get('/kategori/{slug}', [\App\Http\Controllers\PublicController::class, 'category'])->name('category.show');
 
@@ -20,6 +21,10 @@ Route::prefix('seputaradmin')
         // Dashboard
         Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])
             ->name('admin.dashboard');
+
+        // ── Advertisement Management ─────────────────
+        Route::resource('advertisements', \App\Http\Controllers\Admin\AdvertisementController::class)
+            ->except(['show']);
 
         // ── User Management ──────────────────────────
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class)
@@ -42,6 +47,11 @@ Route::prefix('seputaradmin')
 
         Route::resource('articles', \App\Http\Controllers\Admin\ArticleController::class)
             ->except(['show']);
+
+        // ── Profile Management ───────────────────────
+        Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('admin.profile.edit');
+        Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('admin.profile.update');
+        Route::delete('/profile', [\App\Http\Controllers\ProfileController::class, 'destroy'])->name('admin.profile.destroy');
     });
 
 
