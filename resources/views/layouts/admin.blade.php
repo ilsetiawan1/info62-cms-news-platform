@@ -50,7 +50,7 @@
 
             <!-- Navigation Links -->
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-3 rounded-xl transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-primary/10 text-primary dark:bg-primary-500/10 dark:text-primary-500 font-semibold' : 'text-slate-600 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-gray-700/50' }}">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-3 rounded-xl transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-primary/10 text-primary dark:bg-primary-500/10 dark:text-white font-semibold' : 'text-slate-600 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-gray-700/50' }}">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     Dashboard
                 </a>
@@ -60,19 +60,27 @@
                     Manajemen
                 </div>
                 
-                <a href="{{ route('users.index') }}" class="flex items-center px-4 py-3 rounded-xl transition-colors {{ request()->routeIs('users.*') ? 'bg-primary/10 text-primary dark:bg-primary-500/10 dark:text-primary-500 font-semibold' : 'text-slate-600 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-gray-700/50' }}">
+                <a href="{{ route('users.index') }}" class="flex items-center px-4 py-3 rounded-xl transition-colors {{ request()->routeIs('users.*') ? 'bg-primary/10 text-primary dark:bg-primary-500/10 dark:text-white font-semibold' : 'text-slate-600 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-gray-700/50' }}">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     Pengguna
                 </a>
                 
-                <a href="{{ route('categories.index') }}" class="flex items-center px-4 py-3 rounded-xl transition-colors {{ request()->routeIs('categories.*') ? 'bg-primary/10 text-primary dark:bg-primary-500/10 dark:text-primary-500 font-semibold' : 'text-slate-600 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-gray-700/50' }}">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                <!-- Manajemen Artikel -->
+                <a href="{{ route('articles.index') }}" class="flex items-center px-4 py-3 mb-1 text-sm font-semibold rounded-xl transition-all duration-200 group {{ request()->routeIs('articles.*') ? 'bg-primary/10 text-primary dark:bg-primary-500/20 dark:text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100' }}">
+                    <svg class="w-5 h-5 mr-3 transition-colors {{ request()->routeIs('articles.*') ? 'text-primary dark:text-white' : 'text-slate-400 group-hover:text-slate-600 dark:text-gray-500 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5L18.5 7H20"></path></svg>
+                    Artikel
+                </a>
+
+                <!-- Kategori -->
+                <a href="{{ route('categories.index') }}" class="flex items-center px-4 py-3 mb-1 text-sm font-semibold rounded-xl transition-all duration-200 group {{ request()->routeIs('categories.*') ? 'bg-primary/10 text-primary dark:bg-primary-500/20 dark:text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100' }}">
+                    <svg class="w-5 h-5 mr-3 transition-colors {{ request()->routeIs('categories.*') ? 'text-primary dark:text-white' : 'text-slate-400 group-hover:text-slate-600 dark:text-gray-500 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
                     Kategori
                 </a>
-                
-                <a href="{{ route('articles.index') }}" class="flex items-center px-4 py-3 rounded-xl transition-colors {{ request()->routeIs('articles.*') ? 'bg-primary/10 text-primary dark:bg-primary-500/10 dark:text-primary-500 font-semibold' : 'text-slate-600 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-gray-700/50' }}">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5L18.5 7H20"></path></svg>
-                    Artikel
+
+                <!-- Iklan -->
+                <a href="{{ route('advertisements.index') }}" class="flex items-center px-4 py-3 mb-1 text-sm font-semibold rounded-xl transition-all duration-200 group {{ request()->routeIs('advertisements.*') ? 'bg-primary/10 text-primary dark:bg-primary-500/20 dark:text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100' }}">
+                    <svg class="w-5 h-5 mr-3 transition-colors {{ request()->routeIs('advertisements.*') ? 'text-primary dark:text-white' : 'text-slate-400 group-hover:text-slate-600 dark:text-gray-500 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+                    Kelola Iklan
                 </a>
             </nav>
 
@@ -134,7 +142,7 @@
                                     <p class="text-sm font-medium text-slate-900 dark:text-gray-50">{{ Auth::user()->name }}</p>
                                     <p class="text-xs text-slate-500 dark:text-gray-400 truncate">{{ Auth::user()->email }}</p>
                                 </div>
-                                <a href="#" class="block px-4 py-2 text-sm text-slate-700 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-gray-700/50">Profile Settings</a>
+                                <a href="{{ route('admin.profile.edit') }}" class="block px-4 py-2 text-sm text-slate-700 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-gray-700/50">Profile Settings</a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-accent dark:text-accent-500 hover:bg-slate-50 dark:hover:bg-gray-700/50">
