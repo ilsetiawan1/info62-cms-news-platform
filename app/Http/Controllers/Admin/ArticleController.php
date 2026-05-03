@@ -62,6 +62,7 @@ class ArticleController extends Controller
             'category_id'      => ['required', 'exists:categories,id'],
             'status'           => ['required', Rule::in(['draft', 'published', 'archived'])],
             'cover_image'      => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'cover_image_url'  => ['nullable', 'url'],
             'meta_title'       => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string'],
             'keywords'         => ['nullable', 'string'],
@@ -73,7 +74,34 @@ class ArticleController extends Controller
 
         if ($request->hasFile('cover_image')) {
             $validated['cover_image'] = $request->file('cover_image')->store('articles', 'public');
+        } elseif ($request->filled('cover_image_url')) {
+            try {
+                $response = \Illuminate\Support\Facades\Http::timeout(15)
+                    ->withoutVerifying()
+                    ->withHeaders([
+                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                        'Accept' => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+                        'Referer' => parse_url($request->cover_image_url, PHP_URL_SCHEME) . '://' . parse_url($request->cover_image_url, PHP_URL_HOST),
+                    ])
+                    ->get($request->cover_image_url);
+
+                if ($response->successful()) {
+                    $pathInfo = pathinfo(parse_url($request->cover_image_url, PHP_URL_PATH));
+                    $ext = $pathInfo['extension'] ?? 'jpg';
+                    $ext = in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'webp', 'gif']) ? strtolower($ext) : 'jpg';
+                    $filename = 'articles/' . \Illuminate\Support\Str::random(40) . '.' . $ext;
+                    Storage::disk('public')->put($filename, $response->body());
+                    $validated['cover_image'] = $filename;
+                } else {
+                    Log::warning('Failed to auto-download cover image: HTTP ' . $response->status());
+                    $validated['cover_image'] = $request->cover_image_url;
+                }
+            } catch (\Exception $e) {
+                Log::warning('Failed to auto-download cover image: ' . $e->getMessage());
+                $validated['cover_image'] = $request->cover_image_url;
+            }
         }
+        unset($validated['cover_image_url']);
 
         if ($validated['status'] === 'published') {
             $validated['published_at'] = now();
@@ -111,6 +139,7 @@ class ArticleController extends Controller
             'category_id'      => ['required', 'exists:categories,id'],
             'status'           => ['required', Rule::in(['draft', 'published', 'archived'])],
             'cover_image'      => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'cover_image_url'  => ['nullable', 'url'],
             'meta_title'       => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string'],
             'keywords'         => ['nullable', 'string'],
@@ -128,7 +157,34 @@ class ArticleController extends Controller
                 Storage::disk('public')->delete($article->cover_image);
             }
             $validated['cover_image'] = $request->file('cover_image')->store('articles', 'public');
+        } elseif ($request->filled('cover_image_url') && empty($article->cover_image)) {
+            try {
+                $response = \Illuminate\Support\Facades\Http::timeout(15)
+                    ->withoutVerifying()
+                    ->withHeaders([
+                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                        'Accept' => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+                        'Referer' => parse_url($request->cover_image_url, PHP_URL_SCHEME) . '://' . parse_url($request->cover_image_url, PHP_URL_HOST),
+                    ])
+                    ->get($request->cover_image_url);
+                    
+                if ($response->successful()) {
+                    $pathInfo = pathinfo(parse_url($request->cover_image_url, PHP_URL_PATH));
+                    $ext = $pathInfo['extension'] ?? 'jpg';
+                    $ext = in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'webp', 'gif']) ? strtolower($ext) : 'jpg';
+                    $filename = 'articles/' . \Illuminate\Support\Str::random(40) . '.' . $ext;
+                    Storage::disk('public')->put($filename, $response->body());
+                    $validated['cover_image'] = $filename;
+                } else {
+                    Log::warning('Failed to auto-download cover image on update: HTTP ' . $response->status());
+                    $validated['cover_image'] = $request->cover_image_url;
+                }
+            } catch (\Exception $e) {
+                Log::warning('Failed to auto-download cover image on update: ' . $e->getMessage());
+                $validated['cover_image'] = $request->cover_image_url;
+            }
         }
+        unset($validated['cover_image_url']);
 
         if ($validated['status'] === 'published' && ! $article->published_at) {
             $validated['published_at'] = now();

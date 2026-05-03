@@ -94,11 +94,120 @@
                     </div>
                 </div>
             </div>
-        </div>
 
         <!-- Sidebar Column (Right) -->
         <div class="w-full lg:w-80 flex-shrink-0 space-y-6">
             
+            <!-- Category + Subcategory Card -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-gray-700 p-6"
+                 x-data="{
+                    // Initialize with article's category. If it has a parent, use parent_id. If no parent, use its id.
+                    initialCategoryId: '{{ old('category_id', $article->category_id) }}',
+                    categories: {{ Js::from($categories->where('parent_id', null)) }},
+                    allCategories: {{ Js::from($categories) }},
+                    
+                    parentId: '',
+                    
+                    init() {
+                        const currentCat = this.allCategories.find(c => String(c.id) === String(this.initialCategoryId));
+                        if (currentCat) {
+                            if (currentCat.parent_id) {
+                                this.parentId = String(currentCat.parent_id);
+                            } else {
+                                this.parentId = String(currentCat.id);
+                            }
+                        }
+                    },
+                    
+                    get subcategories() {
+                        if (!this.parentId) return [];
+                        return this.allCategories.filter(c => String(c.parent_id) === String(this.parentId));
+                    }
+                 }">
+                <h3 class="text-base font-bold text-slate-900 dark:text-gray-50 mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                    Kategori
+                </h3>
+                
+                {{-- Parent category --}}
+                <label class="block text-xs font-semibold text-slate-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Kategori Utama</label>
+                <select x-model="parentId"
+                    class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary focus:ring-primary px-4 py-2.5 mb-3">
+                    <option value="">-- Pilih Kategori Utama --</option>
+                    @foreach($categories->where('parent_id', null) as $parent)
+                    <option value="{{ $parent->id }}">{{ $parent->name }}</option>
+                    @endforeach
+                </select>
+
+                {{-- Subcategory (shown when parent has children) --}}
+                <div x-show="subcategories.length > 0" style="display:none">
+                    <label class="block text-xs font-semibold text-slate-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Sub Kategori</label>
+                    <select id="category_id" name="category_id" required
+                        class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary focus:ring-primary px-4 py-2.5">
+                        <option value="">-- Pilih Sub Kategori --</option>
+                        <template x-for="sub in subcategories" :key="sub.id">
+                            <option :value="sub.id" x-text="sub.name"
+                                :selected="String(sub.id) === String(initialCategoryId)"></option>
+                        </template>
+                    </select>
+                </div>
+
+                {{-- If parent has no children, parent itself is the category --}}
+                <div x-show="subcategories.length === 0 && parentId">
+                    <input type="hidden" id="category_id" name="category_id" :value="parentId">
+                    <p class="text-xs text-slate-400 dark:text-gray-500 mt-1">Kategori ini tidak memiliki sub kategori.</p>
+                </div>
+
+                @error('category_id')
+                    <p class="mt-2 text-sm text-accent dark:text-accent-500">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Cover Image Card -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-gray-700 p-6">
+                <h3 class="text-base font-bold text-slate-900 dark:text-gray-50 mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Cover Image
+                </h3>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-center w-full {{ $article->cover_image ? 'hidden' : '' }}" id="image-preview-container">
+                        <label for="cover_image" class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl cursor-pointer bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg class="w-8 h-8 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Klik untuk upload</span> atau drag</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, WEBP (Maks. 2MB)</p>
+                            </div>
+                            <input id="cover_image" name="cover_image" type="file" class="hidden" accept="image/*" onchange="previewImage(event)"/>
+                        </label>
+                    </div>
+                    <!-- Image Preview -->
+                    <div id="image-preview-wrapper" class="{{ $article->cover_image ? '' : 'hidden' }} relative w-full h-48 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
+                        <img id="image-preview" src="{{ $article->cover_image ? $article->cover_image_url : '#' }}" alt="Preview" class="w-full h-full object-cover">
+                        <button type="button" onclick="removeImage()" class="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1.5 transition-colors focus:outline-none">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                    @error('cover_image')
+                        <p class="mt-2 text-sm text-accent dark:text-accent-500">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <!-- Source URL Card -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-gray-700 p-6">
+                <h3 class="text-base font-bold text-slate-900 dark:text-gray-50 mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                    Sumber Referensi
+                </h3>
+                
+                <div>
+                    <label for="source_url" class="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-1.5">URL Sumber <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                    <input type="url" id="source_url" name="source_url" value="{{ old('source_url', $article->source_url) }}" placeholder="https://..."
+                        class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary focus:ring-primary text-sm px-3 py-2">
+                </div>
+            </div>
+
             <!-- Publish Card -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-gray-700 p-6">
                 <h3 class="text-base font-bold text-slate-900 dark:text-gray-50 mb-4 flex items-center">
@@ -128,73 +237,6 @@
                             Perbarui Artikel
                         </button>
                     </div>
-                </div>
-            </div>
-
-            <!-- Category Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-gray-700 p-6">
-                <h3 class="text-base font-bold text-slate-900 dark:text-gray-50 mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
-                    Kategori
-                </h3>
-                
-                <div>
-                    <select id="category_id" name="category_id" required class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary focus:ring-primary px-4 py-2.5">
-                        <option value="">-- Pilih Kategori --</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ old('category_id', $article->category_id) == $category->id ? 'selected' : '' }}>
-                                {{ $category->parent_id ? '— ' : '' }}{{ $category->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('category_id')
-                        <p class="mt-2 text-sm text-accent dark:text-accent-500">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-
-            <!-- Cover Image Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-gray-700 p-6">
-                <h3 class="text-base font-bold text-slate-900 dark:text-gray-50 mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    Cover Image
-                </h3>
-                
-                <div class="space-y-4">
-                    <div class="flex items-center justify-center w-full {{ $article->cover_image ? 'hidden' : '' }}" id="image-preview-container">
-                        <label for="cover_image" class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl cursor-pointer bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg class="w-8 h-8 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Klik untuk upload</span> atau drag</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, WEBP (Maks. 2MB)</p>
-                            </div>
-                            <input id="cover_image" name="cover_image" type="file" class="hidden" accept="image/*" onchange="previewImage(event)"/>
-                        </label>
-                    </div>
-                    <!-- Image Preview -->
-                    <div id="image-preview-wrapper" class="{{ $article->cover_image ? '' : 'hidden' }} relative w-full h-48 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
-                        <img id="image-preview" src="{{ $article->cover_image ? Storage::url($article->cover_image) : '#' }}" alt="Preview" class="w-full h-full object-cover">
-                        <button type="button" onclick="removeImage()" class="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1.5 transition-colors focus:outline-none">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        </button>
-                    </div>
-                    @error('cover_image')
-                        <p class="mt-2 text-sm text-accent dark:text-accent-500">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-
-            <!-- Source URL Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-gray-700 p-6">
-                <h3 class="text-base font-bold text-slate-900 dark:text-gray-50 mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-                    Sumber Referensi
-                </h3>
-                
-                <div>
-                    <label for="source_url" class="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-1.5">URL Sumber <span class="text-slate-400 font-normal">(Opsional)</span></label>
-                    <input type="url" id="source_url" name="source_url" value="{{ old('source_url', $article->source_url) }}" placeholder="https://..."
-                        class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary focus:ring-primary text-sm px-3 py-2">
                 </div>
             </div>
 

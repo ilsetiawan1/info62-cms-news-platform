@@ -46,7 +46,7 @@
                                 @if($article->cover_image)
                                     <div x-data="{ open: false }" class="relative">
                                         <div @click="open = true" class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm cursor-pointer hover:opacity-80 transition-opacity">
-                                            <img src="{{ Storage::url($article->cover_image) }}" alt="Cover" class="w-full h-full object-cover">
+                                            <img src="{{ $article->cover_image_url }}" alt="Cover" class="w-full h-full object-cover">
                                         </div>
                                         
                                         <!-- Modal -->
@@ -55,7 +55,7 @@
                                                 <button @click="open = false" class="absolute -top-12 right-0 text-white hover:text-gray-300 focus:outline-none">
                                                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                                 </button>
-                                                <img src="{{ Storage::url($article->cover_image) }}" alt="Cover Besar" class="w-full h-auto rounded-xl shadow-2xl">
+                                                <img src="{{ $article->cover_image_url }}" alt="Cover Besar" class="w-full h-auto rounded-xl shadow-2xl">
                                             </div>
                                         </div>
                                     </div>

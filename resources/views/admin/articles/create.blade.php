@@ -87,7 +87,19 @@
             set('content',          data.content);
             set('excerpt',          data.excerpt);
             set('source_url',       data.source_url);
-            set('meta_description', data.excerpt);   // prefill meta_description dari excerpt
+            set('meta_description', data.excerpt);
+            set('cover_image_url',  data.cover_image_url);
+
+            if (data.cover_image_url) {
+                const preview = document.getElementById('image-preview');
+                const container = document.getElementById('image-preview-container');
+                const wrapper = document.getElementById('image-preview-wrapper');
+                if (preview && container && wrapper) {
+                    preview.src = data.cover_image_url;
+                    container.classList.add('hidden');
+                    wrapper.classList.remove('hidden');
+                }
+            }
 
             // Trigger slug auto-generate dari title
             const titleEl = document.getElementById('title');
@@ -292,23 +304,66 @@
         {{-- SIDEBAR (RIGHT) --}}
         <div class="w-full lg:w-80 flex-shrink-0 space-y-6">
 
-            {{-- Category --}}
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-gray-700 p-6">
+            {{-- Category + Subcategory --}}
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-gray-700 p-6"
+                 x-data="{
+                    initialCategoryId: '{{ old('category_id') }}',
+                    categories: {{ Js::from($categories) }},
+                    parentId: '',
+                    
+                    init() {
+                        if (this.initialCategoryId) {
+                            if (this.categories.some(c => String(c.id) === String(this.initialCategoryId))) {
+                                this.parentId = String(this.initialCategoryId);
+                            } else {
+                                const parent = this.categories.find(c => c.children && c.children.some(child => String(child.id) === String(this.initialCategoryId)));
+                                if (parent) {
+                                    this.parentId = String(parent.id);
+                                }
+                            }
+                        }
+                    },
+                    
+                    get subcategories() {
+                        if (!this.parentId) return [];
+                        const parent = this.categories.find(c => String(c.id) === String(this.parentId));
+                        return parent ? parent.children : [];
+                    }
+                 }">
                 <h3 class="text-base font-bold text-slate-900 dark:text-gray-50 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                    </svg>
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
                     Kategori
                 </h3>
-                <select id="category_id" name="category_id" required
-                    class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary focus:ring-primary px-4 py-2.5">
-                    <option value="">-- Pilih Kategori --</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->parent_id ? '— ' : '' }}{{ $category->name }}
-                        </option>
+
+                {{-- Parent category --}}
+                <label class="block text-xs font-semibold text-slate-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Kategori Utama</label>
+                <select x-model="parentId"
+                    class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary focus:ring-primary px-4 py-2.5 mb-3">
+                    <option value="">-- Pilih Kategori Utama --</option>
+                    @foreach($categories as $parent)
+                    <option value="{{ $parent->id }}">{{ $parent->name }}</option>
                     @endforeach
                 </select>
+
+                {{-- Subcategory (shown when parent has children) --}}
+                <div x-show="subcategories.length > 0" style="display:none">
+                    <label class="block text-xs font-semibold text-slate-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Sub Kategori</label>
+                    <select id="category_id" name="category_id" required
+                        class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary focus:ring-primary px-4 py-2.5">
+                        <option value="">-- Pilih Sub Kategori --</option>
+                        <template x-for="sub in subcategories" :key="sub.id">
+                            <option :value="sub.id" x-text="sub.name"
+                                :selected="String(sub.id) === '{{ old('category_id') }}'"></option>
+                        </template>
+                    </select>
+                </div>
+
+                {{-- If parent has no children, parent itself is the category --}}
+                <div x-show="subcategories.length === 0 && parentId">
+                    <input type="hidden" id="category_id" name="category_id" :value="parentId">
+                    <p class="text-xs text-slate-400 dark:text-gray-500 mt-1">Kategori ini tidak memiliki sub kategori.</p>
+                </div>
+
                 @error('category_id')<p class="mt-1.5 text-sm text-red-500">{{ $message }}</p>@enderror
             </div>
 
@@ -320,6 +375,9 @@
                     </svg>
                     Cover Image
                 </h3>
+                
+                <input type="hidden" id="cover_image_url" name="cover_image_url" value="{{ old('cover_image_url') }}">
+                
                 <div id="image-preview-container" class="flex items-center justify-center w-full">
                     <label for="cover_image"
                         class="flex flex-col items-center justify-center w-full h-44 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl cursor-pointer bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors">
@@ -431,6 +489,8 @@ function previewImage(event) {
 
 function removeImage() {
     document.getElementById('cover_image').value = '';
+    const coverImageUrl = document.getElementById('cover_image_url');
+    if (coverImageUrl) coverImageUrl.value = '';
     document.getElementById('image-preview').src = '#';
     document.getElementById('image-preview-wrapper').classList.add('hidden');
     document.getElementById('image-preview-container').classList.remove('hidden');
