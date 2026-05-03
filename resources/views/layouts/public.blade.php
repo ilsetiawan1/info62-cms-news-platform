@@ -26,41 +26,120 @@
     <meta name="twitter:description" content="@yield('og_description', 'Portal berita terpercaya Indonesia.')">
     <meta name="twitter:image" content="@yield('og_image', asset('images/og-default.png'))">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900&display=swap" rel="stylesheet"/>
+    <!-- Fonts: Inter for an iOS-like clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Scripts & Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        /* === CATEGORY BAR DROPDOWN === */
-        .cat-item { position: relative; }
-        .cat-dropdown {
-            display: none;
-            position: absolute;
-            top: calc(100% + 4px);
-            left: 0;
-            z-index: 999;
-            min-width: 200px;
-            animation: fadeDropdown 0.15s ease;
+        /* ===== BASE ===== */
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+
+        /* ===== SCROLLBAR ===== */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* ===== CATEGORY HOVER DROPDOWN (Pure CSS, no display:none conflict) ===== */
+        .desktop-cat-item { position: relative; }
+        .desktop-cat-dropdown {
+            pointer-events: none;
+            max-height: 0;
+            overflow: hidden;
         }
-        .cat-item:hover .cat-dropdown { display: block; }
-        @keyframes fadeDropdown {
-            from { opacity: 0; transform: translateY(-6px); }
-            to   { opacity: 1; transform: translateY(0); }
+        @media (min-width: 1024px) {
+            .desktop-cat-dropdown {
+                pointer-events: none;
+                max-height: none;
+                overflow: visible;
+                display: block;
+                visibility: hidden;
+                opacity: 0;
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%) translateY(6px);
+                z-index: 200;
+                min-width: 200px;
+                transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+                padding-top: 8px;
+            }
+            .desktop-cat-item:hover .desktop-cat-dropdown {
+                pointer-events: auto;
+                visibility: visible;
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+                transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s;
+            }
         }
 
-        /* === PROSE CONTENT === */
-        .article-content p { margin-bottom: 1.25rem; line-height: 1.85; }
-        .article-content h2 { font-size: 1.4rem; font-weight: 800; margin: 2rem 0 1rem; }
-        .article-content h3 { font-size: 1.15rem; font-weight: 700; margin: 1.5rem 0 0.75rem; }
-        .article-content blockquote { border-left: 4px solid #1E3A8A; padding-left: 1.25rem; font-style: italic; color: #64748b; }
-        .dark .article-content blockquote { border-color: #3B82F6; color: #94a3b8; }
+        /* ===== DROPDOWN CARD ===== */
+        .dropdown-card {
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px -8px rgba(0,0,0,0.12);
+            padding: 6px;
+        }
+        .dark .dropdown-card {
+            background: rgba(30,41,59,0.98);
+            border-color: #334155;
+            box-shadow: 0 8px 30px -8px rgba(0,0,0,0.5);
+        }
+        .dropdown-card a {
+            display: flex; align-items: center;
+            padding: 9px 14px; border-radius: 10px;
+            font-size: 0.8125rem; font-weight: 500; color: #334155;
+            transition: background 0.12s, color 0.12s; white-space: nowrap;
+        }
+        .dropdown-card a:first-child { font-weight: 700; color: #2563eb; }
+        .dropdown-card a:hover { background: #f1f5f9; color: #1e293b; }
+        .dark .dropdown-card a { color: #cbd5e1; }
+        .dark .dropdown-card a:first-child { color: #60a5fa; }
+        .dark .dropdown-card a:hover { background: #1e293b; }
 
-        /* === AD PLACEHOLDER === */
-        .ad-box { background: repeating-linear-gradient(45deg, #f8fafc, #f8fafc 10px, #f1f5f9 10px, #f1f5f9 20px); border: 2px dashed #cbd5e1; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-        .dark .ad-box { background: repeating-linear-gradient(45deg, #1e293b, #1e293b 10px, #0f172a 10px, #0f172a 20px); border-color: #334155; color: #475569; }
+        /* ===== READING PROGRESS ===== */
+        #reading-progress { position: fixed; top: 0; left: 0; height: 3px;
+            background: linear-gradient(90deg, #2563eb, #ef4444); z-index: 9999; transition: width 0.1s ease; width: 0%; }
+
+        /* ===== TICKER ===== */
+        .ticker-wrap { width: 100%; overflow: hidden; display: flex; align-items: center; white-space: nowrap; }
+        .ticker-move { display: inline-block; padding-left: 100%; animation: ticker 40s linear infinite; }
+        .ticker-move:hover { animation-play-state: paused; }
+        .ticker-item { display: inline-block; padding: 0 2.5rem; font-size: 0.8125rem; }
+        @keyframes ticker { 0% { transform: translate3d(0,0,0); } 100% { transform: translate3d(-100%,0,0); } }
+
+        /* ===== ARTICLE PROSE ===== */
+        .article-content { font-size: 1.0625rem; line-height: 1.85; color: #334155; }
+        .dark .article-content { color: #cbd5e1; }
+        .article-content p { margin-bottom: 1.5rem; }
+        .article-content h2 { font-size: 1.4rem; font-weight: 800; margin: 2.5rem 0 1rem; color: #0f172a; }
+        .dark .article-content h2 { color: #f1f5f9; }
+        .article-content h3 { font-size: 1.15rem; font-weight: 700; margin: 2rem 0 0.75rem; color: #1e293b; }
+        .dark .article-content h3 { color: #e2e8f0; }
+        .article-content a { color: #2563eb; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
+        .article-content a:hover { border-bottom-color: #2563eb; }
+        .dark .article-content a { color: #60a5fa; }
+        .article-content img { border-radius: 14px; margin: 2rem auto; width: 100%; }
+        .article-content blockquote { border-left: 4px solid #2563eb; padding: 1rem 1.5rem; margin: 2rem 0; font-style: italic; background: #f8fafc; border-radius: 0 12px 12px 0; color: #475569; }
+        .dark .article-content blockquote { background: #1e293b; color: #94a3b8; }
+        .article-content ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1.5rem; }
+        .article-content ol { list-style: decimal; padding-left: 1.5rem; margin-bottom: 1.5rem; }
+        .article-content li { margin-bottom: 0.4rem; }
+
+        /* ===== AD PLACEHOLDER ===== */
+        .ad-placeholder { border: 2px dashed #e2e8f0; background: #f8fafc; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            color: #94a3b8; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; }
+        .dark .ad-placeholder { border-color: #334155; background: #1e293b; color: #64748b; }
+
+        /* ===== NEWS CARD HOVER ===== */
+        .news-card { transition: transform 0.25s ease; }
+        .news-card:hover { transform: translateY(-2px); }
     </style>
 
     <script>
@@ -70,225 +149,308 @@
             document.documentElement.classList.remove('dark');
         }
         function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
         }
     </script>
-
     @stack('head')
 </head>
-<body class="font-sans antialiased bg-slate-50 dark:bg-navy-900 text-slate-800 dark:text-gray-200 transition-colors duration-300">
+<body class="bg-slate-50 dark:bg-[#0f172a] text-slate-800 dark:text-slate-200 transition-colors duration-300">
+    <div id="reading-progress"></div>
 
-    <!-- ===== STICKY HEADER (solid bg, never transparent on scroll) ===== -->
-    <header class="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700/80 shadow-sm">
+    <!-- ===== STICKY FROSTED HEADER ===== -->
+    <header class="sticky top-0 z-[100] bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-700/50 transition-all shadow-sm dark:shadow-slate-900/50">
+        
+        <!-- Top row: Logo & Utilities -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 gap-4">
+            <div class="flex items-center justify-between h-16 md:h-20 gap-4">
+                
+                <!-- Hamburger (Mobile) -->
+                <button id="mobile-menu-btn" class="flex lg:hidden p-2 rounded-full text-slate-600 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
 
                 <!-- Logo -->
-                <a href="{{ route('home') }}" class="flex items-center gap-2 flex-shrink-0">
-                    <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Info Seputar +62" class="h-8 w-auto">
+                <a href="{{ route('home') }}" class="flex items-center gap-2 flex-shrink-0 lg:mr-8">
+                    <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Info Seputar +62" class="h-8 md:h-10 w-auto">
                 </a>
 
-                <!-- Desktop Nav Links -->
-                <nav class="hidden md:flex items-center gap-1">
-                    <a href="{{ route('home') }}" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all {{ request()->routeIs('home') ? 'text-primary dark:text-primary-500 bg-primary/8 dark:bg-primary-500/10' : 'text-slate-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-slate-100 dark:hover:bg-gray-800' }}">Beranda</a>
-                    <a href="{{ route('home') }}#terkini" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-slate-100 dark:hover:bg-gray-800 transition-all">Terbaru</a>
-                    <a href="{{ route('home') }}#trending" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-slate-100 dark:hover:bg-gray-800 transition-all">Trending</a>
-                </nav>
-
-                <!-- Right Side Actions -->
-                <div class="flex items-center gap-2 ml-auto">
-                    <!-- Desktop Search (hidden on mobile) -->
-                    <div class="hidden md:flex items-center bg-slate-100 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 px-3 py-2 gap-2 focus-within:ring-2 focus-within:ring-primary/30 dark:focus-within:ring-primary-500/30 transition-all">
-                        <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        <input type="text" placeholder="Cari berita..." class="bg-transparent border-none outline-none text-sm text-slate-700 dark:text-gray-200 placeholder-slate-400 w-44 focus:w-56 transition-all duration-300">
+                <!-- Desktop Ticker (if exists) -->
+                @if(isset($tickerNews) && $tickerNews->isNotEmpty())
+                <div class="hidden lg:flex items-center flex-1 mx-4 h-10 bg-slate-100/50 dark:bg-zinc-800/50 rounded-full border border-slate-200/50 dark:border-zinc-700/50 overflow-hidden">
+                    <div class="flex items-center px-4 bg-white dark:bg-zinc-800 h-full border-r border-slate-200 dark:border-zinc-700 shadow-sm z-10 flex-shrink-0">
+                        <span class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-red-600 dark:text-red-500">
+                            <span class="relative flex h-2 w-2">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+                            </span>
+                            LIVE NEWS
+                        </span>
                     </div>
+                    <div class="ticker-wrap flex-1 h-full">
+                        <div class="ticker-move flex items-center h-full">
+                            @foreach($tickerNews as $ticker)
+                                <div class="ticker-item h-full flex items-center">
+                                    <a href="{{ route('article.show', $ticker->slug) }}" class="font-medium text-slate-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                        {{ $ticker->title }}
+                                    </a>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                @else
+                <div class="hidden lg:block flex-1"></div>
+                @endif
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-2 sm:gap-3 ml-auto">
+                    <!-- Desktop Search -->
+                    <form action="{{ route('search') }}" method="GET" class="hidden md:flex items-center bg-slate-100 dark:bg-zinc-800 rounded-full px-4 py-2 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all border border-transparent dark:border-zinc-700">
+                        <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input type="text" name="q" placeholder="Cari berita..." value="{{ request('q') }}" required class="bg-transparent border-none outline-none text-sm text-slate-700 dark:text-zinc-200 placeholder-slate-400 w-40 focus:w-56 transition-all duration-300 p-0 ml-2 focus:ring-0">
+                    </form>
 
                     <!-- Dark Mode Toggle -->
-                    <button onclick="toggleDarkMode()" class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-all" aria-label="Toggle dark mode">
+                    <button onclick="toggleDarkMode()" class="p-2.5 rounded-full text-slate-600 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors" aria-label="Toggle dark mode">
                         <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                         <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    </button>
-
-                    <!-- Hamburger: ONLY on mobile/tablet (hidden on md+) -->
-                    <button id="mobile-menu-btn" class="flex md:hidden p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-all" aria-label="Open menu">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- ===== CATEGORY BAR (Desktop, below main nav) ===== -->
-        <div class="hidden md:block border-t border-gray-100 dark:border-gray-800">
+        <!-- Bottom row: Horizontal Scrollable Categories -->
+        <div class="border-t border-slate-100 dark:border-slate-800/50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <ul class="flex items-center gap-1 h-10 overflow-x-auto scrollbar-none">
+                <nav class="flex items-center overflow-x-auto hide-scrollbar py-2.5 gap-1">
+                    <a href="{{ route('home') }}" class="flex-shrink-0 px-4 py-1.5 rounded-full text-[13px] font-bold tracking-wide transition-all whitespace-nowrap {{ request()->routeIs('home') && !request('cat') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">Semua</a>
+
                     @foreach($navCategories as $cat)
-                        <li class="cat-item relative flex-shrink-0">
+                        {{-- Desktop: hover mega-menu. Mobile: plain link --}}
+                        <div class="desktop-cat-item flex-shrink-0">
                             <a href="{{ route('category.show', $cat->slug) }}"
-                               class="flex items-center gap-1 px-4 py-1.5 text-sm font-semibold rounded-lg transition-all duration-200 text-slate-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-primary/5 dark:hover:bg-primary-500/10 {{ request()->is('kategori/'.$cat->slug) ? 'text-primary dark:text-primary-400 bg-primary/8' : '' }}">
+                               class="flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold tracking-wide transition-all whitespace-nowrap
+                                      {{ request()->is('kategori/'.$cat->slug.'*') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">
                                 {{ $cat->name }}
-                                @if($cat->children->isNotEmpty())
-                                    <svg class="w-3.5 h-3.5 opacity-50 transition-transform cat-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
-                                @endif
                             </a>
+
                             @if($cat->children->isNotEmpty())
-                                <div class="cat-dropdown absolute top-full left-0 mt-1 z-50 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-xl py-2 min-w-48">
+                            {{-- Dropdown: pure CSS hover, NO display:none --}}
+                            <div class="desktop-cat-dropdown">
+                                <div class="dropdown-card">
+                                    <a href="{{ route('category.show', $cat->slug) }}">Semua {{ $cat->name }}</a>
                                     @foreach($cat->children as $child)
-                                        <a href="{{ route('category.show', $child->slug) }}"
-                                           class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-primary/40 dark:bg-primary-500/40 flex-shrink-0"></span>
-                                            {{ $child->name }}
-                                        </a>
+                                        <a href="{{ route('category.show', $child->slug) }}">{{ $child->name }}</a>
                                     @endforeach
                                 </div>
+                            </div>
                             @endif
-                        </li>
+                        </div>
                     @endforeach
-                </ul>
+                </nav>
             </div>
         </div>
     </header>
 
-    <!-- ===== MOBILE SIDEBAR (hidden on desktop md+) ===== -->
-    <div id="mobile-overlay" class="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm hidden md:hidden"></div>
-    <div id="mobile-sidebar" class="fixed inset-y-0 right-0 z-50 w-72 bg-white dark:bg-gray-900 shadow-2xl transform translate-x-full transition-transform duration-300 overflow-y-auto md:hidden">
-        <div class="flex items-center justify-between p-5 border-b border-gray-100 dark:border-gray-800">
-            <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Logo" class="h-7 w-auto">
-            <button id="mobile-close-btn" class="p-2 rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-gray-800 transition-all">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+
+
+    <!-- ===== MOBILE OFFCANVAS MENU ===== -->
+    <div id="mobile-overlay" class="fixed inset-0 z-[998] bg-slate-900/40 backdrop-blur-sm hidden lg:hidden transition-opacity opacity-0" onclick="closeSidebar()"></div>
+    <div id="mobile-sidebar" class="fixed inset-y-0 left-0 z-[999] w-80 bg-white dark:bg-[#0f172a] shadow-2xl transform -translate-x-full transition-transform duration-300 overflow-y-auto lg:hidden">
+        <div class="flex items-center justify-between p-5 sticky top-0 bg-white/90 dark:bg-[#09090b]/90 backdrop-blur-md z-10 border-b border-slate-100 dark:border-zinc-800">
+            <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Logo" class="h-8 w-auto">
+            <button id="mobile-close-btn" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors" onclick="closeSidebar()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
-        <nav class="p-4 space-y-1">
-            <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-gray-800 transition-all">
-                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+        
+        <div class="p-4 border-b border-slate-100 dark:border-zinc-800">
+            <form action="{{ route('search') }}" method="GET" class="flex items-center bg-slate-100 dark:bg-zinc-800/50 rounded-2xl px-4 py-3 gap-3 border border-transparent dark:border-zinc-700">
+                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" name="q" placeholder="Cari..." value="{{ request('q') }}" required class="bg-transparent border-none outline-none text-sm text-slate-700 dark:text-zinc-200 placeholder-slate-400 w-full p-0 focus:ring-0">
+            </form>
+        </div>
+
+        <nav class="p-4 space-y-2">
+            <div class="pb-2 px-2">
+                <p class="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest">Menu Utama</p>
+            </div>
+            <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold {{ request()->routeIs('home') ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800/50' }} transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                 Beranda
             </a>
-            <div class="pt-2 pb-1 px-4">
-                <p class="text-xs font-bold text-slate-400 dark:text-gray-500 uppercase tracking-wider">Kategori</p>
+
+            <div class="pt-4 pb-2 px-2">
+                <p class="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest">Kategori</p>
             </div>
-            @foreach($navCategories as $cat)
-                <a href="{{ route('category.show', $cat->slug) }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-gray-800 transition-all">
-                    <span class="w-2 h-2 rounded-full bg-primary dark:bg-primary-500 flex-shrink-0"></span>
-                    {{ $cat->name }}
-                </a>
-                @foreach($cat->children as $child)
-                    <a href="{{ route('category.show', $child->slug) }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-slate-500 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800/50 transition-all ml-3">
-                        <span class="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-gray-600 flex-shrink-0"></span>
-                        {{ $child->name }}
-                    </a>
+            
+            <div x-data="{ expandedCat: null }" class="space-y-2">
+                @foreach($navCategories as $cat)
+                    <div class="rounded-2xl overflow-hidden {{ request()->is('kategori/'.$cat->slug.'*') ? 'bg-slate-50 dark:bg-zinc-800/30 border border-slate-100 dark:border-zinc-800' : 'border border-transparent' }} transition-colors">
+                        <div class="flex items-center justify-between px-2">
+                            <a href="{{ route('category.show', $cat->slug) }}" class="flex-1 px-2 py-3 text-sm font-bold {{ request()->is('kategori/'.$cat->slug) ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-zinc-200' }}">
+                                {{ $cat->name }}
+                            </a>
+                            
+                            @if($cat->children->isNotEmpty())
+                                <button @click="expandedCat = expandedCat === {{ $cat->id }} ? null : {{ $cat->id }}" class="p-3 text-slate-400 hover:text-blue-600 transition-colors">
+                                    <svg class="w-4 h-4 transition-transform duration-300" :class="expandedCat === {{ $cat->id }} ? 'rotate-180 text-blue-600' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                            @endif
+                        </div>
+                        
+                        @if($cat->children->isNotEmpty())
+                            <div x-show="expandedCat === {{ $cat->id }}" x-collapse class="px-3 pb-3 space-y-1" style="display: none;">
+                                @foreach($cat->children as $child)
+                                    <a href="{{ route('category.show', $child->slug) }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm {{ request()->is('kategori/'.$child->slug) ? 'text-blue-600 font-bold bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' : 'text-slate-500 font-medium dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800' }} transition-colors">
+                                        {{ $child->name }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
                 @endforeach
-            @endforeach
+            </div>
         </nav>
     </div>
 
     <!-- Main Content -->
-    <main>
+    <main class="min-h-screen">
         @yield('content')
     </main>
 
+    <!-- ===== BOTTOM AD BANNER (Above Footer) ===== -->
+    @if(isset($ads_article_bottom) && $ads_article_bottom)
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 mb-10">
+        <div class="flex justify-center">
+            <a href="{{ $ads_article_bottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[728px]">
+                <img src="{{ $ads_article_bottom->image_url }}" alt="{{ $ads_article_bottom->title }}" class="w-full h-auto object-contain rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-200/60 dark:border-zinc-800">
+            </a>
+        </div>
+    </div>
+    @endif
+
     <!-- ===== FOOTER ===== -->
-    <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
-                <!-- Brand -->
-                <div class="md:col-span-1">
-                    <a href="{{ route('home') }}" class="flex items-center gap-2 mb-4">
-                        <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Info Seputar +62" class="h-9 w-auto">
+    <footer class="bg-white dark:bg-[#0c1626] border-t border-slate-200 dark:border-slate-800 mt-16 text-slate-600 dark:text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16">
+                <!-- Brand Info -->
+                <div class="md:col-span-12 lg:col-span-5">
+                    <a href="{{ route('home') }}" class="flex items-center gap-2 mb-6">
+                        <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Info Seputar +62" class="h-10 w-auto dark:brightness-0 dark:invert">
                     </a>
-                    <p class="text-sm text-slate-500 dark:text-gray-400 leading-relaxed">
-                        Portal berita terpercaya yang menyajikan informasi terkini seputar Indonesia. Tepat, akurat, dan independen.
+                    <p class="text-sm leading-relaxed max-w-md mb-8">
+                        Portal berita digital terdepan di Indonesia yang menyajikan informasi terkini, akurat, dan mendalam dengan antarmuka yang mengutamakan kenyamanan pembaca.
                     </p>
-                    <div class="flex gap-3 mt-5">
-                        <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-gray-800 flex items-center justify-center text-slate-500 dark:text-gray-400 hover:bg-primary dark:hover:bg-primary-500 hover:text-white transition-all">
+                    
+                    <div class="flex gap-3">
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 transition-colors">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                         </a>
-                        <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-gray-800 flex items-center justify-center text-slate-500 dark:text-gray-400 hover:bg-primary dark:hover:bg-primary-500 hover:text-white transition-all">
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                         </a>
-                        <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-gray-800 flex items-center justify-center text-slate-500 dark:text-gray-400 hover:bg-green-500 hover:text-white transition-all">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-500 hover:text-white transition-colors">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
                         </a>
                     </div>
                 </div>
 
-                <!-- Categories -->
-                <div>
-                    <h4 class="text-sm font-black text-slate-900 dark:text-gray-100 uppercase tracking-wider mb-5">Kategori</h4>
-                    <ul class="space-y-2.5">
-                        @foreach($navCategories as $cat)
-                            <li>
-                                <a href="{{ route('category.show', $cat->slug) }}" class="text-sm text-slate-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-500 transition-colors font-medium">
-                                    {{ $cat->name }}
-                                </a>
-                            </li>
+                <!-- Footer Links -->
+                <div class="md:col-span-4 lg:col-span-2">
+                    <h4 class="text-[11px] font-black text-slate-900 dark:text-zinc-100 uppercase tracking-widest mb-5">Kategori</h4>
+                    <ul class="space-y-3">
+                        @foreach(collect($navCategories)->take(5) as $cat)
+                            <li><a href="{{ route('category.show', $cat->slug) }}" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{{ $cat->name }}</a></li>
                         @endforeach
                     </ul>
                 </div>
 
-                <!-- Most Read -->
-                <div>
-                    <h4 class="text-sm font-black text-slate-900 dark:text-gray-100 uppercase tracking-wider mb-5">Terpopuler</h4>
-                    <ol class="space-y-3">
-                        @foreach(App\Models\Article::where('status','published')->orderByDesc('views_count')->limit(4)->get() as $i => $pop)
-                            <li class="flex gap-2.5 items-start">
-                                <span class="text-xl font-black text-slate-200 dark:text-gray-700 leading-none w-5 flex-shrink-0 mt-px">{{ $i + 1 }}</span>
-                                <a href="{{ route('article.show', $pop->slug) }}" class="text-sm text-slate-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-500 transition-colors leading-snug line-clamp-2">{{ $pop->title }}</a>
-                            </li>
-                        @endforeach
-                    </ol>
+                <!-- Footer Links -->
+                <div class="md:col-span-4 lg:col-span-2">
+                    <h4 class="text-[11px] font-black text-slate-900 dark:text-zinc-100 uppercase tracking-widest mb-5">Jaringan</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Kompas TV</a></li>
+                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Tribun Network</a></li>
+                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Sonora FM</a></li>
+                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">KG Media</a></li>
+                    </ul>
                 </div>
 
-                <!-- About -->
-                <div>
-                    <h4 class="text-sm font-black text-slate-900 dark:text-gray-100 uppercase tracking-wider mb-5">Informasi</h4>
-                    <ul class="space-y-2.5">
-                        <li><a href="#" class="text-sm text-slate-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-500 transition-colors font-medium">Tentang Kami</a></li>
-                        <li><a href="#" class="text-sm text-slate-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-500 transition-colors font-medium">Pedoman Media Siber</a></li>
-                        <li><a href="#" class="text-sm text-slate-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-500 transition-colors font-medium">Kebijakan Privasi</a></li>
-                        <li><a href="#" class="text-sm text-slate-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-500 transition-colors font-medium">Hubungi Kami</a></li>
+                <!-- Corporate -->
+                <div class="md:col-span-4 lg:col-span-3">
+                    <h4 class="text-[11px] font-black text-slate-900 dark:text-zinc-100 uppercase tracking-widest mb-5">Korporat</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Tentang Kami</a></li>
+                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Pedoman Media Siber</a></li>
+                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Kebijakan Privasi</a></li>
+                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Info Iklan</a></li>
                     </ul>
                 </div>
             </div>
+        </div>
 
-            <div class="border-t border-gray-100 dark:border-gray-800 mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-                <p class="text-xs text-slate-400 dark:text-gray-500">
+        <div class="bg-slate-50 dark:bg-[#09090b] border-t border-slate-200 dark:border-zinc-800 py-6">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs font-medium">
                     &copy; {{ date('Y') }} Info Seputar +62. Seluruh hak cipta dilindungi.
                 </p>
-                <p class="text-xs text-slate-400 dark:text-gray-500">
-                    Dibuat dengan ❤️ di Indonesia &bull; Tepat, Akurat, Independen
-                </p>
+                <div class="flex items-center gap-6 text-xs font-medium">
+                    <a href="#" class="hover:text-slate-900 dark:hover:text-white transition-colors">Syarat & Ketentuan</a>
+                    <a href="#" class="hover:text-slate-900 dark:hover:text-white transition-colors">Data Pribadi</a>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- Mobile Sidebar JS -->
+    <!-- Scripts -->
     <script>
-        // Sidebar open/close
-        const _btn = document.getElementById('mobile-menu-btn');
-        const _sidebar = document.getElementById('mobile-sidebar');
-        const _overlay = document.getElementById('mobile-overlay');
-        const _closeBtn = document.getElementById('mobile-close-btn');
+        // Reading Progress
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            const progressBar = document.getElementById("reading-progress");
+            if(progressBar) progressBar.style.width = scrolled + "%";
+        });
 
+        // Sidebar Handling
+        const overlay = document.getElementById('mobile-overlay');
+        const sidebar = document.getElementById('mobile-sidebar');
+        let sidebarOpen = false;
+        
         function openSidebar() {
-            _sidebar.classList.remove('translate-x-full');
-            _overlay.classList.remove('hidden');
+            sidebarOpen = true;
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            // Allow display block to apply before transitioning opacity
+            setTimeout(() => overlay.classList.remove('opacity-0'), 10);
             document.body.style.overflow = 'hidden';
         }
+        
         function closeSidebar() {
-            _sidebar.classList.add('translate-x-full');
-            _overlay.classList.add('hidden');
+            sidebarOpen = false;
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('opacity-0');
+            setTimeout(() => overlay.classList.add('hidden'), 300); // match duration
             document.body.style.overflow = '';
         }
-        if (_btn) _btn.addEventListener('click', openSidebar);
-        if (_closeBtn) _closeBtn.addEventListener('click', closeSidebar);
-        if (_overlay) _overlay.addEventListener('click', closeSidebar);
 
-        // Close sidebar on resize to desktop
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('mobile-menu-btn');
+            if(btn) btn.addEventListener('click', openSidebar);
+        });
+
         window.addEventListener('resize', () => {
-            if (window.innerWidth >= 768) closeSidebar();
+            if (window.innerWidth >= 1024 && sidebarOpen) closeSidebar();
         });
     </script>
-
     @stack('scripts')
 </body>
 </html>

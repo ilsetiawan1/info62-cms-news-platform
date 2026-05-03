@@ -4,16 +4,41 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\Advertisement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PublicController extends Controller
 {
     /**
-     * Display the public homepage.
+     * Fetch and format advertisements for views.
      */
+    private function getAds(): array
+    {
+        $ads = Cache::remember('active_ads', 3600, function () {
+            $now = now();
+            return Advertisement::where('status', 'active')
+                ->where(function ($q) use ($now) {
+                    $q->whereNull('start_date')->orWhere('start_date', '<=', $now);
+                })
+                ->where(function ($q) use ($now) {
+                    $q->whereNull('end_date')->orWhere('end_date', '>=', $now);
+                })
+                ->get()
+                ->groupBy('position');
+        });
+
+        return [
+            'ads_sidebar_top'    => $ads->get('sidebar_top', collect())->first(),
+            'ads_sidebar_mid'    => $ads->get('sidebar_mid', collect())->first(),
+            'ads_article_mid'    => $ads->get('article_mid', collect())->first(),
+            'ads_article_bottom' => $ads->get('article_bottom', collect())->first(),
+        ];
+    }
+
     public function index()
     {
-        // Hero Slider: latest 5 published articles
+        // Hero: latest 5 published articles
         $heroSlides = Article::with(['category', 'author'])
             ->where('status', 'published')
             ->latest('published_at')
@@ -27,18 +52,43 @@ class PublicController extends Controller
             ->where('status', 'published')
             ->whereNotIn('id', $heroIds)
             ->latest('published_at')
-            ->paginate(9);
+            ->limit(20)
+            ->get();
 
-        // Most viewed for sidebar
+        // Most viewed
         $mostViewed = Article::where('status', 'published')
             ->orderByDesc('views_count')
-            ->limit(5)
+            ->limit(7)
             ->get();
 
         // Categories for navbar & category bar
         $navCategories = Category::whereNull('parent_id')->with('children')->get();
 
-        return view('public.home', compact('heroSlides', 'latestArticles', 'mostViewed', 'navCategories'));
+        // Breaking news ticker (latest 8 headlines)
+        $tickerNews = Article::where('status', 'published')
+            ->latest('published_at')
+            ->limit(8)
+            ->get(['id', 'title', 'slug']);
+
+        // Articles grouped per top category (for homepage sections)
+        $categoryArticles = $navCategories->map(function ($cat) use ($heroIds) {
+            $catIds = collect([$cat->id])
+                ->merge($cat->children->pluck('id'))
+                ->toArray();
+            $articles = Article::with(['category', 'author'])
+                ->where('status', 'published')
+                ->whereNotIn('id', $heroIds)
+                ->whereIn('category_id', $catIds)
+                ->latest('published_at')
+                ->limit(5)
+                ->get();
+            return ['category' => $cat, 'articles' => $articles];
+        })->filter(fn ($item) => $item['articles']->isNotEmpty())->values()->take(5);
+
+        return view('public.home', array_merge(
+            compact('heroSlides', 'latestArticles', 'mostViewed', 'navCategories', 'tickerNews', 'categoryArticles'),
+            $this->getAds()
+        ));
     }
 
     /**
@@ -92,7 +142,15 @@ class PublicController extends Controller
 
         $navCategories = Category::whereNull('parent_id')->with('children')->get();
 
-        return view('public.article', compact('article', 'relatedSameCategory', 'relatedOther', 'navCategories'));
+        $tickerNews = Article::where('status', 'published')
+            ->latest('published_at')
+            ->limit(8)
+            ->get(['id', 'title', 'slug']);
+
+        return view('public.article', array_merge(
+            compact('article', 'relatedSameCategory', 'relatedOther', 'navCategories', 'tickerNews'),
+            $this->getAds()
+        ));
     }
 
     /**
@@ -115,6 +173,73 @@ class PublicController extends Controller
 
         $navCategories = Category::whereNull('parent_id')->with('children')->get();
 
-        return view('public.category', compact('category', 'articles', 'navCategories'));
+        $tickerNews = Article::where('status', 'published')
+            ->latest('published_at')
+            ->limit(8)
+            ->get(['id', 'title', 'slug']);
+
+        $mostViewed = Article::where('status', 'published')
+            ->orderByDesc('views_count')
+            ->limit(7)
+            ->get();
+
+        $latestSidebar = Article::where('status', 'published')
+            ->latest('published_at')
+            ->limit(5)
+            ->get();
+
+        $ads = $this->getAds();
+
+        return view('public.category', array_merge([
+            'category' => $category,
+            'articles' => $articles,
+            'navCategories' => $navCategories,
+            'tickerNews' => $tickerNews,
+            'mostViewed' => $mostViewed,
+            'latestSidebar' => $latestSidebar,
+        ], $ads));
+    }
+
+    /**
+     * Search articles by title.
+     */
+    public function search(Request $request)
+    {
+        $query = $request->input('q');
+        
+        $articles = Article::with(['category', 'author'])
+            ->where('status', 'published')
+            ->where('title', 'like', '%' . $query . '%')
+            ->latest('published_at')
+            ->paginate(12)
+            ->appends(['q' => $query]);
+
+        $navCategories = Category::whereNull('parent_id')->with('children')->get();
+
+        $tickerNews = Article::where('status', 'published')
+            ->latest('published_at')
+            ->limit(8)
+            ->get(['id', 'title', 'slug']);
+
+        $mostViewed = Article::where('status', 'published')
+            ->orderByDesc('views_count')
+            ->limit(7)
+            ->get();
+
+        $latestSidebar = Article::where('status', 'published')
+            ->latest('published_at')
+            ->limit(5)
+            ->get();
+
+        $ads = $this->getAds();
+
+        return view('public.search', array_merge([
+            'articles' => $articles,
+            'query' => $query,
+            'navCategories' => $navCategories,
+            'tickerNews' => $tickerNews,
+            'mostViewed' => $mostViewed,
+            'latestSidebar' => $latestSidebar,
+        ], $ads));
     }
 }
