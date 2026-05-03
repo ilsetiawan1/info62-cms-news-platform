@@ -2,7 +2,7 @@
 -- DATABASE
 -- =========================
 CREATE DATABASE infoseputar62_db;
-USE info_seputar62;
+USE infoseputar62_db;
 
 -- =========================
 -- 1. USERS
@@ -139,3 +139,19 @@ INSERT INTO settings (`key`, `value`) VALUES
 ('logo', '/images/logo.png'),
 ('facebook', 'https://facebook.com'),
 ('instagram', 'https://instagram.com');
+
+-- =========================
+-- 6. ADVERTISEMENTS
+-- =========================
+CREATE TABLE advertisements (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    image_path VARCHAR(255) NOT NULL,
+    url VARCHAR(255) NULL,
+    position ENUM('header', 'sidebar_top', 'sidebar_mid', 'article_mid', 'article_bottom') DEFAULT 'sidebar_top',
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    start_date DATETIME NULL,
+    end_date DATETIME NULL,
+    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
