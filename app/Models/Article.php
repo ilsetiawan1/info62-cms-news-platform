@@ -59,4 +59,20 @@ class Article extends Model
     {
         return $this->belongsTo(User::class, 'author_id');
     }
+
+    /**
+     * Get the full URL for the cover image.
+     */
+    public function getCoverImageUrlAttribute(): ?string
+    {
+        if (!$this->cover_image) {
+            return null;
+        }
+
+        if (\Illuminate\Support\Str::startsWith($this->cover_image, ['http://', 'https://'])) {
+            return $this->cover_image;
+        }
+
+        return \Illuminate\Support\Facades\Storage::url($this->cover_image);
+    }
 }

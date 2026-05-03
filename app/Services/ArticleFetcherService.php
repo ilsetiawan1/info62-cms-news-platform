@@ -263,7 +263,7 @@ class ArticleFetcherService
 
         return [
             'title'      => $title ?? '',
-            'content'    => $content ? "<p>{$cleanContent}</p>" : '',
+            'content'    => $cleanContent,
             'excerpt'    => mb_substr(strip_tags($desc ?? ''), 0, 250),
             'source_url' => $link,
             'warning'    => 'Data diambil dari RSS feed (bukan halaman penuh). Judul dan konten mungkin tidak lengkap.',
@@ -298,15 +298,52 @@ private function getTagContent(\DOMElement $parent, string $tagName): string
 
         $xpath   = new DOMXPath($dom);
         $title   = $this->extractTitle($xpath, $dom);
-        $content = $this->extractContent($xpath);
-        $excerpt = $this->extractExcerpt($xpath, $content);
+        $contentRaw = $this->extractContent($xpath);
+        
+        // Convert block elements to newlines to preserve paragraphs
+        $cleanContent = preg_replace('/<(p|div|h[1-6]|li)[^>]*>/i', "\n\n", $contentRaw);
+        $cleanContent = preg_replace('/<br[^>]*>/i', "\n", $cleanContent);
+        $cleanContent = strip_tags($cleanContent);
+        $cleanContent = preg_replace("/\n[ \t]+/", "\n", $cleanContent);
+        $cleanContent = preg_replace("/\n{3,}/", "\n\n", $cleanContent);
+        $cleanContent = trim($cleanContent);
+
+        $excerpt = $this->extractExcerpt($xpath, $contentRaw);
+        $imageUrl = $this->extractImage($xpath);
 
         return [
-            'title'      => $title,
-            'content'    => $content,
-            'excerpt'    => $excerpt,
-            'source_url' => $url,
+            'title'           => $title,
+            'content'         => $cleanContent,
+            'excerpt'         => $excerpt,
+            'cover_image_url' => $imageUrl,
+            'source_url'      => $url,
         ];
+    }
+
+    // ──────────────────────────────────────────────────────────
+    // IMAGE EXTRACTOR
+    // ──────────────────────────────────────────────────────────
+
+    private function extractImage(DOMXPath $xpath): ?string
+    {
+        $selectors = [
+            '//meta[@property="og:image"]/@content',
+            '//meta[@name="twitter:image"]/@content',
+            '//article//img[contains(@class, "read__photo")]/@src',
+            '//article//img/@src',
+        ];
+
+        foreach ($selectors as $sel) {
+            $nodes = $xpath->query($sel);
+            if ($nodes && $nodes->length > 0) {
+                $url = trim($nodes->item(0)->nodeValue ?? '');
+                if (filter_var($url, FILTER_VALIDATE_URL)) {
+                    return $url;
+                }
+            }
+        }
+
+        return null;
     }
 
     // ──────────────────────────────────────────────────────────
