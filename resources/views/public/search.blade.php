@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
-@section('meta_title', 'Kategori: ' . $category->name . ' — Info Seputar +62')
-@section('meta_description', 'Baca berita terbaru seputar ' . $category->name . ' di Info Seputar +62.')
-@section('canonical', route('category.show', $category->slug))
+@section('meta_title', 'Hasil Pencarian: ' . $query . ' - Info Seputar +62')
+@section('meta_description', 'Hasil pencarian berita untuk ' . $query . ' di Info Seputar +62.')
+@section('canonical', request()->fullUrl())
 
 @section('content')
 <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
@@ -17,7 +17,7 @@
                         @foreach($navCategories->take(8) as $cat)
                         <li>
                             <a href="{{ route('category.show', $cat->slug) }}"
-                               class="block px-3 py-2 rounded-xl text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-sky-400 transition-colors {{ $cat->slug === $category->slug ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-sky-400 font-semibold' : '' }}">
+                               class="block px-3 py-2 rounded-xl text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-sky-400 transition-colors">
                                 {{ $cat->name }}
                             </a>
                         </li>
@@ -33,35 +33,25 @@
         {{-- ===== MAIN CONTENT ===== --}}
         <main class="col-span-12 md:col-span-8 lg:col-span-6">
 
-            {{-- Category Header --}}
-            <div class="mb-6 pb-5 border-b border-slate-200 dark:border-slate-700">
-                <nav class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-3">
-                    <a href="{{ route('home') }}" class="hover:text-blue-600 dark:hover:text-sky-400 transition-colors">Beranda</a>
-                    <span>/</span>
-                    <span class="text-slate-700 dark:text-slate-300">{{ $category->name }}</span>
+            {{-- Search Header --}}
+            <div class="mb-8">
+                <nav class="flex mb-4" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-1 md:space-x-2 text-xs font-medium">
+                        <li><a href="{{ route('home') }}" class="text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">Beranda</a></li>
+                        <li><span class="text-slate-300 dark:text-slate-600 mx-1">/</span></li>
+                        <li aria-current="page">
+                            <span class="text-slate-700 dark:text-slate-300">Pencarian</span>
+                        </li>
+                    </ol>
                 </nav>
-                <div class="flex items-end justify-between gap-4">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
-                        <h1 class="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ $category->name }}</h1>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">{{ $articles->total() }} artikel ditemukan</p>
+                        <h1 class="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight">Hasil Pencarian</h1>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+                            Menampilkan hasil untuk: "<span class="font-bold text-slate-900 dark:text-white">{{ $query }}</span>" ({{ $articles->total() }} artikel ditemukan)
+                        </p>
                     </div>
                 </div>
-
-                {{-- Sub-category chips --}}
-                @if($category->children->isNotEmpty())
-                <div class="flex flex-wrap gap-2 mt-4">
-                    <a href="{{ route('category.show', $category->slug) }}"
-                       class="px-4 py-1.5 rounded-full text-[12px] font-bold border border-blue-600 bg-blue-600 text-white">
-                        Semua
-                    </a>
-                    @foreach($category->children as $child)
-                    <a href="{{ route('category.show', $child->slug) }}"
-                       class="px-4 py-1.5 rounded-full text-[12px] font-bold border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-blue-600 hover:text-blue-600 dark:hover:text-sky-400 transition-all">
-                        {{ $child->name }}
-                    </a>
-                    @endforeach
-                </div>
-                @endif
             </div>
 
             @if($articles->isNotEmpty())
