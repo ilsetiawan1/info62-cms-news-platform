@@ -125,14 +125,8 @@
                 {!! $article->content !!}
             </div>
 
-            {{-- Mid-article Ad --}}
-            @if($ads_article_mid)
-            <div class="flex justify-center my-8">
-                <a href="{{ $ads_article_mid->url ?? '#' }}" target="_blank" rel="noopener">
-                    <img src="{{ $ads_article_mid->image_url }}" alt="{{ $ads_article_mid->title }}" class="max-w-full rounded-xl border border-slate-200 dark:border-slate-700">
-                </a>
-            </div>
-            @endif
+            {{-- Divider --}}
+            <div class="my-8 border-b border-slate-200/60 dark:border-slate-800/50"></div>
 
             {{-- Source --}}
             @if($article->source_url)
@@ -183,15 +177,20 @@
                     </div>
                 </div>
 
-                {{-- Sidebar Ad --}}
-                <div class="ad-placeholder h-[250px] w-full">
-                    @if($ads_sidebar_top)
-                    <a href="{{ $ads_sidebar_top->url ?? '#' }}" target="_blank" rel="noopener" class="w-full h-full flex items-center justify-center">
-                        <img src="{{ $ads_sidebar_top->image_url }}" alt="{{ $ads_sidebar_top->title }}" class="max-h-full object-contain rounded-xl">
-                    </a>
-                    @else
-                    <span class="opacity-40 text-[11px]">Iklan 300×250</span>
-                    @endif
+                {{-- Topik Populer --}}
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="w-1 h-4 bg-blue-600 dark:bg-sky-500 rounded-full"></span>
+                        <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Topik Populer</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <a href="{{ route('search', ['q' => 'Pilkada2026']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Pilkada2026</a>
+                        <a href="{{ route('search', ['q' => 'TimnasIndonesia']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#TimnasIndonesia</a>
+                        <a href="{{ route('search', ['q' => 'Crypto']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Crypto</a>
+                        <a href="{{ route('search', ['q' => 'Teknologi']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Teknologi</a>
+                        <a href="{{ route('search', ['q' => 'GayaHidup']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#GayaHidup</a>
+                        <a href="{{ route('search', ['q' => 'Otomotif']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Otomotif</a>
+                    </div>
                 </div>
 
             </div>
