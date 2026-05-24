@@ -76,7 +76,7 @@
                          class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500">
                     @endif
                 </div>
-                <span class="text-[10px] font-bold text-blue-600 dark:text-sky-400 uppercase tracking-widest">{{ $first->category->name }} · {{ $first->published_at?->diffForHumans() }}</span>
+                <span class="text-[10px] font-bold text-blue-600 dark:text-sky-400 uppercase tracking-widest">{{ $first->category->name }} • {{ $first->published_at?->format('d M Y') }}</span>
                 <h2 class="text-xl font-bold text-slate-900 dark:text-white leading-[1.3] tracking-tight group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors mt-2 mb-2">{{ $first->title }}</h2>
                 @if($first->excerpt ?? false)
                 <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2">{{ $first->excerpt }}</p>
@@ -97,7 +97,7 @@
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 mb-1">
                             <span class="text-[10px] font-bold text-blue-600 dark:text-sky-400 uppercase tracking-wider">{{ $art->category->name }}</span>
-                            <span class="text-[10px] text-slate-400 dark:text-slate-500">{{ $art->published_at?->diffForHumans() }}</span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">{{ $art->published_at?->format('d M Y') }}</span>
                         </div>
                         <h3 class="text-[14px] font-semibold text-slate-900 dark:text-slate-100 leading-[1.4] tracking-tight group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors line-clamp-2">
                             {{ $art->title }}

@@ -52,7 +52,7 @@
                         <h1 class="text-lg sm:text-xl font-bold text-white leading-[1.3] tracking-tight group-hover:text-blue-100 transition-colors line-clamp-3">
                             {{ $hero->title }}
                         </h1>
-                        <p class="text-white/60 text-xs mt-1.5">{{ $hero->author->name }} · {{ $hero->published_at?->diffForHumans() }}</p>
+                        <p class="text-white/60 text-xs mt-1.5">{{ $hero->category->name }} • {{ $hero->published_at?->format('d M Y') }}</p>
                     </div>
                 </div>
             </a>
@@ -98,7 +98,7 @@
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 mb-1">
                             <span class="text-[10px] font-bold text-blue-600 dark:text-sky-400 uppercase tracking-wider">{{ $art->category->name }}</span>
-                            <span class="text-[10px] text-slate-400 dark:text-slate-500">{{ $art->published_at?->diffForHumans() }}</span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">{{ $art->published_at?->format('d M Y') }}</span>
                         </div>
                         <h3 class="text-[14px] font-semibold text-slate-900 dark:text-slate-100 leading-[1.4] tracking-tight group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors line-clamp-2">
                             {{ $art->title }}
@@ -142,7 +142,7 @@
                             <h4 class="text-[13px] font-semibold text-slate-800 dark:text-slate-200 leading-[1.35] group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors line-clamp-2 tracking-tight">
                                 {{ $art->title }}
                             </h4>
-                            <span class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 block">{{ $art->published_at?->diffForHumans() }}</span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 block">{{ $art->published_at?->format('d M Y') }}</span>
                         </div>
                     </a>
                     @endforeach
@@ -171,7 +171,7 @@
                             <span class="text-xl font-black leading-none flex-shrink-0 w-6 text-center mt-0.5 {{ $i === 0 ? 'text-red-500' : 'text-slate-200 dark:text-slate-700' }}">{{ $i+1 }}</span>
                             <div class="flex-1 min-w-0">
                                 <p class="text-[13px] font-semibold text-slate-800 dark:text-slate-200 leading-[1.4] line-clamp-3 group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors tracking-tight">{{ $pop->title }}</p>
-                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">{{ $pop->published_at?->diffForHumans() }}</p>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">{{ $pop->published_at?->format('d M Y') }}</p>
                             </div>
                         </a>
                         @endforeach
@@ -207,7 +207,7 @@
                             </div>
                             <div class="flex-1 min-w-0">
                                 <p class="text-[12px] font-semibold text-slate-800 dark:text-slate-200 leading-[1.35] line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors">{{ $latest->title }}</p>
-                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">{{ $latest->published_at?->diffForHumans() }}</p>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">{{ $latest->published_at?->format('d M Y') }}</p>
                             </div>
                         </a>
                         @endforeach
