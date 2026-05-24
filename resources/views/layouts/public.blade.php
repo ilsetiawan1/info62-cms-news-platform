@@ -165,11 +165,11 @@
 
     <!-- ===== STICKY FROSTED HEADER ===== -->
     <header class="sticky top-0 z-[100] bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-700/50 transition-all shadow-sm dark:shadow-slate-900/50">
-        
+
         <!-- Top row: Logo & Utilities -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 md:h-20 gap-4">
-                
+
                 <!-- Hamburger (Mobile) -->
                 <button id="mobile-menu-btn" class="flex lg:hidden p-2 rounded-full text-slate-600 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -177,7 +177,7 @@
 
                 <!-- Logo -->
                 <a href="{{ route('home') }}" class="flex items-center gap-2 flex-shrink-0 lg:mr-8">
-                    <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Info Seputar +62" class="h-8 md:h-10 w-auto">
+                    <img src="{{ asset('images/logo-infoseputar62.png') }}"  alt="Info Seputar +62" class="h-8 md:h-10 w-auto rounded-xl">
                 </a>
 
                 <!-- Desktop Ticker (if exists) -->
@@ -264,12 +264,12 @@
     <div id="mobile-overlay" class="fixed inset-0 z-[998] bg-slate-900/40 backdrop-blur-sm hidden lg:hidden transition-opacity opacity-0" onclick="closeSidebar()"></div>
     <div id="mobile-sidebar" class="fixed inset-y-0 left-0 z-[999] w-80 bg-white dark:bg-[#0f172a] shadow-2xl transform -translate-x-full transition-transform duration-300 overflow-y-auto lg:hidden">
         <div class="flex items-center justify-between p-5 sticky top-0 bg-white/90 dark:bg-[#09090b]/90 backdrop-blur-md z-10 border-b border-slate-100 dark:border-zinc-800">
-            <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Logo" class="h-8 w-auto">
+            <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Logo" class="h-8 w-auto rounded-md">
             <button id="mobile-close-btn" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors" onclick="closeSidebar()">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
-        
+
         <div class="p-4 border-b border-slate-100 dark:border-zinc-800">
             <form action="{{ route('search') }}" method="GET" class="flex items-center bg-slate-100 dark:bg-zinc-800/50 rounded-2xl px-4 py-3 gap-3 border border-transparent dark:border-zinc-700">
                 <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -289,7 +289,7 @@
             <div class="pt-4 pb-2 px-2">
                 <p class="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest">Kategori</p>
             </div>
-            
+
             <div x-data="{ expandedCat: null }" class="space-y-2">
                 @foreach($navCategories as $cat)
                     <div class="rounded-2xl overflow-hidden {{ request()->is('kategori/'.$cat->slug.'*') ? 'bg-slate-50 dark:bg-zinc-800/30 border border-slate-100 dark:border-zinc-800' : 'border border-transparent' }} transition-colors">
@@ -297,14 +297,14 @@
                             <a href="{{ route('category.show', $cat->slug) }}" class="flex-1 px-2 py-3 text-sm font-bold {{ request()->is('kategori/'.$cat->slug) ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-zinc-200' }}">
                                 {{ $cat->name }}
                             </a>
-                            
+
                             @if($cat->children->isNotEmpty())
                                 <button @click="expandedCat = expandedCat === {{ $cat->id }} ? null : {{ $cat->id }}" class="p-3 text-slate-400 hover:text-blue-600 transition-colors">
                                     <svg class="w-4 h-4 transition-transform duration-300" :class="expandedCat === {{ $cat->id }} ? 'rotate-180 text-blue-600' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                 </button>
                             @endif
                         </div>
-                        
+
                         @if($cat->children->isNotEmpty())
                             <div x-show="expandedCat === {{ $cat->id }}" x-collapse class="px-3 pb-3 space-y-1" style="display: none;">
                                 @foreach($cat->children as $child)
@@ -343,12 +343,12 @@
                 <!-- Brand Info -->
                 <div class="md:col-span-12 lg:col-span-5">
                     <a href="{{ route('home') }}" class="flex items-center gap-2 mb-6">
-                        <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Info Seputar +62" class="h-10 w-auto dark:brightness-0 dark:invert">
+                        <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Info Seputar +62" class="h-10 rounded-md w-auto dark:brightness-0 dark:invert">
                     </a>
                     <p class="text-sm leading-relaxed max-w-md mb-8">
                         Portal berita digital terdepan di Indonesia yang menyajikan informasi terkini, akurat, dan mendalam dengan antarmuka yang mengutamakan kenyamanan pembaca.
                     </p>
-                    
+
                     <div class="flex gap-3">
                         <a href="#" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 transition-colors">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
@@ -424,7 +424,7 @@
         const overlay = document.getElementById('mobile-overlay');
         const sidebar = document.getElementById('mobile-sidebar');
         let sidebarOpen = false;
-        
+
         function openSidebar() {
             sidebarOpen = true;
             sidebar.classList.remove('-translate-x-full');
@@ -433,7 +433,7 @@
             setTimeout(() => overlay.classList.remove('opacity-0'), 10);
             document.body.style.overflow = 'hidden';
         }
-        
+
         function closeSidebar() {
             sidebarOpen = false;
             sidebar.classList.add('-translate-x-full');

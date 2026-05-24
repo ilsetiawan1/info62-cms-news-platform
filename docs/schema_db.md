@@ -8,60 +8,61 @@ USE infoseputar62_db;
 -- 1. USERS
 -- =========================
 CREATE TABLE users (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(150) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    role ENUM('admin','super_admin') DEFAULT 'admin',
-    status BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+email VARCHAR(150) NOT NULL UNIQUE,
+password VARCHAR(255) NOT NULL,
+role ENUM('admin','super_admin') DEFAULT 'admin',
+status BOOLEAN DEFAULT TRUE,
+created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- =========================
 -- 2. CATEGORIES
 -- =========================
 CREATE TABLE categories (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    slug VARCHAR(150) NOT NULL UNIQUE,
-    parent_id BIGINT UNSIGNED NULL,
-    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+slug VARCHAR(150) NOT NULL UNIQUE,
+parent_id BIGINT UNSIGNED NULL,
+created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
     CONSTRAINT fk_categories_parent
     FOREIGN KEY (parent_id) REFERENCES categories(id)
     ON DELETE SET NULL
+
 );
 
 -- =========================
 -- 3. ARTICLES
 -- =========================
 CREATE TABLE articles (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+
     title VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL UNIQUE,
     content LONGTEXT NOT NULL,
     cover_image VARCHAR(255),
-    
+
     category_id BIGINT UNSIGNED NOT NULL,
     author_id BIGINT UNSIGNED NOT NULL,
-    
+
     status ENUM('draft','published') DEFAULT 'draft',
     published_at DATETIME NULL,
-    
+
     -- SEO
     meta_title VARCHAR(255),
     meta_description TEXT,
     keywords TEXT,
-    
+
     -- Auto Fetch
     source_url TEXT NULL,
-    
+
     -- Statistik ringan
     views_count INT DEFAULT 0,
-    
+
     created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -72,31 +73,33 @@ CREATE TABLE articles (
     CONSTRAINT fk_articles_user
     FOREIGN KEY (author_id) REFERENCES users(id)
     ON DELETE CASCADE
+
 );
 
 -- =========================
 -- 4. ARTICLE VIEWS
 -- =========================
 CREATE TABLE article_views (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    article_id BIGINT UNSIGNED NOT NULL,
-    ip_address VARCHAR(45),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+article_id BIGINT UNSIGNED NOT NULL,
+ip_address VARCHAR(45),
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_views_article
     FOREIGN KEY (article_id) REFERENCES articles(id)
     ON DELETE CASCADE
+
 );
 
 -- =========================
 -- 5. SETTINGS
 -- =========================
 CREATE TABLE settings (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `key` VARCHAR(100) UNIQUE,
-    `value` TEXT,
-    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+`key` VARCHAR(100) UNIQUE,
+`value` TEXT,
+created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- =========================
@@ -115,10 +118,10 @@ CREATE INDEX idx_views_created ON article_views(created_at);
 -- Super Admin
 INSERT INTO users (name, email, password, role)
 VALUES (
-    'Super Admin',
-    'admin@info62.com',
-    '$2y$10$examplehashedpassword', -- ganti pakai bcrypt Laravel
-    'super_admin'
+'Super Admin',
+'admin@info62.com',
+'$2y$10$examplehashedpassword', -- ganti pakai bcrypt Laravel
+'super_admin'
 );
 
 -- Kategori Utama
@@ -144,14 +147,14 @@ INSERT INTO settings (`key`, `value`) VALUES
 -- 6. ADVERTISEMENTS
 -- =========================
 CREATE TABLE advertisements (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    image_path VARCHAR(255) NOT NULL,
-    url VARCHAR(255) NULL,
-    position ENUM('header', 'sidebar_top', 'sidebar_mid', 'article_mid', 'article_bottom') DEFAULT 'sidebar_top',
-    status ENUM('active', 'inactive') DEFAULT 'active',
-    start_date DATETIME NULL,
-    end_date DATETIME NULL,
-    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+title VARCHAR(255) NOT NULL,
+image_path VARCHAR(255) NOT NULL,
+url VARCHAR(255) NULL,
+position ENUM('header', 'sidebar_top', 'sidebar_mid', 'article_mid', 'article_bottom') DEFAULT 'sidebar_top',
+status ENUM('active', 'inactive') DEFAULT 'active',
+start_date DATETIME NULL,
+end_date DATETIME NULL,
+created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

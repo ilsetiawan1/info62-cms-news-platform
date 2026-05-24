@@ -13,11 +13,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans text-slate-700 dark:text-gray-200 bg-slate-50 dark:bg-navy-900 antialiased min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
-    
+
     <div class="w-full max-w-md">
         <!-- Logo Section -->
         <div class="flex justify-center mb-8">
-            <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Info Seputar +62" class="h-16 w-auto object-contain">
+            <img src="{{ asset('images/logo-infoseputar62.png') }}" class="rounded-md" alt="Info Seputar +62" class="h-16 w-auto object-contain">
         </div>
 
         <!-- Login Card -->
@@ -29,7 +29,7 @@
 
             <!-- Session Status -->
             <x-auth-session-status class="mb-4" :status="session('status')" />
-            
+
             @if (session('error'))
                 <div class="mb-4 font-medium text-sm text-accent dark:text-accent-500 bg-accent/10 dark:bg-accent-500/10 p-3 rounded-lg text-center">
                     {{ session('error') }}
@@ -42,7 +42,7 @@
                 <!-- Email Address -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-1.5">Email Address</label>
-                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" 
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
                         class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary dark:focus:border-primary-500 focus:ring-primary dark:focus:ring-primary-500 shadow-sm transition-colors duration-200 px-4 py-2.5">
                     <x-input-error :messages="$errors->get('email')" class="mt-2 text-accent dark:text-accent-500" />
                 </div>
@@ -57,7 +57,7 @@
                             </a>
                         @endif
                     </div>
-                    <input id="password" type="password" name="password" required autocomplete="current-password" 
+                    <input id="password" type="password" name="password" required autocomplete="current-password"
                         class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary dark:focus:border-primary-500 focus:ring-primary dark:focus:ring-primary-500 shadow-sm transition-colors duration-200 px-4 py-2.5">
                     <x-input-error :messages="$errors->get('password')" class="mt-2 text-accent dark:text-accent-500" />
                 </div>
