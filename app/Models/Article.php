@@ -21,6 +21,7 @@ class Article extends Model
         'excerpt',
         'content',
         'cover_image',
+        'cover_image_alt',
         'category_id',
         'author_id',
         'status',
