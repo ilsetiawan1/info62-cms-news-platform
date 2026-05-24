@@ -62,11 +62,13 @@ class ArticleController extends Controller
             'category_id'      => ['required', 'exists:categories,id'],
             'status'           => ['required', Rule::in(['draft', 'published', 'archived'])],
             'cover_image'      => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'cover_image_alt'  => ['nullable', 'string', 'max:255'],
             'cover_image_url'  => ['nullable', 'url'],
             'meta_title'       => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string'],
             'keywords'         => ['nullable', 'string'],
             'source_url'       => ['nullable', 'url'],
+            'published_at'     => ['nullable', 'date'],
         ]);
 
         $validated['slug']      = $this->generateUniqueSlug($validated['title'], $validated['slug'] ?? null);
@@ -77,13 +79,13 @@ class ArticleController extends Controller
         } elseif ($request->filled('cover_image_url')) {
             try {
                 $response = \Illuminate\Support\Facades\Http::timeout(15)
-                    ->withoutVerifying()
-                    ->withHeaders([
-                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                        'Accept' => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
-                        'Referer' => parse_url($request->cover_image_url, PHP_URL_SCHEME) . '://' . parse_url($request->cover_image_url, PHP_URL_HOST),
-                    ])
-                    ->get($request->cover_image_url);
+                     ->withoutVerifying()
+                     ->withHeaders([
+                         'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                         'Accept' => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+                         'Referer' => parse_url($request->cover_image_url, PHP_URL_SCHEME) . '://' . parse_url($request->cover_image_url, PHP_URL_HOST),
+                     ])
+                     ->get($request->cover_image_url);
 
                 if ($response->successful()) {
                     $pathInfo = pathinfo(parse_url($request->cover_image_url, PHP_URL_PATH));
@@ -104,7 +106,7 @@ class ArticleController extends Controller
         unset($validated['cover_image_url']);
 
         if ($validated['status'] === 'published') {
-            $validated['published_at'] = now();
+            $validated['published_at'] = $validated['published_at'] ?: now();
         }
 
         Article::create($validated);
