@@ -42,6 +42,16 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+        /* Menyembunyikan scrollbar di Chrome, Safari, dan Opera */
+        .target-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        /* Menyembunyikan scrollbar di IE, Edge, dan Firefox */
+        .target-scroll {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
         /* ===== CATEGORY HOVER DROPDOWN (Pure CSS, no display:none conflict) ===== */
         .desktop-cat-item { position: relative; }
         .desktop-cat-dropdown {
@@ -107,10 +117,10 @@
             background: linear-gradient(90deg, #2563eb, #ef4444); z-index: 9999; transition: width 0.1s ease; width: 0%; }
 
         /* ===== TICKER ===== */
-        .ticker-wrap { width: 100%; overflow: hidden; display: flex; align-items: center; white-space: nowrap; }
-        .ticker-move { display: inline-block; padding-left: 100%; animation: ticker 40s linear infinite; }
+        .ticker-wrap { width: 100%; overflow: hidden; display: flex; align-items: center; white-space: nowrap; height: 100%; }
+        .ticker-move { display: inline-flex; align-items: center; padding-left: 100%; animation: ticker 40s linear infinite; height: 100%; min-width: max-content; }
         .ticker-move:hover { animation-play-state: paused; }
-        .ticker-item { display: inline-block; padding: 0 2.5rem; font-size: 0.8125rem; }
+        .ticker-item { display: inline-flex; align-items: center; padding: 0 2.5rem; font-size: 0.8125rem; height: 100%; }
         @keyframes ticker { 0% { transform: translate3d(0,0,0); } 100% { transform: translate3d(-100%,0,0); } }
 
         /* ===== ARTICLE PROSE ===== */
@@ -135,11 +145,19 @@
         .ad-placeholder { border: 2px dashed #e2e8f0; background: #f8fafc; border-radius: 14px;
             display: flex; align-items: center; justify-content: center;
             color: #94a3b8; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; }
-        .dark .ad-placeholder { border-color: #334155; background: #1e293b; color: #64748b; }
-
         /* ===== NEWS CARD HOVER ===== */
         .news-card { transition: transform 0.25s ease; }
         .news-card:hover { transform: translateY(-2px); }
+
+        /* ===== WING ADS ===== */
+        .wing-ad {
+            display: flex !important;
+        }
+        @media (max-width: 1279px) {
+            .wing-ad {
+                display: none !important;
+            }
+        }
     </style>
 
     <script>
@@ -162,6 +180,68 @@
 </head>
 <body class="bg-slate-50 dark:bg-[#0f172a] text-slate-800 dark:text-slate-200 transition-colors duration-300">
     <div id="reading-progress"></div>
+
+    {{-- ==================== IKLAN SAYAP KIRI BERTINGKAT (SINKRON ADMIN) ==================== --}}
+    <div class="hidden xl:flex wing-ad" style="position: fixed; top: 145px; left: calc(50% - 780px); width: 160px; height: 600px; z-index: 999; flex-direction: column; gap: 16px;">
+        {{-- Slot Kiri Atas (Tinggi 380px -> position: sidebar_top) --}}
+        <div class="shadow-md" style="width: 100%; height: 380px; border-radius: 0.75rem; background-color: #fee2e2; border: 1px dashed #fca5a5; display: flex; flex-direction: column; overflow: hidden;">
+            @if(isset($adLeftTop) && $adLeftTop)
+                <a href="{{ $adLeftTop->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
+                    <img src="{{ $adLeftTop->image_url }}" alt="{{ $adLeftTop->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                </a>
+            @else
+                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #991b1b; font-family: sans-serif;">
+                    <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KIRI TOP</span>
+                    <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 380</span>
+                </div>
+            @endif
+        </div>
+
+        {{-- Slot Kiri Bawah (Tinggi 204px -> position: article_mid) --}}
+        <div class="shadow-md" style="width: 100%; height: 204px; border-radius: 0.75rem; background-color: #fef2f2; border: 1px dashed #fecaca; display: flex; flex-direction: column; overflow: hidden;">
+            @if(isset($adLeftBottom) && $adLeftBottom)
+                <a href="{{ $adLeftBottom->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
+                    <img src="{{ $adLeftBottom->image_url }}" alt="{{ $adLeftBottom->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                </a>
+            @else
+                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #991b1b; font-family: sans-serif;">
+                    <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KIRI BTM</span>
+                    <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 204</span>
+                </div>
+            @endif
+        </div>
+    </div>
+
+    {{-- ==================== IKLAN SAYAP KANAN BERTINGKAT (SINKRON ADMIN) ==================== --}}
+    <div class="hidden xl:flex wing-ad" style="position: fixed; top: 145px; right: calc(50% - 780px); width: 160px; height: 600px; z-index: 999; flex-direction: column; gap: 16px;">
+        {{-- Slot Kanan Atas (Tinggi 204px -> position: sidebar_mid) --}}
+        <div class="shadow-md" style="width: 100%; height: 204px; border-radius: 0.75rem; background-color: #eff6ff; border: 1px dashed #bfdbfe; display: flex; flex-direction: column; overflow: hidden;">
+            @if(isset($adRightTop) && $adRightTop)
+                <a href="{{ $adRightTop->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
+                    <img src="{{ $adRightTop->image_url }}" alt="{{ $adRightTop->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                </a>
+            @else
+                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #1e3a8a; font-family: sans-serif;">
+                    <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KANAN TOP</span>
+                    <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 204</span>
+                </div>
+            @endif
+        </div>
+
+        {{-- Slot Kanan Bawah (Tinggi 380px -> position: article_bottom) --}}
+        <div class="shadow-md" style="width: 100%; height: 380px; border-radius: 0.75rem; background-color: #dbeafe; border: 1px dashed #93c5fd; display: flex; flex-direction: column; overflow: hidden;">
+            @if(isset($adRightBottom) && $adRightBottom)
+                <a href="{{ $adRightBottom->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
+                    <img src="{{ $adRightBottom->image_url }}" alt="{{ $adRightBottom->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                </a>
+            @else
+                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #1e3a8a; font-family: sans-serif;">
+                    <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KANAN BTM</span>
+                    <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 380</span>
+                </div>
+            @endif
+        </div>
+    </div>
 
     <!-- ===== STICKY FROSTED HEADER ===== -->
     <header class="sticky top-0 z-[100] bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-700/50 transition-all shadow-sm dark:shadow-slate-900/50">
@@ -325,16 +405,7 @@
         @yield('content')
     </main>
 
-    <!-- ===== BOTTOM AD BANNER (Above Footer) ===== -->
-    @if(isset($ads_article_bottom) && $ads_article_bottom)
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 mb-10">
-        <div class="flex justify-center">
-            <a href="{{ $ads_article_bottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[728px]">
-                <img src="{{ $ads_article_bottom->image_url }}" alt="{{ $ads_article_bottom->title }}" class="w-full h-auto object-contain rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-200/60 dark:border-zinc-800">
-            </a>
-        </div>
-    </div>
-    @endif
+
 
     <!-- ===== FOOTER ===== -->
     <footer class="bg-white dark:bg-[#0c1626] border-t border-slate-200 dark:border-slate-800 mt-16 text-slate-600 dark:text-slate-400">
@@ -376,10 +447,11 @@
                 <div class="md:col-span-4 lg:col-span-2">
                     <h4 class="text-[11px] font-black text-slate-900 dark:text-zinc-100 uppercase tracking-widest mb-5">Jaringan</h4>
                     <ul class="space-y-3">
-                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Kompas TV</a></li>
-                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Tribun Network</a></li>
-                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Sonora FM</a></li>
-                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">KG Media</a></li>
+                        <li><a href="{{ route('jaringan.show', 'yogyakarta') }}" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Info Seputar Yogyakarta</a></li>
+                        <li><a href="{{ route('jaringan.show', 'football') }}" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Info Seputar Football</a></li>
+                        <li><a href="{{ route('jaringan.show', 'fm') }}" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Info Seputar FM</a></li>
+                        <li><a href="{{ route('jaringan.show', 'otomotif') }}" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Info Seputar Otomotif</a></li>
+                        <li><a href="{{ route('jaringan.show', 'kuliner') }}" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Info Seputar Kuliner</a></li>
                     </ul>
                 </div>
 
@@ -387,24 +459,19 @@
                 <div class="md:col-span-4 lg:col-span-3">
                     <h4 class="text-[11px] font-black text-slate-900 dark:text-zinc-100 uppercase tracking-widest mb-5">Korporat</h4>
                     <ul class="space-y-3">
-                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Tentang Kami</a></li>
-                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Pedoman Media Siber</a></li>
-                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Kebijakan Privasi</a></li>
-                        <li><a href="#" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Info Iklan</a></li>
+                        <li><a href="{{ route('page.show', 'tentang-kami') }}" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Tentang Kami</a></li>
+                        <li><a href="{{ route('page.show', 'pedoman-media-siber') }}" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Pedoman Media Siber</a></li>
+                        <li><a href="{{ route('page.show', 'kebijakan-privasi') }}" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Kebijakan Privasi</a></li>
                     </ul>
                 </div>
             </div>
         </div>
 
         <div class="bg-slate-50 dark:bg-[#09090b] border-t border-slate-200 dark:border-zinc-800 py-6">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-center items-center gap-4">
                 <p class="text-xs font-medium">
                     &copy; {{ date('Y') }} Info Seputar +62. Seluruh hak cipta dilindungi.
                 </p>
-                <div class="flex items-center gap-6 text-xs font-medium">
-                    <a href="#" class="hover:text-slate-900 dark:hover:text-white transition-colors">Syarat & Ketentuan</a>
-                    <a href="#" class="hover:text-slate-900 dark:hover:text-white transition-colors">Data Pribadi</a>
-                </div>
             </div>
         </div>
     </footer>
@@ -445,6 +512,34 @@
         document.addEventListener('DOMContentLoaded', () => {
             const btn = document.getElementById('mobile-menu-btn');
             if(btn) btn.addEventListener('click', openSidebar);
+
+            // Real-Time Clock & Date in Indonesian
+            function updateClock() {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                
+                const clockEl = document.getElementById('local-clock');
+                if (clockEl) {
+                    clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+                }
+                
+                const dateEl = document.getElementById('local-date');
+                if (dateEl) {
+                    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                    
+                    const dayName = days[now.getDay()];
+                    const dayNum = now.getDate();
+                    const monthName = months[now.getMonth()];
+                    const year = now.getFullYear();
+                    
+                    dateEl.textContent = `${dayName}, ${dayNum} ${monthName} ${year}`;
+                }
+            }
+            setInterval(updateClock, 1000);
+            updateClock();
         });
 
         window.addEventListener('resize', () => {
