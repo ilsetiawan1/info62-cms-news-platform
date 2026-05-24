@@ -9,6 +9,16 @@ class Advertisement extends Model
 {
     use HasFactory;
 
+    protected static function booted()
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('active_ads');
+        });
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('active_ads');
+        });
+    }
+
     protected $fillable = [
         'title',
         'image_path',

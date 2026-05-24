@@ -9,6 +9,8 @@ Route::get('/', [\App\Http\Controllers\PublicController::class, 'index'])->name(
 Route::get('/search', [\App\Http\Controllers\PublicController::class, 'search'])->name('search');
 Route::get('/artikel/{slug}', [\App\Http\Controllers\PublicController::class, 'show'])->name('article.show');
 Route::get('/kategori/{slug}', [\App\Http\Controllers\PublicController::class, 'category'])->name('category.show');
+Route::get('/jaringan/{slug}', [\App\Http\Controllers\PublicController::class, 'network'])->name('jaringan.show');
+Route::get('/halaman/{slug}', [\App\Http\Controllers\PublicController::class, 'page'])->name('page.show');
 
 
 // ══════════════════════════════════════════════

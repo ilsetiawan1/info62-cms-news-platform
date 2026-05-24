@@ -28,11 +28,24 @@ class PublicController extends Controller
                 ->groupBy('position');
         });
 
+        $adLeftTop = $ads->get('sidebar_mid', collect())->first();
+        $adLeftBottom = $ads->get('article_mid', collect())->first();
+        $adRightTop = $ads->get('sidebar_top', collect())->first();
+        $adRightBottom = $ads->get('article_bottom', collect())->first();
+
+        // Share globally to prevent undefined variable errors in layout
+        view()->share([
+            'adLeftTop'      => $adLeftTop,
+            'adLeftBottom'   => $adLeftBottom,
+            'adRightTop'     => $adRightTop,
+            'adRightBottom'  => $adRightBottom,
+        ]);
+
         return [
-            'ads_sidebar_top'    => $ads->get('sidebar_top', collect())->first(),
-            'ads_sidebar_mid'    => $ads->get('sidebar_mid', collect())->first(),
-            'ads_article_mid'    => $ads->get('article_mid', collect())->first(),
-            'ads_article_bottom' => $ads->get('article_bottom', collect())->first(),
+            'adLeftTop'      => $adLeftTop,
+            'adLeftBottom'   => $adLeftBottom,
+            'adRightTop'     => $adRightTop,
+            'adRightBottom'  => $adRightBottom,
         ];
     }
 
@@ -264,5 +277,61 @@ class PublicController extends Controller
             'mostViewed' => $mostViewed,
             'latestSidebar' => $latestSidebar,
         ], $ads));
+    }
+
+    public function network(string $slug)
+    {
+        $networks = [
+            'yogyakarta' => 'Info Seputar Yogyakarta',
+            'football' => 'Info Seputar Football',
+            'fm' => 'Info Seputar FM',
+            'otomotif' => 'Info Seputar Otomotif',
+            'kuliner' => 'Info Seputar Kuliner',
+        ];
+        
+        if (!array_key_exists($slug, $networks)) {
+            abort(404);
+        }
+        
+        $name = $networks[$slug];
+        return view('public.coming-soon', compact('name'));
+    }
+
+    public function page(string $slug)
+    {
+        $pages = [
+            'tentang-kami' => [
+                'title' => 'Tentang Kami',
+                'content' => 'Info Seputar +62 adalah portal berita digital terdepan di Indonesia yang menyajikan informasi terkini, akurat, mendalam, dan terpercaya. Kami hadir untuk memenuhi kebutuhan informasi masyarakat dengan menyajikan berita yang berimbang, independen, dan objektif.'
+            ],
+            'pedoman-media-siber' => [
+                'title' => 'Pedoman Pemberitaan Media Siber',
+                'content' => 'Kemerdekaan berpendapat, kemerdekaan berekspresi, dan kemerdekaan pers adalah hak asasi manusia yang dilindungi Pancasila, Undang-Undang Dasar 1945, dan Deklarasi Universal Hak Asasi Manusia PBB. Kehadiran media siber di Indonesia juga merupakan bagian dari kemerdekaan berpendapat dan kemerdekaan pers tersebut.'
+            ],
+            'kebijakan-privasi' => [
+                'title' => 'Kebijakan Privasi',
+                'content' => 'Kebijakan Privasi ini mengatur cara portal berita Info Seputar +62 mengumpulkan, menggunakan, memelihara, dan mengungkapkan informasi yang dikumpulkan dari pengguna situs web kami. Kebijakan privasi ini berlaku untuk Situs dan semua produk serta layanan yang ditawarkan oleh Info Seputar +62.'
+            ]
+        ];
+
+        if (!array_key_exists($slug, $pages)) {
+            abort(404);
+        }
+
+        $page = $pages[$slug];
+        $now = now();
+        $navCategories = Category::whereNull('parent_id')->with('children')->get();
+        $tickerNews = Article::where('status', 'published')
+            ->where('published_at', '<=', $now)
+            ->latest('published_at')
+            ->limit(8)
+            ->get(['id', 'title', 'slug']);
+            
+        $ads = $this->getAds();
+
+        return view('public.static-page', array_merge(
+            compact('page', 'navCategories', 'tickerNews'),
+            $ads
+        ));
     }
 }
