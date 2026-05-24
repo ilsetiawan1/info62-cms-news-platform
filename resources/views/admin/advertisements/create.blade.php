@@ -27,10 +27,10 @@
                 <div>
                     <label class="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-1">Posisi</label>
                     <select name="position" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-white px-4 py-2">
-                        <option value="sidebar_top">Sidebar Kanan (Atas)</option>
-                        <option value="sidebar_mid">Sidebar Kiri (160x200)</option>
-                        <option value="article_mid">Tengah Konten (728x90)</option>
-                        <option value="article_bottom">Bawah Halaman / Footer</option>
+                        <option value="sidebar_mid">Iklan Sayap Kiri Atas (160x380)</option>
+                        <option value="article_mid">Iklan Sayap Kiri Bawah (160x204)</option>
+                        <option value="sidebar_top">Iklan Sayap Kanan Atas (160x204)</option>
+                        <option value="article_bottom">Iklan Sayap Kanan Bawah (160x380)</option>
                     </select>
                 </div>
                 <div>

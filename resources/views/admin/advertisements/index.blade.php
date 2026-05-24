@@ -34,7 +34,17 @@
                         <a href="{{ $ad->url ?? '#' }}" target="_blank" class="text-xs text-primary hover:underline truncate inline-block max-w-[200px]">{{ $ad->url ?? 'Tidak ada link' }}</a>
                     </td>
                     <td class="px-6 py-4">
-                        <span class="px-2.5 py-1 bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-300 rounded text-xs font-semibold">{{ Str::title(str_replace('_', ' ', $ad->position)) }}</span>
+                        @php
+                            $friendlyPositions = [
+                                'sidebar_mid' => 'Sayap Kiri Atas (160x380)',
+                                'article_mid' => 'Sayap Kiri Bawah (160x204)',
+                                'sidebar_top' => 'Sayap Kanan Atas (160x204)',
+                                'article_bottom' => 'Sayap Kanan Bawah (160x380)',
+                            ];
+                        @endphp
+                        <span class="px-2.5 py-1 bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-300 rounded text-xs font-semibold">
+                            {{ $friendlyPositions[$ad->position] ?? Str::title(str_replace('_', ' ', $ad->position)) }}
+                        </span>
                     </td>
                     <td class="px-6 py-4">
                         @if($ad->status === 'active')
