@@ -262,21 +262,24 @@ class ArticleFetcherService
         $cleanContent = strip_tags($content ?? '');
 
         return [
-            'title'      => $title ?? '',
-            'content'    => $cleanContent,
-            'excerpt'    => mb_substr(strip_tags($desc ?? ''), 0, 250),
-            'source_url' => $link,
-            'warning'    => 'Data diambil dari RSS feed (bukan halaman penuh). Judul dan konten mungkin tidak lengkap.',
+            'title'            => $title ?? '',
+            'content'          => $cleanContent,
+            'excerpt'          => mb_substr(strip_tags($desc ?? ''), 0, 250),
+            'source_url'       => $link,
+            'meta_title'       => $title ?? '',
+            'meta_description' => mb_substr(strip_tags($desc ?? ''), 0, 160),
+            'keywords'         => '',
+            'warning'          => 'Data diambil dari RSS feed (bukan halaman penuh). Judul dan konten mungkin tidak lengkap.',
         ];
     }
 
-private function getTagContent(\DOMElement $parent, string $tagName): string
-{
-    $tags = $parent->getElementsByTagName(
-        str_contains($tagName, ':') ? explode(':', $tagName)[1] : $tagName
-    );
-    return $tags->length ? trim($tags->item(0)->textContent ?? '') : '';
-}
+    private function getTagContent(\DOMElement $parent, string $tagName): string
+    {
+        $tags = $parent->getElementsByTagName(
+            str_contains($tagName, ':') ? explode(':', $tagName)[1] : $tagName
+        );
+        return $tags->length ? trim($tags->item(0)->textContent ?? '') : '';
+    }
 
     // ──────────────────────────────────────────────────────────
     // HTML PARSER
@@ -311,13 +314,54 @@ private function getTagContent(\DOMElement $parent, string $tagName): string
         $excerpt = $this->extractExcerpt($xpath, $contentRaw);
         $imageUrl = $this->extractImage($xpath);
 
+        $metaTitle = $this->extractMetaTitle($xpath);
+        $metaDescription = $this->extractMetaDescription($xpath);
+        $keywords = $this->extractKeywords($xpath);
+
         return [
-            'title'           => $title,
-            'content'         => $cleanContent,
-            'excerpt'         => $excerpt,
-            'cover_image_url' => $imageUrl,
-            'source_url'      => $url,
+            'title'            => $title,
+            'content'          => $cleanContent,
+            'excerpt'          => $excerpt,
+            'cover_image_url'  => $imageUrl,
+            'source_url'       => $url,
+            'meta_title'       => $metaTitle,
+            'meta_description' => $metaDescription,
+            'keywords'         => $keywords,
         ];
+    }
+
+    private function extractMetaTitle(DOMXPath $xpath): string
+    {
+        $nodes = $xpath->query('//title');
+        if ($nodes && $nodes->length > 0) {
+            return $this->cleanText($nodes->item(0)->nodeValue ?? '');
+        }
+        return '';
+    }
+
+    private function extractMetaDescription(DOMXPath $xpath): string
+    {
+        $selectors = [
+            '//meta[@name="description"]/@content',
+            '//meta[@property="og:description"]/@content',
+        ];
+
+        foreach ($selectors as $sel) {
+            $nodes = $xpath->query($sel);
+            if ($nodes && $nodes->length > 0) {
+                return $this->cleanText($nodes->item(0)->nodeValue ?? '');
+            }
+        }
+        return '';
+    }
+
+    private function extractKeywords(DOMXPath $xpath): string
+    {
+        $nodes = $xpath->query('//meta[@name="keywords"]/@content');
+        if ($nodes && $nodes->length > 0) {
+            return $this->cleanText($nodes->item(0)->nodeValue ?? '');
+        }
+        return '';
     }
 
     // ──────────────────────────────────────────────────────────
