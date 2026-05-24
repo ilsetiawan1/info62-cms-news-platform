@@ -15,7 +15,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        // Load categories with their parent and count of children
+        // Load categories with their parent and count of children using eager loading
         $categories = Category::with('parent')
             ->withCount('children')
             ->latest()
@@ -70,9 +70,6 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         // Get all categories EXCEPT the current one and its children (to prevent circular reference)
-        // We do a simple exclusion of itself. For full tree exclusion, a recursive function is needed,
-        // but for this scope, preventing itself as parent is the minimum requirement.
-        // Actually, let's also exclude direct children to be safer.
         $excludeIds = $category->children()->pluck('id')->push($category->id)->toArray();
         
         $categories = Category::whereNotIn('id', $excludeIds)->orderBy('name')->get();
@@ -119,7 +116,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Remove the specified category from storage.
+     * Reverse the specified category.
      */
     public function destroy(Category $category)
     {
