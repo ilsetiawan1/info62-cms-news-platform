@@ -10,6 +10,51 @@
     .ck.ck-editor {
         width: 100% !important;
     }
+    /* Batasan maksimal lebar pada .ck-content .image dan .ck-content .ck-media__wrapper sebesar 100% agar tidak overflow */
+    .ck-content .image,
+    .ck-content .ck-media__wrapper {
+        max-width: 100% !important;
+    }
+    /* Rule CSS agar secara default video embed (iframe) memiliki max-width 700px dan terpusat (margin: auto) */
+    .ck-content .ck-media__wrapper iframe {
+        max-width: 700px !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+
+    /* ==================================================================
+       CSS ANTI-SCROLL: MEMBUAT MEDIA MINI KHUSUS DI SISI EDITOR ADMIN 
+       ================================================================== */
+
+    /* 1. Otomatis kecilkan kontainer VIDEO YouTube di dalam area edit admin */
+    .ck-editor__editable .ck-media__wrapper {
+        max-width: 450px !important; /* Dikunci mini agar admin nyaman melihat form lain */
+        margin: 15px 0 !important;   /* Rata kiri serasi dengan teks, beri jarak atas bawah */
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* Memastikan iframe video di dalam kontainer mini ikut presisi 100% dari 450px */
+    .ck-editor__editable .ck-media__wrapper iframe {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 9;
+    }
+
+    /* 2. Otomatis kecilkan FOTO yang di-paste/diupload di dalam area edit admin */
+    .ck-editor__editable .image img {
+        max-width: 350px !important; /* Foto otomatis dibuat berukuran mini di admin */
+        height: auto !important;
+        margin: 10px 0 !important;   /* Rata kiri bersama teks */
+        border-radius: 6px;
+    }
+
+    /* Mengatur agar block widget pembungkus foto dari CKEditor tidak memakan space lebar */
+    .ck-editor__editable .ck-widget.image {
+        max-width: 350px !important;
+    }
 </style>
 
 <div x-data="{
@@ -125,6 +170,101 @@
         } finally {
             this.loading = false;
         }
+    },
+
+    importXml(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const text = e.target.result;
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(text, 'text/xml');
+                
+                const parserError = xmlDoc.getElementsByTagName('parsererror');
+                if (parserError.length > 0) {
+                    alert('Format file XML tidak valid atau rusak.');
+                    return;
+                }
+
+                // Cari elemen item (RSS) atau entry (Atom) atau root
+                let itemNode = xmlDoc.getElementsByTagName('item')[0] 
+                            || xmlDoc.getElementsByTagName('entry')[0] 
+                            || xmlDoc.documentElement;
+
+                if (!itemNode) {
+                    alert('Tidak dapat menemukan artikel/item berita di dalam XML.');
+                    return;
+                }
+
+                const getTagValue = (node, tagName) => {
+                    let elements = node.getElementsByTagName(tagName);
+                    if (elements.length === 0 && tagName.includes(':')) {
+                        const localName = tagName.split(':')[1];
+                        elements = node.getElementsByTagName(localName);
+                    }
+                    if (elements.length > 0) {
+                        return elements[0].textContent || '';
+                    }
+                    return '';
+                };
+
+                const title = getTagValue(itemNode, 'title');
+                const excerpt = getTagValue(itemNode, 'description') || getTagValue(itemNode, 'summary') || getTagValue(itemNode, 'excerpt') || '';
+                
+                let content = getTagValue(itemNode, 'content:encoded') 
+                           || getTagValue(itemNode, 'content') 
+                           || getTagValue(itemNode, 'description') 
+                           || '';
+
+                const sourceUrl = getTagValue(itemNode, 'link') 
+                               || getTagValue(itemNode, 'guid') 
+                               || '';
+
+                const metaTitle = getTagValue(itemNode, 'meta_title') || title;
+                const metaDescription = getTagValue(itemNode, 'meta_description') || (excerpt.substring(0, 160));
+                const keywords = getTagValue(itemNode, 'keywords') || '';
+
+                const titleEl = document.getElementById('title');
+                if (titleEl) {
+                    titleEl.value = title;
+                    titleEl.dispatchEvent(new Event('input'));
+                }
+
+                const excerptEl = document.getElementById('excerpt');
+                if (excerptEl) excerptEl.value = excerpt;
+
+                const sourceUrlEl = document.getElementById('source_url');
+                if (sourceUrlEl) sourceUrlEl.value = sourceUrl;
+
+                const metaTitleEl = document.getElementById('meta_title');
+                if (metaTitleEl) metaTitleEl.value = metaTitle;
+
+                const metaDescEl = document.getElementById('meta_description');
+                if (metaDescEl) metaDescEl.value = metaDescription;
+
+                const keywordsEl = document.getElementById('keywords');
+                if (keywordsEl) keywordsEl.value = keywords;
+
+                if (window.editorInstance) {
+                    window.editorInstance.setData(content);
+                } else {
+                    const contentEl = document.getElementById('content');
+                    if (contentEl) contentEl.value = content;
+                }
+
+                alert('Berhasil mengimpor data dari file XML!');
+
+            } catch (err) {
+                console.error(err);
+                alert('Terjadi kesalahan saat menguraikan XML: ' + err.message);
+            } finally {
+                event.target.value = '';
+            }
+        };
+        reader.readAsText(file);
     }
 }">
 
@@ -145,6 +285,16 @@
                 </svg>
                 <span x-text="scrapingMode ? '✓ Mode Scraping Aktif' : 'Scraping Article'"></span>
             </button>
+
+            <!-- Import XML Button -->
+            <label class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold bg-white text-slate-700 border-gray-200 hover:bg-slate-50 transition-all duration-200 focus:outline-none">
+                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                <span>Import XML</span>
+                <input type="file" accept=".xml" class="hidden" @change="importXml($event)">
+            </label>
+
             <a href="{{ route('articles.index') }}"
                class="inline-flex items-center px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 transition-all">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -512,8 +662,41 @@ document.addEventListener('DOMContentLoaded', function () {
             toolbar: [
                 'heading', '|',
                 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
-                'insertTable', 'mediaEmbed', 'undo', 'redo'
+                'insertTable', 'mediaEmbed', 'imageUpload', '|',
+                'imageTextAlternative', 'toggleImageCaption', 'imageStyle:inline', 'imageStyle:block', 'imageStyle:side', '|',
+                'undo', 'redo'
             ],
+            image: {
+                resizeOptions: [
+                    {
+                        name: 'resizeImage:original',
+                        label: 'Original',
+                        value: null
+                    },
+                    {
+                        name: 'resizeImage:25',
+                        label: '25%',
+                        value: '25'
+                    },
+                    {
+                        name: 'resizeImage:50',
+                        label: '50%',
+                        value: '50'
+                    },
+                    {
+                        name: 'resizeImage:75',
+                        label: '75%',
+                        value: '75'
+                    }
+                ],
+                toolbar: [
+                    'imageStyle:inline', 'imageStyle:block', 'imageStyle:side',
+                    '|',
+                    'toggleImageCaption', 'imageTextAlternative',
+                    '|',
+                    'resizeImage:25', 'resizeImage:50', 'resizeImage:75', 'resizeImage:original'
+                ]
+            },
             mediaEmbed: {
                 previewsInData: true
             }
