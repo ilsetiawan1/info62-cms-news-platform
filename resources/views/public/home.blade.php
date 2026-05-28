@@ -81,11 +81,11 @@
             @endif
             @endif
 
-            {{-- In-Content Ad for Mobile/Tablet (article_mid) --}}
-            @if(isset($adLeftBottom) && $adLeftBottom)
-            <div class="2xl:hidden mb-8">
-                <a href="{{ $adLeftBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm">
-                    <img src="{{ $adLeftBottom->image_url }}" alt="{{ $adLeftBottom->title }}" class="w-full h-[120px] sm:h-[180px] object-cover">
+            {{-- Mobile/Tablet Ad Top (sidebar_mid) --}}
+            @if(isset($adLeftTop) && $adLeftTop)
+            <div class="lg:hidden mb-6 w-full flex justify-center">
+                <a href="{{ $adLeftTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[728px] h-[90px] sm:h-[120px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
+                    <img src="{{ $adLeftTop->image_url }}" alt="{{ $adLeftTop->title }}" class="w-full h-full object-contain mx-auto">
                 </a>
             </div>
             @endif
@@ -118,6 +118,15 @@
                 </a>
                 @endforeach
             </div>
+
+            {{-- Mobile/Tablet Ad Mid (article_mid) --}}
+            @if(isset($adLeftBottom) && $adLeftBottom)
+            <div class="lg:hidden my-6 w-full flex justify-center">
+                <a href="{{ $adLeftBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[728px] h-[90px] sm:h-[120px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
+                    <img src="{{ $adLeftBottom->image_url }}" alt="{{ $adLeftBottom->title }}" class="w-full h-full object-contain mx-auto">
+                </a>
+            </div>
+            @endif
 
             {{-- Divider --}}
             <div class="my-8 border-b border-slate-200/60 dark:border-slate-800/50"></div>
@@ -160,11 +169,11 @@
         {{-- ===== SIDEBAR KANAN (col-span-12 → md:4 → lg:4) ===== --}}
         <aside class="col-span-12 md:col-span-4 lg:col-span-4">
             <div class="md:sticky md:top-24 space-y-6">
-                {{-- Sidebar Ad for Mobile/Tablet/Standard Desktop (sidebar_top) --}}
+                {{-- Mobile/Tablet Sidebar Ad Top (sidebar_top) --}}
                 @if(isset($adRightTop) && $adRightTop)
-                <div class="2xl:hidden bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden p-3 shadow-sm">
-                    <a href="{{ $adRightTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full rounded-xl overflow-hidden">
-                        <img src="{{ $adRightTop->image_url }}" alt="{{ $adRightTop->title }}" class="w-full h-auto max-h-[250px] object-cover">
+                <div class="lg:hidden w-full flex justify-center">
+                    <a href="{{ $adRightTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[728px] h-[90px] sm:h-[120px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
+                        <img src="{{ $adRightTop->image_url }}" alt="{{ $adRightTop->title }}" class="w-full h-full object-contain mx-auto">
                     </a>
                 </div>
                 @endif
@@ -229,6 +238,15 @@
                         @endforeach
                     </div>
                 </div>
+
+                {{-- Mobile/Tablet Sidebar Ad Bottom (article_bottom) --}}
+                @if(isset($adRightBottom) && $adRightBottom)
+                <div class="lg:hidden w-full flex justify-center">
+                    <a href="{{ $adRightBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[728px] h-[90px] sm:h-[120px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
+                        <img src="{{ $adRightBottom->image_url }}" alt="{{ $adRightBottom->title }}" class="w-full h-full object-contain mx-auto">
+                    </a>
+                </div>
+                @endif
 
             </div>
         </aside>

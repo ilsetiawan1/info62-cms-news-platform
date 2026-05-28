@@ -182,8 +182,8 @@
     <div id="reading-progress"></div>
     <div class="relative w-full">
         {{-- ==================== IKLAN SAYAP KIRI BERTINGKAT (SINKRON ADMIN) ==================== --}}
-        <div class="hidden 2xl:block absolute top-0 bottom-0 pointer-events-none" style="left: calc(50% - 780px); width: 160px; z-index: 99;">
-            <div class="hidden 2xl:flex wing-ad" style="position: sticky; top: 145px; width: 160px; height: 600px; z-index: 999; flex-direction: column; gap: 16px; pointer-events: auto;">
+        <div class="hidden lg:block absolute top-0 bottom-0 pointer-events-none" style="left: calc(50% - 780px); width: 160px; z-index: 99;">
+            <div class="hidden lg:flex wing-ad" style="position: sticky; top: 145px; width: 160px; height: 600px; z-index: 999; flex-direction: column; gap: 16px; pointer-events: auto;">
                 {{-- Slot Kiri Atas (Tinggi 380px -> position: sidebar_top) --}}
                 <div class="shadow-md" style="width: 100%; height: 380px; border-radius: 0.75rem; background-color: #fee2e2; border: 1px dashed #fca5a5; display: flex; flex-direction: column; overflow: hidden;">
                     @if(isset($adLeftTop) && $adLeftTop)
@@ -215,8 +215,8 @@
         </div>
 
         {{-- ==================== IKLAN SAYAP KANAN BERTINGKAT (SINKRON ADMIN) ==================== --}}
-        <div class="hidden 2xl:block absolute top-0 bottom-0 pointer-events-none" style="right: calc(50% - 780px); width: 160px; z-index: 99;">
-            <div class="hidden 2xl:flex wing-ad" style="position: sticky; top: 145px; width: 160px; height: 600px; z-index: 999; flex-direction: column; gap: 16px; pointer-events: auto;">
+        <div class="hidden lg:block absolute top-0 bottom-0 pointer-events-none" style="right: calc(50% - 780px); width: 160px; z-index: 99;">
+            <div class="hidden lg:flex wing-ad" style="position: sticky; top: 145px; width: 160px; height: 600px; z-index: 999; flex-direction: column; gap: 16px; pointer-events: auto;">
                 {{-- Slot Kanan Atas (Tinggi 204px -> position: sidebar_mid) --}}
                 <div class="shadow-md" style="width: 100%; height: 204px; border-radius: 0.75rem; background-color: #eff6ff; border: 1px dashed #bfdbfe; display: flex; flex-direction: column; overflow: hidden;">
                     @if(isset($adRightTop) && $adRightTop)
@@ -404,10 +404,10 @@
 
         <!-- ===== HEADER ADVERTISEMENT ===== -->
         @if(isset($adHeader) && $adHeader)
-            <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+            <div class="lg:hidden max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-4">
                 <div class="w-full flex justify-center">
-                    <a href="{{ $adHeader->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[970px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <img src="{{ $adHeader->image_url }}" alt="{{ $adHeader->title }}" class="w-full h-[60px] sm:h-[90px] object-cover">
+                    <a href="{{ $adHeader->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[728px] h-[90px] sm:h-[120px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
+                        <img src="{{ $adHeader->image_url }}" alt="{{ $adHeader->title }}" class="w-full h-full object-contain mx-auto">
                     </a>
                 </div>
             </div>
