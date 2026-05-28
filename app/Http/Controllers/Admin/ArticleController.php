@@ -22,6 +22,7 @@ class ArticleController extends Controller
     public function index(Request $request)
     {
         $status = $request->input('status', 'all');
+        $sortBy = $request->input('sort', 'date');
 
         if ($status === 'trash') {
             $query = Article::onlyTrashed()->with(['category.parent', 'author']);
@@ -36,7 +37,13 @@ class ArticleController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $articles = $query->latest('updated_at')->paginate(10)->withQueryString();
+        if ($sortBy === 'title') {
+            $query->orderBy('title', 'asc');
+        } else {
+            $query->orderBy('updated_at', 'desc');
+        }
+
+        $articles = $query->paginate(10)->withQueryString();
 
         $counts = [
             'all'       => Article::count(),
@@ -46,7 +53,7 @@ class ArticleController extends Controller
             'trash'     => Article::onlyTrashed()->count(),
         ];
 
-        return view('admin.articles.index', compact('articles', 'status', 'counts'));
+        return view('admin.articles.index', compact('articles', 'status', 'counts', 'sortBy'));
     }
 
     // ─────────────────────────────────────────────────────────

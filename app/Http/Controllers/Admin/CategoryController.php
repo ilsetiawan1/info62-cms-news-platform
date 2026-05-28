@@ -16,9 +16,16 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $sortBy = $request->input('sort', 'date');
 
         $query = Category::whereNull('parent_id')
-            ->with('children')
+            ->with(['children' => function($q) use ($sortBy) {
+                if ($sortBy === 'name') {
+                    $q->orderBy('name', 'asc');
+                } else {
+                    $q->orderBy('created_at', 'desc');
+                }
+            }])
             ->withCount('children');
 
         if ($search) {
@@ -30,9 +37,15 @@ class CategoryController extends Controller
             });
         }
 
-        $categories = $query->latest()->paginate(10)->withQueryString();
+        if ($sortBy === 'name') {
+            $query->orderBy('name', 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $categories = $query->paginate(10)->withQueryString();
             
-        return view('admin.categories.index', compact('categories'));
+        return view('admin.categories.index', compact('categories', 'sortBy'));
     }
 
     /**
