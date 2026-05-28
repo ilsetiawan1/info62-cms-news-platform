@@ -98,14 +98,19 @@
                     </div>
 
                     <!-- Left Sidebar -->
-                    <div class="col-span-3 bg-slate-50 dark:bg-slate-800 rounded p-1.5 border border-slate-200 dark:border-slate-700 flex flex-col gap-1.5">
+                    <div id="preview-col-left" class="col-span-3 bg-slate-50 dark:bg-slate-800 rounded p-1.5 border border-slate-200 dark:border-slate-700 flex flex-col gap-1.5">
                         <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded w-2/3"></div>
                         <div class="h-1 bg-slate-100 dark:bg-slate-700 rounded w-full"></div>
                         <div class="h-1 bg-slate-100 dark:bg-slate-700 rounded w-full"></div>
                     </div>
 
                     <!-- Middle Main Content -->
-                    <div class="col-span-6 bg-slate-50/50 dark:bg-slate-800/40 rounded p-1.5 border border-slate-200/60 dark:border-slate-700/60 flex flex-col gap-2">
+                    <div id="preview-col-main" class="col-span-6 bg-slate-50/50 dark:bg-slate-800/40 rounded p-1.5 border border-slate-200/60 dark:border-slate-700/60 flex flex-col gap-2">
+                        <!-- Inline Content Ads Top on Mobile/Tablet -->
+                        <div id="preview-inline-top" class="preview-slot h-6 bg-slate-50 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded flex items-center justify-center text-[6px] text-center p-0.5 transition-all duration-300 hidden">
+                            <span>IN-CONTENT (KIRI TOP)</span>
+                        </div>
+
                         <!-- Featured Slider -->
                         <div class="h-10 bg-slate-200 dark:bg-slate-700 rounded flex items-center justify-center">
                             <span class="text-[7px]">Konten</span>
@@ -128,9 +133,9 @@
                     </div>
 
                     <!-- Right Sidebar -->
-                    <div class="col-span-3 bg-slate-50 dark:bg-slate-800 rounded p-1.5 border border-slate-200 dark:border-slate-700 flex flex-col gap-1.5">
+                    <div id="preview-col-right" class="col-span-3 bg-slate-50 dark:bg-slate-800 rounded p-1.5 border border-slate-200 dark:border-slate-700 flex flex-col gap-1.5">
                         <!-- Sidebar Top Ad -->
-                        <div id="preview-sidebar_top" class="preview-slot h-8 bg-slate-50 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded flex items-center justify-center text-[6px] text-center p-0.5 transition-all duration-300">
+                        <div id="preview-sidebar_top" class="preview-slot h-8 bg-slate-50 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded flex items-center justify-center text-[6px] text-center p-0.5 transition-all duration-300 hidden">
                             <span>SIDEBAR TOP</span>
                         </div>
                         <div class="h-1.5 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
@@ -211,6 +216,7 @@
             highlight('preview-header');
         } else if (pos === 'sidebar_mid') {
             highlight('preview-sidebar_mid');
+            highlight('preview-inline-top');
         } else if (pos === 'article_mid') {
             highlight('preview-article_mid');
             highlight('preview-inline-mid');
@@ -224,42 +230,72 @@
     }
     
     function toggleMockView(mode) {
-        const desktopBtn = document.getElementById('btn-mock-desktop');
-        const mobileBtn = document.getElementById('btn-mock-mobile');
-        
-        // Slots that are shown on desktop only (wings)
-        const leftWing = document.getElementById('preview-sidebar_mid').parentElement;
-        const rightWing = document.getElementById('preview-right_wing_top').parentElement;
-        
-        // Slots that show inline on mobile
-        const inlineMid = document.getElementById('preview-inline-mid');
-        const inlineBottom = document.getElementById('preview-inline-bottom');
-        
-        if (mode === 'desktop') {
-            desktopBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white shadow-sm border border-transparent';
-            mobileBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-750 hover:bg-slate-50 dark:hover:bg-slate-750';
+        console.log("toggleMockView called with mode:", mode);
+        try {
+            const desktopBtn = document.getElementById('btn-mock-desktop');
+            const mobileBtn = document.getElementById('btn-mock-mobile');
             
-            // Show wings
-            leftWing.classList.remove('hidden');
-            rightWing.classList.remove('hidden');
+            // Slots that are shown on desktop only (wings)
+            const leftWing = document.getElementById('preview-sidebar_mid').parentElement;
+            const rightWing = document.getElementById('preview-right_wing_top').parentElement;
             
-            // Hide inline mobile slots
-            inlineMid.classList.add('hidden');
-            inlineBottom.classList.add('hidden');
-        } else {
-            mobileBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white shadow-sm border border-transparent';
-            desktopBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-750 hover:bg-slate-50 dark:hover:bg-slate-750';
+            // Slots that show inline/sidebar on mobile
+            const inlineTop = document.getElementById('preview-inline-top');
+            const inlineMid = document.getElementById('preview-inline-mid');
+            const inlineBottom = document.getElementById('preview-inline-bottom');
+            const sidebarTop = document.getElementById('preview-sidebar_top');
             
-            // Hide wings
-            leftWing.classList.add('hidden');
-            rightWing.classList.add('hidden');
+            // Mock columns
+            const colLeft = document.getElementById('preview-col-left');
+            const colMain = document.getElementById('preview-col-main');
+            const colRight = document.getElementById('preview-col-right');
             
-            // Show inline mobile slots
-            inlineMid.classList.remove('hidden');
-            inlineBottom.classList.remove('hidden');
+            console.log("Elements found:", {leftWing, rightWing, inlineTop, inlineMid, inlineBottom, sidebarTop, colLeft, colMain, colRight});
+
+            if (mode === 'desktop') {
+                desktopBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white shadow-sm border border-transparent';
+                mobileBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-750 hover:bg-slate-50 dark:hover:bg-slate-750';
+                
+                // Show wings
+                leftWing.classList.remove('hidden');
+                rightWing.classList.remove('hidden');
+                
+                // Hide mobile slots
+                inlineTop.classList.add('hidden');
+                inlineMid.classList.add('hidden');
+                inlineBottom.classList.add('hidden');
+                sidebarTop.classList.add('hidden');
+                
+                // Reset columns for desktop
+                colLeft.classList.remove('hidden');
+                colLeft.style.gridColumn = "span 3 / span 3";
+                colMain.style.gridColumn = "span 6 / span 6";
+                colRight.style.gridColumn = "span 3 / span 3";
+            } else {
+                mobileBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white shadow-sm border border-transparent';
+                desktopBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-750 hover:bg-slate-50 dark:hover:bg-slate-750';
+                
+                // Hide wings
+                leftWing.classList.add('hidden');
+                rightWing.classList.add('hidden');
+                
+                // Show mobile slots
+                inlineTop.classList.remove('hidden');
+                inlineMid.classList.remove('hidden');
+                inlineBottom.classList.remove('hidden');
+                sidebarTop.classList.remove('hidden');
+                
+                // Adjust columns for mobile/tablet
+                colLeft.classList.add('hidden');
+                colMain.style.gridColumn = "span 12 / span 12";
+                colRight.style.gridColumn = "span 12 / span 12";
+                console.log("Applied mobile spans to columns. Main:", colMain.style.gridColumn, "Right:", colRight.style.gridColumn);
+            }
+            
+            updateWireframeHighlight();
+        } catch (e) {
+            console.error("Error in toggleMockView:", e);
         }
-        
-        updateWireframeHighlight();
     }
     
     document.addEventListener('DOMContentLoaded', () => {
