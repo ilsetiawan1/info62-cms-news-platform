@@ -15,7 +15,7 @@
 
         {{-- ===== SIDEBAR KIRI (3 cols, desktop only) ===== --}}
         <aside class="hidden lg:block lg:col-span-3">
-            <div class="sticky top-24 space-y-6">
+            <div class="sticky top-[136px] flex flex-col gap-6">
 
                 {{-- Author info --}}
                 <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
@@ -31,19 +31,97 @@
                     </div>
                 </div>
 
-                {{-- Categories nav --}}
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-                    <h3 class="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Kategori</h3>
-                    <ul class="space-y-1">
-                        @foreach($navCategories->take(7) as $cat)
-                        <li>
-                            <a href="{{ route('category.show', $cat->slug) }}"
-                               class="block px-3 py-2 rounded-xl text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-sky-400 transition-colors {{ $cat->id === $article->category->id ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-sky-400 font-semibold' : '' }}">
-                                {{ $cat->name }}
-                            </a>
-                        </li>
-                        @endforeach
-                    </ul>
+                {{-- Prakiraan Cuaca +62 --}}
+                <div class="bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-slate-800 dark:to-slate-900 rounded-2xl border border-blue-100 dark:border-slate-700 p-4 text-white shadow-md relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 opacity-10">
+                        <svg class="w-24 h-24 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75zM6.16 5.1a.75.75 0 0 1 1.06 0l1.59 1.59a.75.75 0 1 1-1.06 1.06L6.16 6.16a.75.75 0 0 1 0-1.06zm11.68 0a.75.75 0 0 1 0 1.06l-1.59 1.59a.75.75 0 1 1-1.06-1.06l1.59-1.59a.75.75 0 0 1 1.06 0zM12 5.25a6.75 6.75 0 1 0 6.75 6.75A6.75 6.75 0 0 0 12 5.25zM3 12a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12zm15 0a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5h-2.25A.75.75 0 0 1 18 12zm-11.84 5.25a.75.75 0 0 1 1.06 0l1.59 1.59a.75.75 0 1 1-1.06 1.06l-1.59-1.59a.75.75 0 0 1 0-1.06zm9.68 0a.75.75 0 0 1 0 1.06l-1.59 1.59a.75.75 0 1 1-1.06-1.06l1.59-1.59a.75.75 0 0 1 1.06 0zM12 18.75a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V19.5a.75.75 0 0 1 .75-.75z"/></svg>
+                    </div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[10px] font-black tracking-wider uppercase text-blue-100/90">Cuaca Nusantara</span>
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-medium bg-white/20 text-white backdrop-blur-sm">Live</span>
+                    </div>
+                    <div class="space-y-3" x-data="{ 
+                        cities: [
+                            { name: 'Jakarta', temp: '32°C', desc: 'Cerah Berawan', icon: '⛅' },
+                            { name: 'Surabaya', temp: '34°C', desc: 'Cerah', icon: '☀️' },
+                            { name: 'Bandung', temp: '25°C', desc: 'Hujan Ringan', icon: '🌧️' },
+                            { name: 'Medan', temp: '30°C', desc: 'Berawan', icon: '☁️' }
+                        ],
+                        activeIdx: 0,
+                        init() {
+                            setInterval(() => {
+                                this.activeIdx = (this.activeIdx + 1) % this.cities.length;
+                            }, 5000);
+                        }
+                    }">
+                        <div class="bg-white/10 dark:bg-slate-900/40 rounded-xl p-3 backdrop-blur-sm transition-all duration-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-sm font-extrabold tracking-tight" x-text="cities[activeIdx].name">Jakarta</h4>
+                                    <p class="text-[11px] text-blue-100/80" x-text="cities[activeIdx].desc">Cerah Berawan</p>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-2xl font-black" x-text="cities[activeIdx].temp">32°C</div>
+                                    <div class="text-lg" x-text="cities[activeIdx].icon">⛅</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Trivia Nusantara --}}
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm relative overflow-hidden" x-data="{
+                    facts: [
+                        'Indonesia memiliki garis pantai terpanjang kedua di dunia setelah Kanada, membentang lebih dari 54.000 kilometer.',
+                        'Komodo adalah kadal terbesar dan terberat di dunia yang masih hidup, dan hanya dapat ditemukan di habitat aslinya di NTT, Indonesia.',
+                        'Candi Borobudur di Magelang, Jawa Tengah, merupakan candi Buddha terbesar di dunia dan salah satu monumen Buddha terbesar di bumi.',
+                        'Indonesia adalah negara kepulauan terbesar di dunia, dengan jumlah pulau mencapai lebih dari 17.000 pulau resmi.',
+                        'Danau Toba di Sumatera Utara merupakan danau vulkanik terbesar di dunia, terbentuk dari letusan supervolcano dahsyat ribuan tahun lalu.',
+                        'Rafflesia arnoldii, bunga tunggal terbesar di dunia dengan diameter mencapai 1 meter, tumbuh di hutan hujan Sumatra.',
+                        'Puncak Jaya di Papua adalah salah satu dari sedikit tempat di dekat garis khatulistiwa yang memiliki gletser es abadi.',
+                        'Indonesia merupakan salah satu negara megabiodiversitas terbesar, menampung sekitar 10-15% dari seluruh spesies tumbuhan, mamalia, dan burung di dunia.',
+                        'Garis imajiner Wallace membagi fauna Indonesia menjadi tipe Asiatis di bagian barat dan tipe Australis di bagian timur.',
+                        'Indonesia memiliki lebih dari 700 bahasa daerah aktif, menjadikannya salah satu negara dengan keragaman bahasa terbanyak di dunia.'
+                    ],
+                    factIdx: 0,
+                    init() {
+                        setInterval(() => {
+                            this.factIdx = (this.factIdx + 1) % this.facts.length;
+                        }, 12000);
+                    }
+                }">
+                    <div class="flex items-center justify-between mb-2 pb-2 border-b border-slate-100 dark:border-slate-700/50">
+                        <div class="flex items-center gap-2">
+                            <span class="text-red-500 text-sm">💡</span>
+                            <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Fakta Nusantara</h3>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <button @click="factIdx = (factIdx - 1 + facts.length) % facts.length" 
+                                    class="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-700 transition-colors"
+                                    aria-label="Fakta sebelumnya">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                            </button>
+                            <button @click="factIdx = (factIdx + 1) % facts.length" 
+                                    class="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-700 transition-colors"
+                                    aria-label="Fakta berikutnya">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-[12px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium transition-all duration-500 min-h-[72px]" x-text="facts[factIdx]">
+                        Indonesia memiliki garis pantai terpanjang kedua di dunia setelah Kanada, membentang lebih dari 54.000 kilometer.
+                    </p>
+                </div>
+
+                {{-- Waktu & Hari Lokal --}}
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 text-center shadow-sm">
+                    <h3 class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Waktu Lokal</h3>
+                    <div id="local-clock" class="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">00:00:00</div>
+                    <div id="local-date" class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-medium">---</div>
                 </div>
 
             </div>
@@ -185,7 +263,7 @@
 
         {{-- ===== SIDEBAR KANAN (3 cols) ===== --}}
         <aside class="col-span-12 md:col-span-4 lg:col-span-3">
-            <div class="md:sticky md:top-24 space-y-6">
+            <div class="md:sticky md:top-[136px] flex flex-col gap-6">
                 {{-- Mobile/Tablet Sidebar Ad Top (sidebar_top) --}}
                 @if(isset($adRightTop) && $adRightTop)
                 <div class="lg:hidden w-full flex justify-center">
