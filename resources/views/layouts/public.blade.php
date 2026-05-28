@@ -309,14 +309,14 @@
                 </div>
             </div>
 
-            <!-- Bottom row: Horizontal Scrollable Categories -->
+            <!-- Bottom row: Categories (Horizontal scroll on desktop, Dropdown select on mobile) -->
             <div class="border-t border-slate-100 dark:border-slate-800/50">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <nav class="flex items-center overflow-x-auto hide-scrollbar py-2.5 gap-1">
+                    <!-- Desktop & Tablet Category Navigation (horizontal scroll) -->
+                    <nav class="hidden md:flex items-center overflow-x-auto hide-scrollbar py-2.5 gap-1">
                         <a href="{{ route('home') }}" class="flex-shrink-0 px-4 py-1.5 rounded-full text-[13px] font-bold tracking-wide transition-all whitespace-nowrap {{ request()->routeIs('home') && !request('cat') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">Semua</a>
 
                         @foreach($navCategories as $cat)
-                            {{-- Desktop: hover mega-menu. Mobile: plain link --}}
                             <div class="desktop-cat-item flex-shrink-0">
                                 <a href="{{ route('category.show', $cat->slug) }}"
                                    class="flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold tracking-wide transition-all whitespace-nowrap
@@ -325,7 +325,6 @@
                                 </a>
 
                                 @if($cat->children->isNotEmpty())
-                                {{-- Dropdown: pure CSS hover, NO display:none --}}
                                 <div class="desktop-cat-dropdown">
                                     <div class="dropdown-card">
                                         <a href="{{ route('category.show', $cat->slug) }}">Semua {{ $cat->name }}</a>
@@ -338,6 +337,57 @@
                             </div>
                         @endforeach
                     </nav>
+
+                    <!-- Mobile Category Navigation (Dropdown Select Menu) -->
+                    <div class="md:hidden py-2" x-data="{ openCatDropdown: false }">
+                        <div class="flex items-center justify-between gap-2 relative">
+                            <a href="{{ route('home') }}" class="px-4 py-1.5 rounded-full text-[13px] font-bold tracking-wide transition-all whitespace-nowrap {{ request()->routeIs('home') && !request('cat') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 bg-slate-100/50 dark:bg-slate-800/40' }}">Semua</a>
+                            
+                            @php
+                                $activeCatName = 'Pilih Kategori';
+                                foreach ($navCategories as $cat) {
+                                    if (request()->is('kategori/'.$cat->slug.'*')) {
+                                        $activeCatName = $cat->name;
+                                        break;
+                                    }
+                                }
+                            @endphp
+
+                            <button @click="openCatDropdown = !openCatDropdown" class="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[13px] font-bold bg-slate-950 text-white dark:bg-sky-500 transition-all select-none">
+                                <span>{{ $activeCatName }}</span>
+                                <svg class="w-4 h-4 transition-transform duration-300" :class="openCatDropdown ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                        </div>
+
+                        <!-- Dropdown list -->
+                        <div x-show="openCatDropdown" 
+                             @click.away="openCatDropdown = false"
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="transform opacity-0 scale-95"
+                             x-transition:enter-end="transform opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="transform opacity-100 scale-100"
+                             x-transition:leave-end="transform opacity-0 scale-95"
+                             class="absolute left-4 right-4 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl overflow-hidden divide-y divide-slate-100 dark:divide-slate-700/50 z-[110]"
+                             style="display: none;">
+                            @foreach($navCategories as $cat)
+                                <div class="px-2 py-1 bg-white dark:bg-slate-800">
+                                    <a href="{{ route('category.show', $cat->slug) }}" class="block px-4 py-2 text-sm font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-xl">
+                                        {{ $cat->name }}
+                                    </a>
+                                    @if($cat->children->isNotEmpty())
+                                        <div class="pl-4 pb-1 space-y-1">
+                                            @foreach($cat->children as $child)
+                                                <a href="{{ route('category.show', $child->slug) }}" class="block px-4 py-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-sky-400">
+                                                    ↳ {{ $child->name }}
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>

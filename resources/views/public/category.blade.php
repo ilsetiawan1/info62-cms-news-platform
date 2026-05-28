@@ -88,26 +88,35 @@
             @endif
 
             {{-- Article list --}}
-            <div class="divide-y divide-slate-100 dark:divide-slate-800">
-                @foreach(($articles->currentPage() === 1 ? $articles->skip(1) : $articles) as $art)
-                <a href="{{ route('article.show', $art->slug) }}" class="group flex gap-4 py-4">
-                    <div class="w-24 h-[70px] flex-shrink-0 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        @if($art->cover_image)
-                        <img src="{{ $art->cover_image_url }}" alt="{{ $art->title }}"
-                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
-                        @endif
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="text-[10px] font-bold text-blue-600 dark:text-sky-400 uppercase tracking-wider">{{ $art->category->name }}</span>
-                            <span class="text-[10px] text-slate-400 dark:text-slate-500">{{ $art->published_at?->format('d M Y') }}</span>
+            <div class="grid grid-cols-12 gap-4 md:block">
+                <div class="col-span-8 sm:col-span-9 md:col-span-12 divide-y divide-slate-100 dark:divide-slate-800">
+                    @foreach(($articles->currentPage() === 1 ? $articles->skip(1) : $articles) as $art)
+                    <a href="{{ route('article.show', $art->slug) }}" class="group flex gap-4 py-4 first:pt-0">
+                        <div class="w-24 h-[70px] flex-shrink-0 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                            @if($art->cover_image)
+                            <img src="{{ $art->cover_image_url }}" alt="{{ $art->title }}"
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                            @endif
                         </div>
-                        <h3 class="text-[14px] font-semibold text-slate-900 dark:text-slate-100 leading-[1.4] tracking-tight group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors line-clamp-2">
-                            {{ $art->title }}
-                        </h3>
-                    </div>
-                </a>
-                @endforeach
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[10px] font-bold text-blue-600 dark:text-sky-400 uppercase tracking-wider">{{ $art->category->name }}</span>
+                                <span class="text-[10px] text-slate-400 dark:text-slate-500">{{ $art->published_at?->format('d M Y') }}</span>
+                            </div>
+                            <h3 class="text-[14px] font-semibold text-slate-900 dark:text-slate-100 leading-[1.4] tracking-tight group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors line-clamp-2">
+                                {{ $art->title }}
+                            </h3>
+                        </div>
+                    </a>
+                    @endforeach
+                </div>
+                @if(isset($adLeftTop) && $adLeftTop)
+                <div class="col-span-4 sm:col-span-3 md:hidden flex flex-col justify-start pt-2">
+                    <a href="{{ $adLeftTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
+                        <img src="{{ $adLeftTop->image_url }}" alt="{{ $adLeftTop->title }}" class="w-full h-auto max-h-[380px] object-contain mx-auto">
+                    </a>
+                </div>
+                @endif
             </div>
 
             {{-- Pagination --}}
@@ -130,38 +139,92 @@
         <aside class="col-span-12 md:col-span-4 lg:col-span-4">
             <div class="md:sticky md:top-24 space-y-6">
 
+                {{-- Tablet Sidebar Ad 1 (sidebar_mid on Tablet) --}}
+                @if(isset($adLeftTop) && $adLeftTop)
+                <div class="hidden md:block lg:!hidden w-full flex justify-center">
+                    <a href="{{ $adLeftTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[280px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
+                        <img src="{{ $adLeftTop->image_url }}" alt="{{ $adLeftTop->title }}" class="w-full h-auto max-h-[380px] object-contain mx-auto">
+                    </a>
+                </div>
+                @endif
+
                 {{-- Terpopuler --}}
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
-                    <div class="flex items-center gap-2 px-5 py-4 border-b border-slate-100 dark:border-slate-700">
-                        <span class="w-1 h-4 bg-red-500 rounded-full"></span>
-                        <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Terpopuler</h3>
+                <div class="grid grid-cols-12 gap-4 md:block">
+                    <div class="col-span-8 sm:col-span-9 md:col-span-12 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+                        <div class="flex items-center gap-2 px-5 py-4 border-b border-slate-100 dark:border-slate-700">
+                            <span class="w-1 h-4 bg-red-500 rounded-full"></span>
+                            <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Terpopuler</h3>
+                        </div>
+                        <div class="divide-y divide-slate-100 dark:divide-slate-700/50">
+                            @foreach(App\Models\Article::where('status','published')->orderByDesc('views_count')->limit(6)->get() as $i => $pop)
+                            <a href="{{ route('article.show', $pop->slug) }}"
+                               class="group flex items-start gap-3 px-5 py-3.5 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                                <span class="text-xl font-black leading-none flex-shrink-0 w-6 text-center mt-0.5 {{ $i === 0 ? 'text-red-500' : 'text-slate-200 dark:text-slate-700' }}">{{ $i+1 }}</span>
+                                <p class="text-[12px] font-semibold text-slate-800 dark:text-slate-200 leading-[1.4] line-clamp-3 group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors">{{ $pop->title }}</p>
+                            </a>
+                            @endforeach
+                        </div>
                     </div>
-                    <div class="divide-y divide-slate-100 dark:divide-slate-700/50">
-                        @foreach(App\Models\Article::where('status','published')->orderByDesc('views_count')->limit(6)->get() as $i => $pop)
-                        <a href="{{ route('article.show', $pop->slug) }}"
-                           class="group flex items-start gap-3 px-5 py-3.5 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                            <span class="text-xl font-black leading-none flex-shrink-0 w-6 text-center mt-0.5 {{ $i === 0 ? 'text-red-500' : 'text-slate-200 dark:text-slate-700' }}">{{ $i+1 }}</span>
-                            <p class="text-[12px] font-semibold text-slate-800 dark:text-slate-200 leading-[1.4] line-clamp-3 group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors">{{ $pop->title }}</p>
+                    @if(isset($adRightTop) && $adRightTop)
+                    <div class="col-span-4 sm:col-span-3 md:hidden flex flex-col justify-start">
+                        <a href="{{ $adRightTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
+                            <img src="{{ $adRightTop->image_url }}" alt="{{ $adRightTop->title }}" class="w-full h-auto max-h-[240px] object-contain mx-auto">
                         </a>
-                        @endforeach
                     </div>
+                    @endif
                 </div>
 
-                {{-- Topik Populer --}}
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="w-1 h-4 bg-blue-600 dark:bg-sky-500 rounded-full"></span>
-                        <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Topik Populer</h3>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        <a href="{{ route('search', ['q' => 'Pilkada2026']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Pilkada2026</a>
-                        <a href="{{ route('search', ['q' => 'TimnasIndonesia']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#TimnasIndonesia</a>
-                        <a href="{{ route('search', ['q' => 'Crypto']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Crypto</a>
-                        <a href="{{ route('search', ['q' => 'Teknologi']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Teknologi</a>
-                        <a href="{{ route('search', ['q' => 'GayaHidup']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#GayaHidup</a>
-                        <a href="{{ route('search', ['q' => 'Otomotif']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Otomotif</a>
-                    </div>
+                {{-- Tablet Sidebar Ad 2 (article_mid on Tablet) --}}
+                @if(isset($adLeftBottom) && $adLeftBottom)
+                <div class="hidden md:block lg:!hidden w-full flex justify-center">
+                    <a href="{{ $adLeftBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[280px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
+                        <img src="{{ $adLeftBottom->image_url }}" alt="{{ $adLeftBottom->title }}" class="w-full h-auto max-h-[240px] object-contain mx-auto">
+                    </a>
                 </div>
+                @endif
+
+                {{-- Topik Populer --}}
+                <div class="grid grid-cols-12 gap-4 md:block">
+                    <div class="col-span-8 sm:col-span-9 md:col-span-12 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="w-1 h-4 bg-blue-600 dark:bg-sky-500 rounded-full"></span>
+                            <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Topik Populer</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <a href="{{ route('search', ['q' => 'Pilkada2026']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Pilkada2026</a>
+                            <a href="{{ route('search', ['q' => 'TimnasIndonesia']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#TimnasIndonesia</a>
+                            <a href="{{ route('search', ['q' => 'Crypto']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Crypto</a>
+                            <a href="{{ route('search', ['q' => 'Teknologi']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Teknologi</a>
+                            <a href="{{ route('search', ['q' => 'GayaHidup']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#GayaHidup</a>
+                            <a href="{{ route('search', ['q' => 'Otomotif']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Otomotif</a>
+                        </div>
+                    </div>
+                    @if(isset($adRightBottom) && $adRightBottom)
+                    <div class="col-span-4 sm:col-span-3 md:hidden flex flex-col justify-start">
+                        <a href="{{ $adRightBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
+                            <img src="{{ $adRightBottom->image_url }}" alt="{{ $adRightBottom->title }}" class="w-full h-auto max-h-[380px] object-contain mx-auto">
+                        </a>
+                    </div>
+                    @endif
+                </div>
+
+                {{-- Tablet Sidebar Ad 3 (sidebar_top on Tablet) --}}
+                @if(isset($adRightTop) && $adRightTop)
+                <div class="hidden md:block lg:!hidden w-full flex justify-center">
+                    <a href="{{ $adRightTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[280px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
+                        <img src="{{ $adRightTop->image_url }}" alt="{{ $adRightTop->title }}" class="w-full h-auto max-h-[240px] object-contain mx-auto">
+                    </a>
+                </div>
+                @endif
+
+                {{-- Tablet Sidebar Ad 4 (article_bottom on Tablet) --}}
+                @if(isset($adRightBottom) && $adRightBottom)
+                <div class="hidden md:block lg:!hidden w-full flex justify-center">
+                    <a href="{{ $adRightBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[280px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
+                        <img src="{{ $adRightBottom->image_url }}" alt="{{ $adRightBottom->title }}" class="w-full h-auto max-h-[380px] object-contain mx-auto">
+                    </a>
+                </div>
+                @endif
 
             </div>
         </aside>
