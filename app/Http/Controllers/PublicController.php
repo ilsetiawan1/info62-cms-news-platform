@@ -61,7 +61,7 @@ class PublicController extends Controller
             ->where('status', 'published')
             ->where('published_at', '<=', $now)
             ->latest('published_at')
-            ->limit(5)
+            ->limit(9)
             ->get();
 
         $heroIds = $heroSlides->pluck('id');
