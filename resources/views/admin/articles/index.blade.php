@@ -14,6 +14,9 @@
                 @if(request('status'))
                     <input type="hidden" name="status" value="{{ request('status') }}">
                 @endif
+                @if(request('sort'))
+                    <input type="hidden" name="sort" value="{{ request('sort') }}">
+                @endif
                 <div class="relative">
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari judul artikel..." 
                         class="pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-900 text-sm text-slate-700 dark:text-gray-300 focus:border-primary focus:ring-primary shadow-sm w-64" style="padding-left: 2.75rem;">
@@ -23,6 +26,27 @@
                 </div>
             </form>
             
+            <!-- Sorting Switch Button -->
+            @if($sortBy === 'title')
+                <a href="{{ route('articles.index', array_merge(request()->only(['status', 'search']), ['sort' => 'date'])) }}" 
+                   class="inline-flex items-center justify-center p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-slate-50 dark:hover:bg-gray-700 text-slate-600 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white transition-colors shadow-sm"
+                   title="Urutkan berdasarkan: Terakhir Diupdate (Terbaru)">
+                    <svg class="w-5 h-5 mr-1.5 text-slate-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
+                    </svg>
+                    <span class="text-xs font-bold text-slate-700 dark:text-gray-300">A-Z</span>
+                </a>
+            @else
+                <a href="{{ route('articles.index', array_merge(request()->only(['status', 'search']), ['sort' => 'title'])) }}" 
+                   class="inline-flex items-center justify-center p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-slate-50 dark:hover:bg-gray-700 text-slate-600 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white transition-colors shadow-sm"
+                   title="Urutkan berdasarkan: Judul Artikel (A-Z)">
+                    <svg class="w-5 h-5 mr-1.5 text-slate-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="text-xs font-bold text-slate-700 dark:text-gray-300">Terbaru</span>
+                </a>
+            @endif
+
             <a href="{{ route('articles.create') }}" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl shadow-sm text-sm font-semibold text-white bg-primary hover:bg-primary/90 dark:bg-primary-500 dark:hover:bg-primary-500/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-primary-500 transition-all duration-200">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 Tulis Artikel
@@ -32,35 +56,35 @@
 
     <!-- Tabs Filter -->
     <div class="mb-6 flex flex-wrap gap-2 border-b border-gray-100 dark:border-gray-700 pb-4">
-        <a href="{{ route('articles.index', ['status' => 'all', 'search' => request('search')]) }}" 
+        <a href="{{ route('articles.index', ['status' => 'all', 'search' => request('search'), 'sort' => request('sort')]) }}" 
            class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ $status === 'all' ? 'bg-primary text-white shadow-sm' : 'bg-white dark:bg-gray-800 text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-gray-700' }}">
             Semua
             <span class="ml-2 px-2 py-0.5 text-xs rounded-full {{ $status === 'all' ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-400' }}">
                 {{ $counts['all'] }}
             </span>
         </a>
-        <a href="{{ route('articles.index', ['status' => 'published', 'search' => request('search')]) }}" 
+        <a href="{{ route('articles.index', ['status' => 'published', 'search' => request('search'), 'sort' => request('sort')]) }}" 
            class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ $status === 'published' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white dark:bg-gray-800 text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-gray-700' }}">
             Publish
             <span class="ml-2 px-2 py-0.5 text-xs rounded-full {{ $status === 'published' ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-400' }}">
                 {{ $counts['published'] }}
             </span>
         </a>
-        <a href="{{ route('articles.index', ['status' => 'draft', 'search' => request('search')]) }}" 
+        <a href="{{ route('articles.index', ['status' => 'draft', 'search' => request('search'), 'sort' => request('sort')]) }}" 
            class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ $status === 'draft' ? 'bg-slate-600 text-white shadow-sm' : 'bg-white dark:bg-gray-800 text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-gray-700' }}">
             Draft
             <span class="ml-2 px-2 py-0.5 text-xs rounded-full {{ $status === 'draft' ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-400' }}">
                 {{ $counts['draft'] }}
             </span>
         </a>
-        <a href="{{ route('articles.index', ['status' => 'scheduled', 'search' => request('search')]) }}" 
+        <a href="{{ route('articles.index', ['status' => 'scheduled', 'search' => request('search'), 'sort' => request('sort')]) }}" 
            class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ $status === 'scheduled' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-white dark:bg-gray-800 text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-gray-700' }}">
             Scheduled
             <span class="ml-2 px-2 py-0.5 text-xs rounded-full {{ $status === 'scheduled' ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-400' }}">
                 {{ $counts['scheduled'] }}
             </span>
         </a>
-        <a href="{{ route('articles.index', ['status' => 'trash', 'search' => request('search')]) }}" 
+        <a href="{{ route('articles.index', ['status' => 'trash', 'search' => request('search'), 'sort' => request('sort')]) }}" 
            class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ $status === 'trash' ? 'bg-red-600 text-white shadow-sm' : 'bg-white dark:bg-gray-800 text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-gray-700' }}">
             Sampah (Trash)
             <span class="ml-2 px-2 py-0.5 text-xs rounded-full {{ $status === 'trash' ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-400' }}">

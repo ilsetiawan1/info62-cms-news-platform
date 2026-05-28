@@ -11,6 +11,9 @@
         <div class="flex-shrink-0 flex items-center gap-3">
             <!-- Search Form -->
             <form action="{{ route('categories.index') }}" method="GET" class="flex items-center gap-2">
+                @if(request('sort'))
+                    <input type="hidden" name="sort" value="{{ request('sort') }}">
+                @endif
                 <div class="relative">
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kategori..." 
                         class="pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-slate-50 text-sm text-slate-700 focus:border-primary focus:ring-primary shadow-sm w-64" style="padding-left: 2.75rem;">
@@ -19,6 +22,27 @@
                     </div>
                 </div>
             </form>
+
+            <!-- Sorting Switch Button -->
+            @if($sortBy === 'name')
+                <a href="{{ route('categories.index', array_merge(request()->except('sort'), ['sort' => 'date'])) }}" 
+                   class="inline-flex items-center justify-center p-2.5 rounded-xl border border-gray-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition-colors shadow-sm"
+                   title="Urutkan berdasarkan: Tanggal dibuat (Terbaru)">
+                    <svg class="w-5 h-5 mr-1.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
+                    </svg>
+                    <span class="text-xs font-bold text-slate-700">A-Z</span>
+                </a>
+            @else
+                <a href="{{ route('categories.index', array_merge(request()->except('sort'), ['sort' => 'name'])) }}" 
+                   class="inline-flex items-center justify-center p-2.5 rounded-xl border border-gray-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition-colors shadow-sm"
+                   title="Urutkan berdasarkan: Nama Kategori (A-Z)">
+                    <svg class="w-5 h-5 mr-1.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="text-xs font-bold text-slate-700">Terbaru</span>
+                </a>
+            @endif
 
             <a href="{{ route('categories.create') }}" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl shadow-sm text-sm font-semibold text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200 w-full sm:w-auto">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
