@@ -153,7 +153,7 @@
         .wing-ad {
             display: flex !important;
         }
-        @media (max-width: 1279px) {
+        @media (max-width: 1535px) {
             .wing-ad {
                 display: none !important;
             }
@@ -180,230 +180,244 @@
 </head>
 <body class="bg-slate-50 dark:bg-[#0f172a] text-slate-800 dark:text-slate-200 transition-colors duration-300">
     <div id="reading-progress"></div>
-
-    {{-- ==================== IKLAN SAYAP KIRI BERTINGKAT (SINKRON ADMIN) ==================== --}}
-    <div class="hidden xl:flex wing-ad" style="position: fixed; top: 145px; left: calc(50% - 780px); width: 160px; height: 600px; z-index: 999; flex-direction: column; gap: 16px;">
-        {{-- Slot Kiri Atas (Tinggi 380px -> position: sidebar_top) --}}
-        <div class="shadow-md" style="width: 100%; height: 380px; border-radius: 0.75rem; background-color: #fee2e2; border: 1px dashed #fca5a5; display: flex; flex-direction: column; overflow: hidden;">
-            @if(isset($adLeftTop) && $adLeftTop)
-                <a href="{{ $adLeftTop->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
-                    <img src="{{ $adLeftTop->image_url }}" alt="{{ $adLeftTop->title }}" style="width: 100%; height: 100%; object-fit: cover;">
-                </a>
-            @else
-                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #991b1b; font-family: sans-serif;">
-                    <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KIRI TOP</span>
-                    <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 380</span>
-                </div>
-            @endif
-        </div>
-
-        {{-- Slot Kiri Bawah (Tinggi 204px -> position: article_mid) --}}
-        <div class="shadow-md" style="width: 100%; height: 204px; border-radius: 0.75rem; background-color: #fef2f2; border: 1px dashed #fecaca; display: flex; flex-direction: column; overflow: hidden;">
-            @if(isset($adLeftBottom) && $adLeftBottom)
-                <a href="{{ $adLeftBottom->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
-                    <img src="{{ $adLeftBottom->image_url }}" alt="{{ $adLeftBottom->title }}" style="width: 100%; height: 100%; object-fit: cover;">
-                </a>
-            @else
-                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #991b1b; font-family: sans-serif;">
-                    <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KIRI BTM</span>
-                    <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 204</span>
-                </div>
-            @endif
-        </div>
-    </div>
-
-    {{-- ==================== IKLAN SAYAP KANAN BERTINGKAT (SINKRON ADMIN) ==================== --}}
-    <div class="hidden xl:flex wing-ad" style="position: fixed; top: 145px; right: calc(50% - 780px); width: 160px; height: 600px; z-index: 999; flex-direction: column; gap: 16px;">
-        {{-- Slot Kanan Atas (Tinggi 204px -> position: sidebar_mid) --}}
-        <div class="shadow-md" style="width: 100%; height: 204px; border-radius: 0.75rem; background-color: #eff6ff; border: 1px dashed #bfdbfe; display: flex; flex-direction: column; overflow: hidden;">
-            @if(isset($adRightTop) && $adRightTop)
-                <a href="{{ $adRightTop->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
-                    <img src="{{ $adRightTop->image_url }}" alt="{{ $adRightTop->title }}" style="width: 100%; height: 100%; object-fit: cover;">
-                </a>
-            @else
-                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #1e3a8a; font-family: sans-serif;">
-                    <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KANAN TOP</span>
-                    <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 204</span>
-                </div>
-            @endif
-        </div>
-
-        {{-- Slot Kanan Bawah (Tinggi 380px -> position: article_bottom) --}}
-        <div class="shadow-md" style="width: 100%; height: 380px; border-radius: 0.75rem; background-color: #dbeafe; border: 1px dashed #93c5fd; display: flex; flex-direction: column; overflow: hidden;">
-            @if(isset($adRightBottom) && $adRightBottom)
-                <a href="{{ $adRightBottom->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
-                    <img src="{{ $adRightBottom->image_url }}" alt="{{ $adRightBottom->title }}" style="width: 100%; height: 100%; object-fit: cover;">
-                </a>
-            @else
-                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #1e3a8a; font-family: sans-serif;">
-                    <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KANAN BTM</span>
-                    <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 380</span>
-                </div>
-            @endif
-        </div>
-    </div>
-
-    <!-- ===== STICKY FROSTED HEADER ===== -->
-    <header class="sticky top-0 z-[100] bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-700/50 transition-all shadow-sm dark:shadow-slate-900/50">
-
-        <!-- Top row: Logo & Utilities -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 md:h-20 gap-4">
-
-                <!-- Hamburger (Mobile) -->
-                <button id="mobile-menu-btn" class="flex lg:hidden p-2 rounded-full text-slate-600 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
-
-                <!-- Logo -->
-                <a href="{{ route('home') }}" class="flex items-center gap-2 flex-shrink-0 lg:mr-8">
-                    <img src="{{ asset('images/logo-infoseputar62.png') }}"  alt="Info Seputar +62" class="h-8 md:h-10 w-auto rounded-xl">
-                </a>
-
-                <!-- Desktop Ticker (if exists) -->
-                @if(isset($tickerNews) && $tickerNews->isNotEmpty())
-                <div class="hidden lg:flex items-center flex-1 mx-4 h-10 bg-slate-100/50 dark:bg-zinc-800/50 rounded-full border border-slate-200/50 dark:border-zinc-700/50 overflow-hidden">
-                    <div class="flex items-center px-4 bg-white dark:bg-zinc-800 h-full border-r border-slate-200 dark:border-zinc-700 shadow-sm z-10 flex-shrink-0">
-                        <span class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-red-600 dark:text-red-500">
-                            <span class="relative flex h-2 w-2">
-                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                              <span class="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
-                            </span>
-                            LIVE NEWS
-                        </span>
-                    </div>
-                    <div class="ticker-wrap flex-1 h-full">
-                        <div class="ticker-move flex items-center h-full">
-                            @foreach($tickerNews as $ticker)
-                                <div class="ticker-item h-full flex items-center">
-                                    <a href="{{ route('article.show', $ticker->slug) }}" class="font-medium text-slate-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                                        {{ $ticker->title }}
-                                    </a>
-                                </div>
-                            @endforeach
+    <div class="relative w-full">
+        {{-- ==================== IKLAN SAYAP KIRI BERTINGKAT (SINKRON ADMIN) ==================== --}}
+        <div class="hidden 2xl:block absolute top-0 bottom-0 pointer-events-none" style="left: calc(50% - 780px); width: 160px; z-index: 99;">
+            <div class="hidden 2xl:flex wing-ad" style="position: sticky; top: 145px; width: 160px; height: 600px; z-index: 999; flex-direction: column; gap: 16px; pointer-events: auto;">
+                {{-- Slot Kiri Atas (Tinggi 380px -> position: sidebar_top) --}}
+                <div class="shadow-md" style="width: 100%; height: 380px; border-radius: 0.75rem; background-color: #fee2e2; border: 1px dashed #fca5a5; display: flex; flex-direction: column; overflow: hidden;">
+                    @if(isset($adLeftTop) && $adLeftTop)
+                        <a href="{{ $adLeftTop->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
+                            <img src="{{ $adLeftTop->image_url }}" alt="{{ $adLeftTop->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </a>
+                    @else
+                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #991b1b; font-family: sans-serif;">
+                            <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KIRI TOP</span>
+                            <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 380</span>
                         </div>
-                    </div>
+                    @endif
                 </div>
-                @else
-                <div class="hidden lg:block flex-1"></div>
-                @endif
 
-                <!-- Right Actions -->
-                <div class="flex items-center gap-2 sm:gap-3 ml-auto">
-                    <!-- Desktop Search -->
-                    <form action="{{ route('search') }}" method="GET" class="hidden md:flex items-center bg-slate-100 dark:bg-zinc-800 rounded-full px-4 py-2 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all border border-transparent dark:border-zinc-700">
-                        <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        <input type="text" name="q" placeholder="Cari berita..." value="{{ request('q') }}" required class="bg-transparent border-none outline-none text-sm text-slate-700 dark:text-zinc-200 placeholder-slate-400 w-40 focus:w-56 transition-all duration-300 p-0 ml-2 focus:ring-0">
-                    </form>
-
-                    <!-- Dark Mode Toggle -->
-                    <button onclick="toggleDarkMode()" class="p-2.5 rounded-full text-slate-600 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors" aria-label="Toggle dark mode">
-                        <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                        <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    </button>
+                {{-- Slot Kiri Bawah (Tinggi 204px -> position: article_mid) --}}
+                <div class="shadow-md" style="width: 100%; height: 204px; border-radius: 0.75rem; background-color: #fef2f2; border: 1px dashed #fecaca; display: flex; flex-direction: column; overflow: hidden;">
+                    @if(isset($adLeftBottom) && $adLeftBottom)
+                        <a href="{{ $adLeftBottom->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
+                            <img src="{{ $adLeftBottom->image_url }}" alt="{{ $adLeftBottom->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </a>
+                    @else
+                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #991b1b; font-family: sans-serif;">
+                            <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KIRI BTM</span>
+                            <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 204</span>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
 
-        <!-- Bottom row: Horizontal Scrollable Categories -->
-        <div class="border-t border-slate-100 dark:border-slate-800/50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <nav class="flex items-center overflow-x-auto hide-scrollbar py-2.5 gap-1">
-                    <a href="{{ route('home') }}" class="flex-shrink-0 px-4 py-1.5 rounded-full text-[13px] font-bold tracking-wide transition-all whitespace-nowrap {{ request()->routeIs('home') && !request('cat') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">Semua</a>
+        {{-- ==================== IKLAN SAYAP KANAN BERTINGKAT (SINKRON ADMIN) ==================== --}}
+        <div class="hidden 2xl:block absolute top-0 bottom-0 pointer-events-none" style="right: calc(50% - 780px); width: 160px; z-index: 99;">
+            <div class="hidden 2xl:flex wing-ad" style="position: sticky; top: 145px; width: 160px; height: 600px; z-index: 999; flex-direction: column; gap: 16px; pointer-events: auto;">
+                {{-- Slot Kanan Atas (Tinggi 204px -> position: sidebar_mid) --}}
+                <div class="shadow-md" style="width: 100%; height: 204px; border-radius: 0.75rem; background-color: #eff6ff; border: 1px dashed #bfdbfe; display: flex; flex-direction: column; overflow: hidden;">
+                    @if(isset($adRightTop) && $adRightTop)
+                        <a href="{{ $adRightTop->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
+                            <img src="{{ $adRightTop->image_url }}" alt="{{ $adRightTop->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </a>
+                    @else
+                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #1e3a8a; font-family: sans-serif;">
+                            <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KANAN TOP</span>
+                            <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 204</span>
+                        </div>
+                    @endif
+                </div>
 
+                {{-- Slot Kanan Bawah (Tinggi 380px -> position: article_bottom) --}}
+                <div class="shadow-md" style="width: 100%; height: 380px; border-radius: 0.75rem; background-color: #dbeafe; border: 1px dashed #93c5fd; display: flex; flex-direction: column; overflow: hidden;">
+                    @if(isset($adRightBottom) && $adRightBottom)
+                        <a href="{{ $adRightBottom->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
+                            <img src="{{ $adRightBottom->image_url }}" alt="{{ $adRightBottom->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </a>
+                    @else
+                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #1e3a8a; font-family: sans-serif;">
+                            <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KANAN BTM</span>
+                            <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 380</span>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== STICKY FROSTED HEADER ===== -->
+        <header class="sticky top-0 z-[100] bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-700/50 transition-all shadow-sm dark:shadow-slate-900/50">
+
+            <!-- Top row: Logo & Utilities -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16 md:h-20 gap-4">
+
+                    <!-- Hamburger (Mobile) -->
+                    <button id="mobile-menu-btn" class="flex lg:hidden p-2 rounded-full text-slate-600 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+
+                    <!-- Logo -->
+                    <a href="{{ route('home') }}" class="flex items-center gap-2 flex-shrink-0 lg:mr-8">
+                        <img src="{{ asset('images/logo-infoseputar62.png') }}"  alt="Info Seputar +62" class="h-8 md:h-10 w-auto rounded-xl">
+                    </a>
+
+                    <!-- Desktop Ticker (if exists) -->
+                    @if(isset($tickerNews) && $tickerNews->isNotEmpty())
+                    <div class="hidden lg:flex items-center flex-1 mx-4 h-10 bg-slate-100/50 dark:bg-zinc-800/50 rounded-full border border-slate-200/50 dark:border-zinc-700/50 overflow-hidden">
+                        <div class="flex items-center px-4 bg-white dark:bg-zinc-800 h-full border-r border-slate-200 dark:border-zinc-700 shadow-sm z-10 flex-shrink-0">
+                            <span class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-red-600 dark:text-red-500">
+                                <span class="relative flex h-2 w-2">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+                                </span>
+                                LIVE NEWS
+                            </span>
+                        </div>
+                        <div class="ticker-wrap flex-1 h-full">
+                            <div class="ticker-move flex items-center h-full">
+                                @foreach($tickerNews as $ticker)
+                                    <div class="ticker-item h-full flex items-center">
+                                        <a href="{{ route('article.show', $ticker->slug) }}" class="font-medium text-slate-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                            {{ $ticker->title }}
+                                        </a>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    @else
+                    <div class="hidden lg:block flex-1"></div>
+                    @endif
+
+                    <!-- Right Actions -->
+                    <div class="flex items-center gap-2 sm:gap-3 ml-auto">
+                        <!-- Desktop Search -->
+                        <form action="{{ route('search') }}" method="GET" class="hidden md:flex items-center bg-slate-100 dark:bg-zinc-800 rounded-full px-4 py-2 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all border border-transparent dark:border-zinc-700">
+                            <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <input type="text" name="q" placeholder="Cari berita..." value="{{ request('q') }}" required class="bg-transparent border-none outline-none text-sm text-slate-700 dark:text-zinc-200 placeholder-slate-400 w-40 focus:w-56 transition-all duration-300 p-0 ml-2 focus:ring-0">
+                        </form>
+
+                        <!-- Dark Mode Toggle -->
+                        <button onclick="toggleDarkMode()" class="p-2.5 rounded-full text-slate-600 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors" aria-label="Toggle dark mode">
+                            <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom row: Horizontal Scrollable Categories -->
+            <div class="border-t border-slate-100 dark:border-slate-800/50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <nav class="flex items-center overflow-x-auto hide-scrollbar py-2.5 gap-1">
+                        <a href="{{ route('home') }}" class="flex-shrink-0 px-4 py-1.5 rounded-full text-[13px] font-bold tracking-wide transition-all whitespace-nowrap {{ request()->routeIs('home') && !request('cat') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">Semua</a>
+
+                        @foreach($navCategories as $cat)
+                            {{-- Desktop: hover mega-menu. Mobile: plain link --}}
+                            <div class="desktop-cat-item flex-shrink-0">
+                                <a href="{{ route('category.show', $cat->slug) }}"
+                                   class="flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold tracking-wide transition-all whitespace-nowrap
+                                          {{ request()->is('kategori/'.$cat->slug.'*') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">
+                                    {{ $cat->name }}
+                                </a>
+
+                                @if($cat->children->isNotEmpty())
+                                {{-- Dropdown: pure CSS hover, NO display:none --}}
+                                <div class="desktop-cat-dropdown">
+                                    <div class="dropdown-card">
+                                        <a href="{{ route('category.show', $cat->slug) }}">Semua {{ $cat->name }}</a>
+                                        @foreach($cat->children as $child)
+                                            <a href="{{ route('category.show', $child->slug) }}">{{ $child->name }}</a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== MOBILE OFFCANVAS MENU ===== -->
+        <div id="mobile-overlay" class="fixed inset-0 z-[998] bg-slate-900/40 backdrop-blur-sm hidden lg:hidden transition-opacity opacity-0" onclick="closeSidebar()"></div>
+        <div id="mobile-sidebar" class="fixed inset-y-0 left-0 z-[999] w-80 bg-white dark:bg-[#0f172a] shadow-2xl transform -translate-x-full transition-transform duration-300 overflow-y-auto lg:hidden">
+            <div class="flex items-center justify-between p-5 sticky top-0 bg-white/90 dark:bg-[#09090b]/90 backdrop-blur-md z-10 border-b border-slate-100 dark:border-zinc-800">
+                <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Logo" class="h-8 w-auto rounded-md">
+                <button id="mobile-close-btn" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors" onclick="closeSidebar()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <div class="p-4 border-b border-slate-100 dark:border-zinc-800">
+                <form action="{{ route('search') }}" method="GET" class="flex items-center bg-slate-100 dark:bg-zinc-800/50 rounded-2xl px-4 py-3 gap-3 border border-transparent dark:border-zinc-700">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" name="q" placeholder="Cari..." value="{{ request('q') }}" required class="bg-transparent border-none outline-none text-sm text-slate-700 dark:text-zinc-200 placeholder-slate-400 w-full p-0 focus:ring-0">
+                </form>
+            </div>
+
+            <nav class="p-4 space-y-2">
+                <div class="pb-2 px-2">
+                    <p class="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest">Menu Utama</p>
+                </div>
+                <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold {{ request()->routeIs('home') ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800/50' }} transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    Beranda
+                </a>
+
+                <div class="pt-4 pb-2 px-2">
+                    <p class="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest">Kategori</p>
+                </div>
+
+                <div x-data="{ expandedCat: null }" class="space-y-2">
                     @foreach($navCategories as $cat)
-                        {{-- Desktop: hover mega-menu. Mobile: plain link --}}
-                        <div class="desktop-cat-item flex-shrink-0">
-                            <a href="{{ route('category.show', $cat->slug) }}"
-                               class="flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold tracking-wide transition-all whitespace-nowrap
-                                      {{ request()->is('kategori/'.$cat->slug.'*') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">
-                                {{ $cat->name }}
-                            </a>
+                        <div class="rounded-2xl overflow-hidden {{ request()->is('kategori/'.$cat->slug.'*') ? 'bg-slate-50 dark:bg-zinc-800/30 border border-slate-100 dark:border-zinc-800' : 'border border-transparent' }} transition-colors">
+                            <div class="flex items-center justify-between px-2">
+                                <a href="{{ route('category.show', $cat->slug) }}" class="flex-1 px-2 py-3 text-sm font-bold {{ request()->is('kategori/'.$cat->slug) ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-zinc-200' }}">
+                                    {{ $cat->name }}
+                                </a>
+
+                                @if($cat->children->isNotEmpty())
+                                    <button @click="expandedCat = expandedCat === {{ $cat->id }} ? null : {{ $cat->id }}" class="p-3 text-slate-400 hover:text-blue-600 transition-colors">
+                                        <svg class="w-4 h-4 transition-transform duration-300" :class="expandedCat === {{ $cat->id }} ? 'rotate-180 text-blue-600' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </button>
+                                @endif
+                            </div>
 
                             @if($cat->children->isNotEmpty())
-                            {{-- Dropdown: pure CSS hover, NO display:none --}}
-                            <div class="desktop-cat-dropdown">
-                                <div class="dropdown-card">
-                                    <a href="{{ route('category.show', $cat->slug) }}">Semua {{ $cat->name }}</a>
+                                <div x-show="expandedCat === {{ $cat->id }}" x-collapse class="px-3 pb-3 space-y-1" style="display: none;">
                                     @foreach($cat->children as $child)
-                                        <a href="{{ route('category.show', $child->slug) }}">{{ $child->name }}</a>
+                                        <a href="{{ route('category.show', $child->slug) }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm {{ request()->is('kategori/'.$child->slug) ? 'text-blue-600 font-bold bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' : 'text-slate-500 font-medium dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800' }} transition-colors">
+                                            {{ $child->name }}
+                                        </a>
                                     @endforeach
                                 </div>
-                            </div>
                             @endif
                         </div>
                     @endforeach
-                </nav>
-            </div>
-        </div>
-    </header>
-
-
-
-    <!-- ===== MOBILE OFFCANVAS MENU ===== -->
-    <div id="mobile-overlay" class="fixed inset-0 z-[998] bg-slate-900/40 backdrop-blur-sm hidden lg:hidden transition-opacity opacity-0" onclick="closeSidebar()"></div>
-    <div id="mobile-sidebar" class="fixed inset-y-0 left-0 z-[999] w-80 bg-white dark:bg-[#0f172a] shadow-2xl transform -translate-x-full transition-transform duration-300 overflow-y-auto lg:hidden">
-        <div class="flex items-center justify-between p-5 sticky top-0 bg-white/90 dark:bg-[#09090b]/90 backdrop-blur-md z-10 border-b border-slate-100 dark:border-zinc-800">
-            <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Logo" class="h-8 w-auto rounded-md">
-            <button id="mobile-close-btn" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors" onclick="closeSidebar()">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
+                </div>
+            </nav>
         </div>
 
-        <div class="p-4 border-b border-slate-100 dark:border-zinc-800">
-            <form action="{{ route('search') }}" method="GET" class="flex items-center bg-slate-100 dark:bg-zinc-800/50 rounded-2xl px-4 py-3 gap-3 border border-transparent dark:border-zinc-700">
-                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                <input type="text" name="q" placeholder="Cari..." value="{{ request('q') }}" required class="bg-transparent border-none outline-none text-sm text-slate-700 dark:text-zinc-200 placeholder-slate-400 w-full p-0 focus:ring-0">
-            </form>
-        </div>
-
-        <nav class="p-4 space-y-2">
-            <div class="pb-2 px-2">
-                <p class="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest">Menu Utama</p>
+        <!-- ===== HEADER ADVERTISEMENT ===== -->
+        @if(isset($adHeader) && $adHeader)
+            <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+                <div class="w-full flex justify-center">
+                    <a href="{{ $adHeader->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[970px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <img src="{{ $adHeader->image_url }}" alt="{{ $adHeader->title }}" class="w-full h-[60px] sm:h-[90px] object-cover">
+                    </a>
+                </div>
             </div>
-            <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold {{ request()->routeIs('home') ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800/50' }} transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                Beranda
-            </a>
+        @endif
 
-            <div class="pt-4 pb-2 px-2">
-                <p class="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest">Kategori</p>
-            </div>
-
-            <div x-data="{ expandedCat: null }" class="space-y-2">
-                @foreach($navCategories as $cat)
-                    <div class="rounded-2xl overflow-hidden {{ request()->is('kategori/'.$cat->slug.'*') ? 'bg-slate-50 dark:bg-zinc-800/30 border border-slate-100 dark:border-zinc-800' : 'border border-transparent' }} transition-colors">
-                        <div class="flex items-center justify-between px-2">
-                            <a href="{{ route('category.show', $cat->slug) }}" class="flex-1 px-2 py-3 text-sm font-bold {{ request()->is('kategori/'.$cat->slug) ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-zinc-200' }}">
-                                {{ $cat->name }}
-                            </a>
-
-                            @if($cat->children->isNotEmpty())
-                                <button @click="expandedCat = expandedCat === {{ $cat->id }} ? null : {{ $cat->id }}" class="p-3 text-slate-400 hover:text-blue-600 transition-colors">
-                                    <svg class="w-4 h-4 transition-transform duration-300" :class="expandedCat === {{ $cat->id }} ? 'rotate-180 text-blue-600' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </button>
-                            @endif
-                        </div>
-
-                        @if($cat->children->isNotEmpty())
-                            <div x-show="expandedCat === {{ $cat->id }}" x-collapse class="px-3 pb-3 space-y-1" style="display: none;">
-                                @foreach($cat->children as $child)
-                                    <a href="{{ route('category.show', $child->slug) }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm {{ request()->is('kategori/'.$child->slug) ? 'text-blue-600 font-bold bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' : 'text-slate-500 font-medium dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800' }} transition-colors">
-                                        {{ $child->name }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        @endif
-                    </div>
-                @endforeach
-            </div>
-        </nav>
+        <!-- Main Content -->
+        <main class="min-h-screen">
+            @yield('content')
+        </main>
     </div>
-
-    <!-- Main Content -->
-    <main class="min-h-screen">
-        @yield('content')
-    </main>
 
 
 

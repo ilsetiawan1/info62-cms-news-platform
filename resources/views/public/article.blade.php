@@ -120,10 +120,28 @@
             </div>
             @endif
 
+            {{-- In-Content Ad (article_mid) for Mobile/Tablet --}}
+            @if(isset($adLeftBottom) && $adLeftBottom)
+            <div class="2xl:hidden mb-6">
+                <a href="{{ $adLeftBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 shadow-sm">
+                    <img src="{{ $adLeftBottom->image_url }}" alt="{{ $adLeftBottom->title }}" class="w-full h-auto max-h-[180px] object-cover">
+                </a>
+            </div>
+            @endif
+
             {{-- Article Body --}}
             <div id="article-text" class="article-content mb-10">
                 {!! $article->content !!}
             </div>
+
+            {{-- In-Content Ad (article_bottom) for Mobile/Tablet --}}
+            @if(isset($adRightBottom) && $adRightBottom)
+            <div class="2xl:hidden my-6">
+                <a href="{{ $adRightBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 shadow-sm">
+                    <img src="{{ $adRightBottom->image_url }}" alt="{{ $adRightBottom->title }}" class="w-full h-auto max-h-[180px] object-cover">
+                </a>
+            </div>
+            @endif
 
             {{-- Divider --}}
             <div class="my-8 border-b border-slate-200/60 dark:border-slate-800/50"></div>
@@ -159,6 +177,14 @@
         {{-- ===== SIDEBAR KANAN (3 cols) ===== --}}
         <aside class="col-span-12 md:col-span-4 lg:col-span-3">
             <div class="md:sticky md:top-24 space-y-6">
+                {{-- Sidebar Ad (sidebar_top) for Mobile/Tablet/Standard Desktop --}}
+                @if(isset($adRightTop) && $adRightTop)
+                <div class="2xl:hidden bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden p-3 shadow-sm">
+                    <a href="{{ $adRightTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full rounded-xl overflow-hidden">
+                        <img src="{{ $adRightTop->image_url }}" alt="{{ $adRightTop->title }}" class="w-full h-auto max-h-[250px] object-cover">
+                    </a>
+                </div>
+                @endif
 
                 {{-- Terpopuler --}}
                 <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">

@@ -81,6 +81,15 @@
             @endif
             @endif
 
+            {{-- In-Content Ad for Mobile/Tablet (article_mid) --}}
+            @if(isset($adLeftBottom) && $adLeftBottom)
+            <div class="2xl:hidden mb-8">
+                <a href="{{ $adLeftBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm">
+                    <img src="{{ $adLeftBottom->image_url }}" alt="{{ $adLeftBottom->title }}" class="w-full h-[120px] sm:h-[180px] object-cover">
+                </a>
+            </div>
+            @endif
+
             {{-- Divider + Terkini --}}
             <div class="flex items-center gap-3 mb-5">
                 <span class="w-1 h-5 bg-red-500 rounded-full flex-shrink-0"></span>
@@ -151,6 +160,14 @@
         {{-- ===== SIDEBAR KANAN (col-span-12 → md:4 → lg:4) ===== --}}
         <aside class="col-span-12 md:col-span-4 lg:col-span-4">
             <div class="md:sticky md:top-24 space-y-6">
+                {{-- Sidebar Ad for Mobile/Tablet/Standard Desktop (sidebar_top) --}}
+                @if(isset($adRightTop) && $adRightTop)
+                <div class="2xl:hidden bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden p-3 shadow-sm">
+                    <a href="{{ $adRightTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full rounded-xl overflow-hidden">
+                        <img src="{{ $adRightTop->image_url }}" alt="{{ $adRightTop->title }}" class="w-full h-auto max-h-[250px] object-cover">
+                    </a>
+                </div>
+                @endif
 
                 {{-- Terpopuler --}}
                 <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">

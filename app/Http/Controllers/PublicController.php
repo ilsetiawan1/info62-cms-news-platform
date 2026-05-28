@@ -28,6 +28,7 @@ class PublicController extends Controller
                 ->groupBy('position');
         });
 
+        $adHeader = $ads->get('header', collect())->first();
         $adLeftTop = $ads->get('sidebar_mid', collect())->first();
         $adLeftBottom = $ads->get('article_mid', collect())->first();
         $adRightTop = $ads->get('sidebar_top', collect())->first();
@@ -35,6 +36,7 @@ class PublicController extends Controller
 
         // Share globally to prevent undefined variable errors in layout
         view()->share([
+            'adHeader'       => $adHeader,
             'adLeftTop'      => $adLeftTop,
             'adLeftBottom'   => $adLeftBottom,
             'adRightTop'     => $adRightTop,
@@ -42,6 +44,7 @@ class PublicController extends Controller
         ]);
 
         return [
+            'adHeader'       => $adHeader,
             'adLeftTop'      => $adLeftTop,
             'adLeftBottom'   => $adLeftBottom,
             'adRightTop'     => $adRightTop,
