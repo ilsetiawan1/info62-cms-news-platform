@@ -313,64 +313,48 @@
             <div class="border-t border-slate-100 dark:border-slate-800/50">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <!-- Desktop & Tablet Category Navigation -->
-                    <nav class="hidden md:flex items-center py-2.5 gap-1 relative z-[100]">
-                        <a href="{{ route('home') }}" class="flex-shrink-0 px-4 py-1.5 rounded-full text-[13px] font-bold tracking-wide transition-all whitespace-nowrap {{ request()->routeIs('home') && !request('cat') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">Semua</a>
+                    <nav class="hidden md:flex items-center justify-between py-2.5 relative z-[100] w-full">
+                        <div class="flex items-center gap-1 flex-wrap lg:flex-nowrap">
+                            <a href="{{ route('home') }}" class="flex-shrink-0 px-4 py-1.5 rounded-full text-[13px] font-bold tracking-wide transition-all whitespace-nowrap {{ request()->routeIs('home') && !request('cat') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">Semua</a>
 
-                        <!-- Categories 1 to 4: Always visible on md and up -->
-                        @foreach($navCategories->take(4) as $cat)
-                            <div class="desktop-cat-item flex-shrink-0">
-                                <a href="{{ route('category.show', $cat->slug) }}"
-                                   class="flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold tracking-wide transition-all whitespace-nowrap
-                                          {{ request()->is('kategori/'.$cat->slug.'*') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">
-                                    {{ $cat->name }}
-                                </a>
+                            @foreach($navCategories as $index => $cat)
+                                <div class="desktop-cat-item flex-shrink-0
+                                    @if($index >= 9) hidden
+                                    @elseif($index >= 7) hidden xl:block
+                                    @elseif($index >= 4) hidden lg:block
+                                    @endif">
+                                    <a href="{{ route('category.show', $cat->slug) }}"
+                                       class="flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold tracking-wide transition-all whitespace-nowrap
+                                              {{ request()->is('kategori/'.$cat->slug.'*') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">
+                                        {{ $cat->name }}
+                                    </a>
 
-                                @if($cat->children->isNotEmpty())
-                                <div class="desktop-cat-dropdown">
-                                    <div class="dropdown-card">
-                                        <a href="{{ route('category.show', $cat->slug) }}">Semua {{ $cat->name }}</a>
-                                        @foreach($cat->children as $child)
-                                            <a href="{{ route('category.show', $child->slug) }}">{{ $child->name }}</a>
-                                        @endforeach
+                                    @if($cat->children->isNotEmpty())
+                                    <div class="desktop-cat-dropdown">
+                                        <div class="dropdown-card">
+                                            <a href="{{ route('category.show', $cat->slug) }}">Semua {{ $cat->name }}</a>
+                                            @foreach($cat->children as $child)
+                                                <a href="{{ route('category.show', $child->slug) }}">{{ $child->name }}</a>
+                                            @endforeach
+                                        </div>
                                     </div>
+                                    @endif
                                 </div>
-                                @endif
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
 
-                        <!-- Categories 5 to 7: Visible on desktop (lg and up) only -->
-                        @foreach($navCategories->slice(4, 3) as $cat)
-                            <div class="desktop-cat-item flex-shrink-0 hidden lg:block">
-                                <a href="{{ route('category.show', $cat->slug) }}"
-                                   class="flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold tracking-wide transition-all whitespace-nowrap
-                                          {{ request()->is('kategori/'.$cat->slug.'*') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">
-                                    {{ $cat->name }}
-                                </a>
-
-                                @if($cat->children->isNotEmpty())
-                                <div class="desktop-cat-dropdown">
-                                    <div class="dropdown-card">
-                                        <a href="{{ route('category.show', $cat->slug) }}">Semua {{ $cat->name }}</a>
-                                        @foreach($cat->children as $child)
-                                            <a href="{{ route('category.show', $child->slug) }}">{{ $child->name }}</a>
-                                        @endforeach
-                                    </div>
-                                </div>
-                                @endif
-                            </div>
-                        @endforeach
-
-                        <!-- Tablet Hamburger Menu: visible on md, hidden on lg -->
+                        <!-- Dropdown Menu for Overflow Categories -->
                         @if($navCategories->count() > 4)
-                            <div class="relative flex-shrink-0 lg:hidden" x-data="{ openMoreTablet: false }">
-                                <button @click="openMoreTablet = !openMoreTablet" @click.away="openMoreTablet = false"
-                                        class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all select-none">
+                            <div class="relative flex-shrink-0" x-data="{ openMore: false }">
+                                <button @click="openMore = !openMore" @click.away="openMore = false"
+                                        class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all select-none"
+                                        aria-label="More categories">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                                     </svg>
                                 </button>
 
-                                <div x-show="openMoreTablet"
+                                <div x-show="openMore"
                                      x-transition:enter="transition ease-out duration-100"
                                      x-transition:enter-start="transform opacity-0 scale-95"
                                      x-transition:enter-end="transform opacity-100 scale-100"
@@ -379,60 +363,27 @@
                                      x-transition:leave-end="transform opacity-0 scale-95"
                                      class="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden divide-y divide-slate-100 dark:divide-slate-700/50 z-[120]"
                                      style="display: none;">
-                                    @foreach($navCategories->skip(4) as $cat)
-                                        <div class="px-1 py-1">
-                                            <a href="{{ route('category.show', $cat->slug) }}" class="block px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg">
-                                                {{ $cat->name }}
-                                            </a>
-                                            @if($cat->children->isNotEmpty())
-                                                <div class="pl-3 pb-1 space-y-0.5">
-                                                    @foreach($cat->children as $child)
-                                                        <a href="{{ route('category.show', $child->slug) }}" class="block px-3 py-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-sky-400">
-                                                            ↳ {{ $child->name }}
-                                                        </a>
-                                                    @endforeach
-                                                </div>
-                                            @endif
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
-
-                        <!-- Desktop Hamburger Menu: hidden on md, visible on lg -->
-                        @if($navCategories->count() > 7)
-                            <div class="relative flex-shrink-0 hidden lg:block" x-data="{ openMoreDesktop: false }">
-                                <button @click="openMoreDesktop = !openMoreDesktop" @click.away="openMoreDesktop = false"
-                                        class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all select-none">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                                    </svg>
-                                </button>
-
-                                <div x-show="openMoreDesktop"
-                                     x-transition:enter="transition ease-out duration-100"
-                                     x-transition:enter-start="transform opacity-0 scale-95"
-                                     x-transition:enter-end="transform opacity-100 scale-100"
-                                     x-transition:leave="transition ease-in duration-75"
-                                     x-transition:leave-start="transform opacity-100 scale-100"
-                                     x-transition:leave-end="transform opacity-0 scale-95"
-                                     class="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden divide-y divide-slate-100 dark:divide-slate-700/50 z-[120]"
-                                     style="display: none;">
-                                    @foreach($navCategories->skip(7) as $cat)
-                                        <div class="px-1 py-1">
-                                            <a href="{{ route('category.show', $cat->slug) }}" class="block px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg">
-                                                {{ $cat->name }}
-                                            </a>
-                                            @if($cat->children->isNotEmpty())
-                                                <div class="pl-3 pb-1 space-y-0.5">
-                                                    @foreach($cat->children as $child)
-                                                        <a href="{{ route('category.show', $child->slug) }}" class="block px-3 py-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-sky-400">
-                                                            ↳ {{ $child->name }}
-                                                        </a>
-                                                    @endforeach
-                                                </div>
-                                            @endif
-                                        </div>
+                                    @foreach($navCategories as $index => $cat)
+                                        @if($index >= 4)
+                                            <div class="px-1 py-1 
+                                                @if($index >= 9) block
+                                                @elseif($index >= 7) xl:hidden block
+                                                @elseif($index >= 4) lg:hidden block
+                                                @endif">
+                                                <a href="{{ route('category.show', $cat->slug) }}" class="block px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg">
+                                                    {{ $cat->name }}
+                                                </a>
+                                                @if($cat->children->isNotEmpty())
+                                                    <div class="pl-3 pb-1 space-y-0.5">
+                                                        @foreach($cat->children as $child)
+                                                            <a href="{{ route('category.show', $child->slug) }}" class="block px-3 py-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-sky-400">
+                                                                ↳ {{ $child->name }}
+                                                            </a>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endif
                                     @endforeach
                                 </div>
                             </div>
