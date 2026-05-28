@@ -62,9 +62,9 @@
             {{-- More hero articles (compact) --}}
             @if($heroSlides->count() > 1)
             <div class="mb-8">
-                <!-- Desktop & Tablet: 2x2 Grid | Mobile: 2 rows of cards scrolling horizontally, aligned with px-4 -->
-                <div class="grid grid-rows-2 grid-flow-col gap-4 overflow-x-auto md:grid-rows-none md:grid-cols-2 md:overflow-visible pb-4 md:pb-0 snap-x snap-mandatory scroll-smooth hide-scrollbar px-4 md:px-0">
-                    @foreach($heroSlides->skip(1)->take(8) as $slide)
+                <!-- Desktop & Tablet: 2 rows of 3 cards | Mobile: 2 rows of cards scrolling horizontally, aligned with px-4 -->
+                <div class="grid grid-rows-2 grid-flow-col gap-4 overflow-x-auto md:grid-flow-row md:grid-rows-none md:grid-cols-3 md:overflow-visible pb-4 md:pb-0 snap-x snap-mandatory scroll-smooth hide-scrollbar px-4 md:px-0">
+                    @foreach($heroSlides->skip(1)->take(6) as $slide)
                     <a href="{{ route('article.show', $slide->slug) }}" class="group block flex-shrink-0 w-[calc(50vw-24px)] sm:w-[280px] md:w-auto snap-start">
                         <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 mb-2">
                             @if($slide->cover_image)
