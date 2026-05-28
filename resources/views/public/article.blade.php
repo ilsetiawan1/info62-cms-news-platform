@@ -125,87 +125,72 @@
                     <div id="local-date" class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-medium">---</div>
                 </div>
 
-                {{-- Kuis Nusantara --}}
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm relative overflow-hidden" x-data="{
-                    quiz: [
-                        {
-                            q: 'Siapakah pencipta lagu kebangsaan Indonesia Raya?',
-                            options: ['Ibu Sud', 'W.R. Soepratman', 'Ismail Marzuki', 'Cornel Simanjuntak'],
-                            correct: 1,
-                            exp: 'Lagu Indonesia Raya pertama kali dikumandangkan pada Kongres Pemuda II tanggal 28 Oktober 1928 oleh W.R. Soepratman.'
-                        },
-                        {
-                            q: 'Kabupaten terluas di Indonesia adalah...',
-                            options: ['Merauke', 'Kutai Kartanegara', 'Banyuwangi', 'Malinau'],
-                            correct: 0,
-                            exp: 'Kabupaten Merauke di Papua Selatan adalah kabupaten terluas di Indonesia dengan luas mencapai 46.792 km².'
-                        },
-                        {
-                            q: 'Manakah pulau di Indonesia yang memiliki spesies endemik burung Cendrawasih?',
-                            options: ['Kalimantan', 'Sulawesi', 'Papua', 'Sumatra'],
-                            correct: 2,
-                            exp: 'Burung Cendrawasih yang dijuluki \'Bird of Paradise\' merupakan burung khas dari pulau Papua dan pulau-pulau sekitarnya.'
-                        },
-                        {
-                            q: 'Mata uang resmi pertama yang diterbitkan oleh pemerintah Indonesia pasca kemerdekaan adalah...',
-                            options: ['Rupiah', 'ORI (Oeang Repoeblik Indonesia)', 'Sen', 'Gulden'],
-                            correct: 1,
-                            exp: 'Oeang Repoeblik Indonesia (ORI) diterbitkan pertama kali pada tanggal 30 Oktober 1946 untuk menggantikan mata uang Jepang.'
-                        },
-                        {
-                            q: 'Hutan hujan tropis tertua di Indonesia terdapat di pulau...',
-                            options: ['Jawa', 'Sumatra', 'Kalimantan', 'Bali'],
-                            correct: 2,
-                            exp: 'Hutan hujan tropis di Kalimantan diperkirakan berusia lebih dari 140 juta tahun, menjadikannya salah satu yang tertua di dunia.'
-                        }
-                    ],
-                    currentIdx: 0,
-                    selectedOpt: null,
-                    answered: false,
-                    init() {
-                        this.currentIdx = Math.floor(Math.random() * this.quiz.length);
-                    },
-                    selectOption(optIdx) {
-                        if (this.answered) return;
-                        this.selectedOpt = optIdx;
-                        this.answered = true;
-                    },
-                    nextQuestion() {
-                        this.selectedOpt = null;
-                        this.answered = false;
-                        this.currentIdx = (this.currentIdx + 1) % this.quiz.length;
-                    }
-                }">
+                {{-- Kurs Nusantara --}}
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm relative overflow-hidden">
                     <div class="flex items-center gap-2 mb-3 pb-2 border-b border-slate-100 dark:border-slate-700/50">
-                        <span class="text-blue-500 text-sm">🧠</span>
-                        <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Kuis Nusantara</h3>
+                        <span class="text-emerald-500 text-sm">💱</span>
+                        <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Kurs Rupiah</h3>
                     </div>
-                    
-                    <p class="text-[12px] font-semibold text-slate-800 dark:text-slate-200 mb-3" x-text="quiz[currentIdx].q"></p>
-                    
-                    <div class="space-y-2">
-                        <template x-for="(opt, idx) in quiz[currentIdx].options" :key="idx">
-                            <button @click="selectOption(idx)" 
-                                    class="w-full text-left px-3 py-2 rounded-xl text-[12px] font-medium border transition-all duration-200 flex items-center justify-between"
-                                    :class="{
-                                        'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-blue-300 dark:hover:border-slate-600': !answered,
-                                        'bg-green-50 dark:bg-green-950/30 border-green-500 text-green-700 dark:text-green-400': answered && idx === quiz[currentIdx].correct,
-                                        'bg-red-50 dark:bg-red-950/30 border-red-500 text-red-700 dark:text-red-400': answered && selectedOpt === idx && idx !== quiz[currentIdx].correct,
-                                        'opacity-60 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400': answered && idx !== quiz[currentIdx].correct && selectedOpt !== idx
-                                    }">
-                                <span x-text="opt"></span>
-                                <span x-show="answered && idx === quiz[currentIdx].correct" class="text-green-500 font-bold">✓</span>
-                                <span x-show="answered && selectedOpt === idx && idx !== quiz[currentIdx].correct" class="text-red-500 font-bold">✗</span>
-                            </button>
-                        </template>
+                    <div class="flex flex-col gap-2">
+                        {{-- USD --}}
+                        <div class="flex flex-col p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[9px] font-extrabold px-1.5 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded">USD</span>
+                                    <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400">USD / IDR</span>
+                                </div>
+                                <span class="inline-flex items-center gap-0.5 text-[10px] font-black {{ ($financialData['usd_change'] ?? 0) >= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
+                                    {{ ($financialData['usd_change'] ?? 0) >= 0 ? '▲' : '▼' }}{{ abs($financialData['usd_change'] ?? 0) }}%
+                                </span>
+                            </div>
+                            <div class="text-[14px] font-black text-slate-900 dark:text-white">
+                                Rp{{ number_format($financialData['usd_to_idr'] ?? 16250, 0, ',', '.') }}
+                            </div>
+                        </div>
+                        {{-- SGD --}}
+                        <div class="flex flex-col p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[9px] font-extrabold px-1.5 py-0.5 bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-400 rounded">SGD</span>
+                                    <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400">SGD / IDR</span>
+                                </div>
+                                <span class="inline-flex items-center gap-0.5 text-[10px] font-black {{ ($financialData['sgd_change'] ?? 0) >= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
+                                    {{ ($financialData['sgd_change'] ?? 0) >= 0 ? '▲' : '▼' }}{{ abs($financialData['sgd_change'] ?? 0) }}%
+                                </span>
+                            </div>
+                            <div class="text-[14px] font-black text-slate-900 dark:text-white">
+                                Rp{{ number_format($financialData['sgd_to_idr'] ?? 12050, 0, ',', '.') }}
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <div x-show="answered" x-collapse class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700/50">
-                        <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800" x-text="quiz[currentIdx].exp"></p>
-                        <button @click="nextQuestion()" 
-                                class="w-full mt-3 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-[11px] font-bold transition-colors">
-                            Pertanyaan Lainnya →
-                        </button>
+                {{-- Logam Mulia --}}
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-bl from-amber-500/10 to-transparent pointer-events-none rounded-bl-full"></div>
+                    <div class="flex items-center gap-2 mb-3 pb-2 border-b border-slate-100 dark:border-slate-700/50">
+                        <span class="text-amber-500 text-sm">✨</span>
+                        <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Harga Emas</h3>
+                    </div>
+                    <div class="flex flex-col p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Antam / Gram</span>
+                            <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[9px] font-black {{ ($financialData['gold_change'] ?? 0) >= 0 ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-500' : 'bg-rose-50 dark:bg-rose-950/20 text-rose-500' }}">
+                                {{ ($financialData['gold_change'] ?? 0) >= 0 ? '▲' : '▼' }}{{ abs($financialData['gold_change'] ?? 0) }}%
+                            </span>
+                        </div>
+                        <div class="flex flex-col gap-0.5">
+                            <div class="text-[15px] font-black text-slate-900 dark:text-white">
+                                Rp{{ number_format($financialData['gold_price'] ?? 1350000, 0, ',', '.') }}
+                            </div>
+                            <div class="text-[10px] text-amber-500 dark:text-amber-400 font-bold">LM 24 Karat</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-[9px] text-slate-400 dark:text-slate-500 flex flex-col gap-0.5 border-t border-slate-100 dark:border-slate-700/50 pt-2">
+                        <div class="flex items-center justify-between">
+                            <span>Pembaruan otomatis</span>
+                            <span class="font-bold text-slate-500 dark:text-slate-400">{{ $financialData['updated_at'] ?? now()->format('d M Y') }}</span>
+                        </div>
                     </div>
                 </div>
 
