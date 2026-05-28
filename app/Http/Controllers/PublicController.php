@@ -116,8 +116,7 @@ class PublicController extends Controller
 
         // Hero: latest 5 published articles (scheduled in the past or now)
         $heroSlides = Article::with(['category', 'author'])
-            ->where('status', 'published')
-            ->where('published_at', '<=', $now)
+            ->published()
             ->latest('published_at')
             ->limit(9)
             ->get();
@@ -126,16 +125,14 @@ class PublicController extends Controller
 
         // Latest articles (exclude hero slides)
         $latestArticles = Article::with(['category', 'author'])
-            ->where('status', 'published')
-            ->where('published_at', '<=', $now)
+            ->published()
             ->whereNotIn('id', $heroIds)
             ->latest('published_at')
             ->limit(20)
             ->get();
 
         // Most viewed
-        $mostViewed = Article::where('status', 'published')
-            ->where('published_at', '<=', $now)
+        $mostViewed = Article::published()
             ->orderByDesc('views_count')
             ->limit(7)
             ->get();
@@ -144,8 +141,7 @@ class PublicController extends Controller
         $navCategories = Category::whereNull('parent_id')->with('children')->get();
 
         // Breaking news ticker (latest 8 headlines)
-        $tickerNews = Article::where('status', 'published')
-            ->where('published_at', '<=', $now)
+        $tickerNews = Article::published()
             ->latest('published_at')
             ->limit(8)
             ->get(['id', 'title', 'slug']);
@@ -156,8 +152,7 @@ class PublicController extends Controller
                 ->merge($cat->children->pluck('id'))
                 ->toArray();
             $articles = Article::with(['category', 'author'])
-                ->where('status', 'published')
-                ->where('published_at', '<=', $now)
+                ->published()
                 ->whereNotIn('id', $heroIds)
                 ->whereIn('category_id', $catIds)
                 ->latest('published_at')
@@ -181,8 +176,7 @@ class PublicController extends Controller
 
         $article = Article::with(['category', 'author'])
             ->where('slug', $slug)
-            ->where('status', 'published')
-            ->where('published_at', '<=', $now)
+            ->published()
             ->firstOrFail();
 
         // --- View Tracking (24h cooldown per IP per article) ---
@@ -208,8 +202,7 @@ class PublicController extends Controller
 
         // Related articles: 3 from same category
         $relatedSameCategory = Article::with('category')
-            ->where('status', 'published')
-            ->where('published_at', '<=', $now)
+            ->published()
             ->where('category_id', $article->category_id)
             ->where('id', '!=', $article->id)
             ->latest('published_at')
@@ -218,8 +211,7 @@ class PublicController extends Controller
 
         // 3 random from other categories
         $relatedOther = Article::with('category')
-            ->where('status', 'published')
-            ->where('published_at', '<=', $now)
+            ->published()
             ->where('category_id', '!=', $article->category_id)
             ->where('id', '!=', $article->id)
             ->inRandomOrder()
@@ -228,8 +220,7 @@ class PublicController extends Controller
 
         $navCategories = Category::whereNull('parent_id')->with('children')->get();
 
-        $tickerNews = Article::where('status', 'published')
-            ->where('published_at', '<=', $now)
+        $tickerNews = Article::published()
             ->latest('published_at')
             ->limit(8)
             ->get(['id', 'title', 'slug']);
@@ -254,28 +245,24 @@ class PublicController extends Controller
             ->toArray();
 
         $articles = Article::with(['category', 'author'])
-            ->where('status', 'published')
-            ->where('published_at', '<=', $now)
+            ->published()
             ->whereIn('category_id', $categoryIds)
             ->latest('published_at')
             ->paginate(12);
 
         $navCategories = Category::whereNull('parent_id')->with('children')->get();
 
-        $tickerNews = Article::where('status', 'published')
-            ->where('published_at', '<=', $now)
+        $tickerNews = Article::published()
             ->latest('published_at')
             ->limit(8)
             ->get(['id', 'title', 'slug']);
 
-        $mostViewed = Article::where('status', 'published')
-            ->where('published_at', '<=', $now)
+        $mostViewed = Article::published()
             ->orderByDesc('views_count')
             ->limit(7)
             ->get();
 
-        $latestSidebar = Article::where('status', 'published')
-            ->where('published_at', '<=', $now)
+        $latestSidebar = Article::published()
             ->latest('published_at')
             ->limit(5)
             ->get();
@@ -301,8 +288,7 @@ class PublicController extends Controller
         $query = $request->input('q');
         
         $articles = Article::with(['category', 'author'])
-            ->where('status', 'published')
-            ->where('published_at', '<=', $now)
+            ->published()
             ->where('title', 'like', '%' . $query . '%')
             ->latest('published_at')
             ->paginate(12)
@@ -310,20 +296,17 @@ class PublicController extends Controller
 
         $navCategories = Category::whereNull('parent_id')->with('children')->get();
 
-        $tickerNews = Article::where('status', 'published')
-            ->where('published_at', '<=', $now)
+        $tickerNews = Article::published()
             ->latest('published_at')
             ->limit(8)
             ->get(['id', 'title', 'slug']);
 
-        $mostViewed = Article::where('status', 'published')
-            ->where('published_at', '<=', $now)
+        $mostViewed = Article::published()
             ->orderByDesc('views_count')
             ->limit(7)
             ->get();
 
-        $latestSidebar = Article::where('status', 'published')
-            ->where('published_at', '<=', $now)
+        $latestSidebar = Article::published()
             ->latest('published_at')
             ->limit(5)
             ->get();
@@ -382,8 +365,7 @@ class PublicController extends Controller
         $page = $pages[$slug];
         $now = now();
         $navCategories = Category::whereNull('parent_id')->with('children')->get();
-        $tickerNews = Article::where('status', 'published')
-            ->where('published_at', '<=', $now)
+        $tickerNews = Article::published()
             ->latest('published_at')
             ->limit(8)
             ->get(['id', 'title', 'slug']);

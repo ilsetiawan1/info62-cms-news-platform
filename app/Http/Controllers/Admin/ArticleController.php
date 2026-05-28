@@ -21,10 +21,15 @@ class ArticleController extends Controller
     // ─────────────────────────────────────────────────────────
     public function index(Request $request)
     {
-        $query = Article::with(['category', 'author']);
+        $status = $request->input('status', 'all');
 
-        if ($request->filled('status') && in_array($request->status, ['draft', 'published', 'archived'])) {
-            $query->where('status', $request->status);
+        if ($status === 'trash') {
+            $query = Article::onlyTrashed()->with(['category.parent', 'author']);
+        } else {
+            $query = Article::with(['category.parent', 'author']);
+            if (in_array($status, ['draft', 'published', 'scheduled', 'archived'])) {
+                $query->where('status', $status);
+            }
         }
 
         if ($request->filled('search')) {
@@ -33,7 +38,15 @@ class ArticleController extends Controller
 
         $articles = $query->latest('updated_at')->paginate(10)->withQueryString();
 
-        return view('admin.articles.index', compact('articles'));
+        $counts = [
+            'all'       => Article::count(),
+            'published' => Article::where('status', 'published')->count(),
+            'draft'     => Article::where('status', 'draft')->count(),
+            'scheduled' => Article::where('status', 'scheduled')->count(),
+            'trash'     => Article::onlyTrashed()->count(),
+        ];
+
+        return view('admin.articles.index', compact('articles', 'status', 'counts'));
     }
 
     // ─────────────────────────────────────────────────────────
@@ -60,7 +73,7 @@ class ArticleController extends Controller
             'excerpt'          => ['nullable', 'string'],
             'content'          => ['required', 'string'],
             'category_id'      => ['required', 'exists:categories,id'],
-            'status'           => ['required', Rule::in(['draft', 'published', 'archived'])],
+            'status'           => ['required', Rule::in(['draft', 'published', 'scheduled', 'archived'])],
             'cover_image'      => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'cover_image_alt'  => ['nullable', 'string', 'max:255'],
             'cover_image_url'  => ['nullable', 'url'],
@@ -106,7 +119,16 @@ class ArticleController extends Controller
         unset($validated['cover_image_url']);
 
         if ($validated['status'] === 'published') {
-            $validated['published_at'] = $validated['published_at'] ?: now();
+            if ($validated['published_at'] && \Carbon\Carbon::parse($validated['published_at'])->isFuture()) {
+                $validated['status'] = 'scheduled';
+            } else {
+                $validated['published_at'] = $validated['published_at'] ?: now();
+            }
+        } elseif ($validated['status'] === 'scheduled') {
+            if (empty($validated['published_at']) || \Carbon\Carbon::parse($validated['published_at'])->isPast()) {
+                $validated['status'] = 'published';
+                $validated['published_at'] = $validated['published_at'] ?: now();
+            }
         }
 
         Article::create($validated);
@@ -139,13 +161,15 @@ class ArticleController extends Controller
             'excerpt'          => ['nullable', 'string'],
             'content'          => ['required', 'string'],
             'category_id'      => ['required', 'exists:categories,id'],
-            'status'           => ['required', Rule::in(['draft', 'published', 'archived'])],
+            'status'           => ['required', Rule::in(['draft', 'published', 'scheduled', 'archived'])],
             'cover_image'      => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'cover_image_alt'  => ['nullable', 'string', 'max:255'],
             'cover_image_url'  => ['nullable', 'url'],
             'meta_title'       => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string'],
             'keywords'         => ['nullable', 'string'],
             'source_url'       => ['nullable', 'url'],
+            'published_at'     => ['nullable', 'date'],
         ]);
 
         $validated['slug'] = $this->generateUniqueSlug(
@@ -188,8 +212,17 @@ class ArticleController extends Controller
         }
         unset($validated['cover_image_url']);
 
-        if ($validated['status'] === 'published' && ! $article->published_at) {
-            $validated['published_at'] = now();
+        if ($validated['status'] === 'published') {
+            if ($validated['published_at'] && \Carbon\Carbon::parse($validated['published_at'])->isFuture()) {
+                $validated['status'] = 'scheduled';
+            } else {
+                $validated['published_at'] = $validated['published_at'] ?: ($article->published_at ?: now());
+            }
+        } elseif ($validated['status'] === 'scheduled') {
+            if (empty($validated['published_at']) || \Carbon\Carbon::parse($validated['published_at'])->isPast()) {
+                $validated['status'] = 'published';
+                $validated['published_at'] = $validated['published_at'] ?: ($article->published_at ?: now());
+            }
         }
 
         $article->update($validated);
@@ -199,18 +232,35 @@ class ArticleController extends Controller
     }
 
     // ─────────────────────────────────────────────────────────
-    // DESTROY
-    // ─────────────────────────────────────────────────────────
     public function destroy(Article $article)
     {
+        $article->delete();
+
+        return redirect()->route('articles.index')
+            ->with('success', 'Artikel berhasil dipindahkan ke Sampah.');
+    }
+
+    public function restore($id)
+    {
+        $article = Article::onlyTrashed()->findOrFail($id);
+        $article->restore();
+
+        return redirect()->route('articles.index', ['status' => 'trash'])
+            ->with('success', 'Artikel berhasil dikembalikan dari Sampah.');
+    }
+
+    public function forceDelete($id)
+    {
+        $article = Article::onlyTrashed()->findOrFail($id);
+
         if ($article->cover_image && Storage::disk('public')->exists($article->cover_image)) {
             Storage::disk('public')->delete($article->cover_image);
         }
 
-        $article->delete();
+        $article->forceDelete();
 
-        return redirect()->route('articles.index')
-            ->with('success', 'Artikel berhasil dihapus.');
+        return redirect()->route('articles.index', ['status' => 'trash'])
+            ->with('success', 'Artikel berhasil dihapus secara permanen.');
     }
 
     // ─────────────────────────────────────────────────────────

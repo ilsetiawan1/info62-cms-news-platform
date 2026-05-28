@@ -13,13 +13,24 @@ class CategoryController extends Controller
     /**
      * Display a listing of the categories.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Load categories with their parent and count of children using eager loading
-        $categories = Category::with('parent')
-            ->withCount('children')
-            ->latest()
-            ->paginate(10);
+        $search = $request->input('search');
+
+        $query = Category::whereNull('parent_id')
+            ->with('children')
+            ->withCount('children');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhereHas('children', function ($cq) use ($search) {
+                      $cq->where('name', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+
+        $categories = $query->latest()->paginate(10)->withQueryString();
             
         return view('admin.categories.index', compact('categories'));
     }

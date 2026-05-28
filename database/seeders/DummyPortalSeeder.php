@@ -25,7 +25,7 @@ class DummyPortalSeeder extends Seeder
             ]
         );
 
-        // 2. Create Categories
+        // 2. Create/Retrieve Categories
         $categories = [
             ['name' => 'Nasional', 'slug' => 'nasional'],
             ['name' => 'Bisnis', 'slug' => 'bisnis'],
@@ -34,48 +34,52 @@ class DummyPortalSeeder extends Seeder
             ['name' => 'Hiburan', 'slug' => 'hiburan'],
         ];
 
-        $categoryModels = [];
         foreach ($categories as $cat) {
-            $categoryModels[] = Category::firstOrCreate(['slug' => $cat['slug']], $cat);
+            Category::firstOrCreate(['slug' => $cat['slug']], $cat);
         }
 
-        // 3. Create 20 Dummy Articles in Indonesian
+        // 3. Create 20 Dummy Articles in Indonesian mapped to subcategories
         $articlesData = [
             // Nasional
-            ['title' => 'Pemerintah Resmi Mengesahkan Undang-Undang Baru Terkait Perlindungan Data', 'cat' => 0],
-            ['title' => 'Presiden Melakukan Kunjungan Kerja ke Kawasan Timur Indonesia', 'cat' => 0],
-            ['title' => 'Pembangunan Infrastruktur Tol Baru Ditargetkan Selesai Tahun Depan', 'cat' => 0],
-            ['title' => 'Kementerian Kesehatan Luncurkan Program Pemeriksaan Kesehatan Gratis', 'cat' => 0],
+            ['title' => 'Pemerintah Resmi Mengesahkan Undang-Undang Baru Terkait Perlindungan Data', 'subcat' => 'Politik'],
+            ['title' => 'Presiden Melakukan Kunjungan Kerja ke Kawasan Timur Indonesia', 'subcat' => 'Politik'],
+            ['title' => 'Pembangunan Infrastruktur Tol Baru Ditargetkan Selesai Tahun Depan', 'subcat' => 'Ekonomi'],
+            ['title' => 'Kementerian Kesehatan Luncurkan Program Pemeriksaan Kesehatan Gratis', 'subcat' => 'Kesehatan'],
             // Bisnis
-            ['title' => 'IHSG Ditutup Menguat Seiring Sentimen Positif Pasar Global', 'cat' => 1],
-            ['title' => 'Startup Lokal Mendapat Pendanaan Seri B Senilai Rp 500 Miliar', 'cat' => 1],
-            ['title' => 'Harga Emas Meroket, Banyak Investor Beralih ke Aset Safe Haven', 'cat' => 1],
-            ['title' => 'Ekspor Kopi Indonesia Menembus Rekor Tertinggi di Kuartal Ini', 'cat' => 1],
+            ['title' => 'IHSG Ditutup Menguat Seiring Sentimen Positif Pasar Global', 'subcat' => 'Investasi & Saham'],
+            ['title' => 'Startup Lokal Mendapat Pendanaan Seri B Senilai Rp 500 Miliar', 'subcat' => 'Startup'],
+            ['title' => 'Harga Emas Meroket, Banyak Investor Beralih ke Aset Safe Haven', 'subcat' => 'Investasi & Saham'],
+            ['title' => 'Ekspor Kopi Indonesia Menembus Rekor Tertinggi di Kuartal Ini', 'subcat' => 'UMKM'],
             // Teknologi
-            ['title' => 'Inovasi AI Terbaru Mampu Mempercepat Diagnosa Medis', 'cat' => 2],
-            ['title' => 'Review Smartphone Flagship Terbaru: Performa Kamera Luar Biasa', 'cat' => 2],
-            ['title' => 'Perusahaan Teknologi Raksasa Mulai Mengembangkan Kacamata AR', 'cat' => 2],
-            ['title' => 'Cara Aman Melindungi Privasi Data Pribadi Anda di Media Sosial', 'cat' => 2],
+            ['title' => 'Inovasi AI Terbaru Mampu Mempercepat Diagnosa Medis', 'subcat' => 'AI'],
+            ['title' => 'Review Smartphone Flagship Terbaru: Performa Kamera Luar Biasa', 'subcat' => 'Gadget'],
+            ['title' => 'Perusahaan Teknologi Raksasa Mulai Mengembangkan Kacamata AR', 'subcat' => 'Gadget'],
+            ['title' => 'Cara Aman Melindungi Privasi Data Pribadi Anda di Media Sosial', 'subcat' => 'Keamanan Siber'],
             // Olahraga
-            ['title' => 'Timnas Indonesia Siap Hadapi Pertandingan Kualifikasi Piala Dunia', 'cat' => 3],
-            ['title' => 'Atlet Bulu Tangkis Indonesia Sabet Medali Emas di Kejuaraan Asia', 'cat' => 3],
-            ['title' => 'Menyambut Gelaran Liga 1 Musim Depan dengan Format Baru', 'cat' => 3],
-            ['title' => 'Tips Lari Marathon Bagi Pemula: Persiapan dan Pola Makan', 'cat' => 3],
+            ['title' => 'Timnas Indonesia Siap Hadapi Pertandingan Kualifikasi Piala Dunia', 'subcat' => 'Sepak Bola'],
+            ['title' => 'Atlet Bulu Tangkis Indonesia Sabet Medali Emas di Kejuaraan Asia', 'subcat' => 'Bulu Tangkis'],
+            ['title' => 'Menyambut Gelaran Liga 1 Musim Depan dengan Format Baru', 'subcat' => 'Sepak Bola'],
+            ['title' => 'Tips Lari Marathon Bagi Pemula: Persiapan dan Pola Makan', 'subcat' => 'Renang & Atletik'],
             // Hiburan
-            ['title' => 'Film Karya Sineas Indonesia Berhasil Menembus Festival Film Internasional', 'cat' => 4],
-            ['title' => 'Konser Musik Band Legendaris Akan Digelar Bulan Depan di Jakarta', 'cat' => 4],
-            ['title' => 'Daftar Serial Drama Terpopuler Minggu Ini yang Wajib Ditonton', 'cat' => 4],
-            ['title' => 'Review Album Terbaru Artis Lokal: Eksplorasi Genre Baru yang Segar', 'cat' => 4],
+            ['title' => 'Film Karya Sineas Indonesia Berhasil Menembus Festival Film Internasional', 'subcat' => 'Film & Serial'],
+            ['title' => 'Konser Musik Band Legendaris Akan Digelar Bulan Depan di Jakarta', 'subcat' => 'Musik'],
+            ['title' => 'Daftar Serial Drama Terpopuler Minggu Ini yang Wajib Ditonton', 'subcat' => 'Film & Serial'],
+            ['title' => 'Review Album Terbaru Artis Lokal: Eksplorasi Genre Baru yang Segar', 'subcat' => 'Musik'],
         ];
 
         foreach ($articlesData as $index => $data) {
+            $category = Category::where('name', $data['subcat'])->first();
+            if (!$category) {
+                $category = Category::first();
+            }
+
             Article::create([
                 'title' => $data['title'],
                 'slug' => Str::slug($data['title']) . '-' . rand(100, 999),
-                'content' => '<p>Jakarta, Info Seputar +62 &mdash; Ini adalah paragraf pertama dari artikel <strong>' . $data['title'] . '</strong>. Berita ini disajikan sebagai contoh data dummy untuk melihat bagaimana tampilan portal berita publik. Setiap artikel harus memiliki struktur yang baik untuk dibaca oleh pengguna.</p><p>Pemerintah dan berbagai pemangku kepentingan terus berupaya meningkatkan kualitas layanan di bidang terkait. "Kami berkomitmen untuk terus berinovasi," ungkap salah satu narasumber. Dengan adanya perkembangan ini, diharapkan masyarakat bisa merasakan dampaknya secara langsung dalam kehidupan sehari-hari.</p><p>Lebih lanjut, berbagai program telah disiapkan untuk mendukung inisiatif ini. Beberapa langkah strategis akan diumumkan dalam waktu dekat, seiring dengan persiapan matang dari berbagai pihak yang terlibat. Terus pantau <em>Info Seputar +62</em> untuk mendapatkan berita terkini dan paling akurat.</p>',
+                'content' => '<p>Jakarta, Info Seputar +62 &mdash; Ini adalah paragraf pertama dari artikel <strong>' . $data['title'] . '</strong>. Berita ini disajikan sebagai contoh data dummy untuk melihat bagaimana tampilan portal berita publik. Setiap artikel harus memiliki struktur yang baik untuk dibaca oleh pengguna.</p><p>Pemerintah dan berbagai pemangku kepentingan terus berupaya meningkatkan kualitas layanan di bidang terkait. "Kami berkomitmen untuk terus berinnovasi," ungkap salah satu narasumber. Dengan adanya perkembangan ini, diharapkan masyarakat bisa merasakan dampaknya secara langsung dalam kehidupan sehari-hari.</p><p>Lebih lanjut, berbagai program telah disiapkan untuk mendukung inisiatif ini. Beberapa langkah strategis akan diumumkan dalam waktu dekat, seiring dengan persiapan matang dari berbagai pihak yang terlibat. Terus pantau <em>Info Seputar +62</em> untuk mendapatkan berita terkini dan paling akurat.</p>',
                 'excerpt' => 'Ini adalah cuplikan berita untuk artikel ' . $data['title'] . ' yang disajikan sebagai data dummy.',
                 'cover_image' => 'https://picsum.photos/seed/' . ($index + 100) . '/800/500',
-                'category_id' => $categoryModels[$data['cat']]->id,
+                'category_id' => $category->id,
                 'author_id' => $superAdmin->id,
                 'status' => 'published',
                 'published_at' => now()->subDays(rand(0, 10))->subHours(rand(1, 23)),

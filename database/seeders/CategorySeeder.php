@@ -81,6 +81,23 @@ class CategorySeeder extends Seeder
                 'Tradisi Gotong Royong',
                 'Hukum Adat',
             ]],
+            ['name' => 'Wisata Nusantara', 'children' => [
+                'Destinasi Super Prioritas',
+                'Taman Nasional & Hutan Lindung',
+                'Pantai & Kepulauan',
+                'Desa Wisata',
+            ]],
+            ['name' => 'Kuliner Nusantara', 'children' => [
+                'Makanan Tradisional',
+                'Minuman Khas Daerah',
+                'Rempah & Bumbu Tradisional',
+                'Jajanan Pasar',
+            ]],
+            ['name' => 'Flora & Fauna Nusantara', 'children' => [
+                'Satwa Langka Dilindungi',
+                'Flora Endemik Indonesia',
+                'Cagar Alam & Suaka Margasatwa',
+            ]],
         ];
 
         foreach ($data as $parentData) {

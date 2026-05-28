@@ -47,6 +47,13 @@ Route::prefix('seputaradmin')
             [\App\Http\Controllers\Admin\ArticleController::class, 'fetchFromUrl'])
             ->name('articles.fetch');
 
+        Route::post('articles/{id}/restore',
+            [\App\Http\Controllers\Admin\ArticleController::class, 'restore'])
+            ->name('articles.restore');
+        Route::delete('articles/{id}/force-delete',
+            [\App\Http\Controllers\Admin\ArticleController::class, 'forceDelete'])
+            ->name('articles.force-delete');
+
         Route::resource('articles', \App\Http\Controllers\Admin\ArticleController::class)
             ->except(['show']);
 
