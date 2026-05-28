@@ -58,6 +58,29 @@ class CategorySeeder extends Seeder
                 'Fashion & Kecantikan',
                 'Kesehatan & Kebugaran',
             ]],
+            ['name' => 'Budaya & Adat', 'children' => [
+                'Seni Pertunjukan',
+                'Bahasa & Aksara',
+                'Upacara Adat',
+                'Wastra Nusantara',
+            ]],
+            ['name' => 'Sejarah Nusantara', 'children' => [
+                'Era Kerajaan',
+                'Zaman Kolonial',
+                'Kemerdekaan',
+                'Situs Purbakala',
+            ]],
+            ['name' => 'Tokoh & Inspirasi', 'children' => [
+                'Pahlawan Nasional',
+                'Inspirator Muda',
+                'Budayawan',
+                'Ilmuwan Indonesia',
+            ]],
+            ['name' => 'Kearifan Lokal', 'children' => [
+                'Mitos & Legenda',
+                'Tradisi Gotong Royong',
+                'Hukum Adat',
+            ]],
         ];
 
         foreach ($data as $parentData) {

@@ -11,19 +11,69 @@
         {{-- ===== SIDEBAR KIRI (Desktop only) ===== --}}
         <aside class="hidden lg:block lg:col-span-2">
             <div class="sticky top-24 space-y-6">
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-                    <h3 class="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Kategori</h3>
-                    <ul class="space-y-1 max-h-[240px] overflow-y-auto block target-scroll">
-                        @foreach($navCategories as $cat)
-                        <li>
-                            <a href="{{ route('category.show', $cat->slug) }}"
-                               class="block px-3 py-2 rounded-xl text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-sky-400 transition-colors {{ $cat->slug === $category->slug ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-sky-400 font-semibold' : '' }}">
-                                {{ $cat->name }}
-                            </a>
-                        </li>
-                        @endforeach
-                    </ul>
+                {{-- Prakiraan Cuaca +62 --}}
+                <div class="bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-slate-800 dark:to-slate-900 rounded-2xl border border-blue-100 dark:border-slate-700 p-4 text-white shadow-md relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 opacity-10">
+                        <svg class="w-24 h-24 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75zM6.16 5.1a.75.75 0 0 1 1.06 0l1.59 1.59a.75.75 0 1 1-1.06 1.06L6.16 6.16a.75.75 0 0 1 0-1.06zm11.68 0a.75.75 0 0 1 0 1.06l-1.59 1.59a.75.75 0 1 1-1.06-1.06l1.59-1.59a.75.75 0 0 1 1.06 0zM12 5.25a6.75 6.75 0 1 0 6.75 6.75A6.75 6.75 0 0 0 12 5.25zM3 12a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12zm15 0a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5h-2.25A.75.75 0 0 1 18 12zm-11.84 5.25a.75.75 0 0 1 1.06 0l1.59 1.59a.75.75 0 1 1-1.06 1.06l-1.59-1.59a.75.75 0 0 1 0-1.06zm9.68 0a.75.75 0 0 1 0 1.06l-1.59 1.59a.75.75 0 1 1-1.06-1.06l1.59-1.59a.75.75 0 0 1 1.06 0zM12 18.75a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V19.5a.75.75 0 0 1 .75-.75z"/></svg>
+                    </div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[10px] font-black tracking-wider uppercase text-blue-100/90">Cuaca Nusantara</span>
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-medium bg-white/20 text-white backdrop-blur-sm">Live</span>
+                    </div>
+                    <div class="space-y-3" x-data="{ 
+                        cities: [
+                            { name: 'Jakarta', temp: '32°C', desc: 'Cerah Berawan', icon: '⛅' },
+                            { name: 'Surabaya', temp: '34°C', desc: 'Cerah', icon: '☀️' },
+                            { name: 'Bandung', temp: '25°C', desc: 'Hujan Ringan', icon: '🌧️' },
+                            { name: 'Medan', temp: '30°C', desc: 'Berawan', icon: '☁️' }
+                        ],
+                        activeIdx: 0,
+                        init() {
+                            setInterval(() => {
+                                this.activeIdx = (this.activeIdx + 1) % this.cities.length;
+                            }, 5000);
+                        }
+                    }">
+                        <div class="bg-white/10 dark:bg-slate-900/40 rounded-xl p-3 backdrop-blur-sm transition-all duration-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-sm font-extrabold tracking-tight" x-text="cities[activeIdx].name">Jakarta</h4>
+                                    <p class="text-[11px] text-blue-100/80" x-text="cities[activeIdx].desc">Cerah Berawan</p>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-2xl font-black" x-text="cities[activeIdx].temp">32°C</div>
+                                    <div class="text-lg" x-text="cities[activeIdx].icon">⛅</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                {{-- Trivia Nusantara --}}
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm relative overflow-hidden" x-data="{
+                    facts: [
+                        'Indonesia memiliki garis pantai terpanjang kedua di dunia setelah Kanada.',
+                        'Komodo adalah kadal terbesar di dunia dan hanya hidup di Indonesia.',
+                        'Indonesia memiliki jumlah gunung berapi aktif terbanyak di dunia (sekitar 127).',
+                        'Candi Borobudur di Magelang adalah candi Buddha terbesar di dunia.',
+                        'Indonesia merupakan produsen buah pala terbesar di dunia sejak zaman kolonial.'
+                    ],
+                    factIdx: 0,
+                    init() {
+                        setInterval(() => {
+                            this.factIdx = (this.factIdx + 1) % this.facts.length;
+                        }, 12000);
+                    }
+                }">
+                    <div class="flex items-center gap-2 mb-2 pb-2 border-b border-slate-100 dark:border-slate-700/50">
+                        <span class="text-red-500 text-sm">💡</span>
+                        <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Fakta Nusantara</h3>
+                    </div>
+                    <p class="text-[12px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium transition-all duration-500" x-text="facts[factIdx]">
+                        Indonesia memiliki garis pantai terpanjang kedua di dunia setelah Kanada.
+                    </p>
+                </div>
+
                 {{-- Waktu & Hari Lokal --}}
                 <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 text-center shadow-sm">
                     <h3 class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Waktu Lokal</h3>
