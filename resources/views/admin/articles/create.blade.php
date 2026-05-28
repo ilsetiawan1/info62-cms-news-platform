@@ -606,6 +606,7 @@
                             class="w-full rounded-xl border-gray-200 bg-slate-50 text-slate-900 focus:border-primary focus:ring-primary font-medium px-4 py-2.5">
                             <option value="draft"     {{ old('status','draft') == 'draft'     ? 'selected' : '' }}>Draft</option>
                             <option value="published" {{ old('status')         == 'published' ? 'selected' : '' }}>Published (Terbit)</option>
+                            <option value="scheduled" {{ old('status')         == 'scheduled' ? 'selected' : '' }}>Scheduled (Terjadwal)</option>
                             <option value="archived"  {{ old('status')         == 'archived'  ? 'selected' : '' }}>Archived (Arsip)</option>
                         </select>
                     </div>

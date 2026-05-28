@@ -221,16 +221,21 @@
                         <select id="status" name="status" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary focus:ring-primary font-medium px-4 py-2.5">
                             <option value="draft" {{ old('status', $article->status) == 'draft' ? 'selected' : '' }}>Draft</option>
                             <option value="published" {{ old('status', $article->status) == 'published' ? 'selected' : '' }}>Published (Terbit)</option>
+                            <option value="scheduled" {{ old('status', $article->status) == 'scheduled' ? 'selected' : '' }}>Scheduled (Terjadwal)</option>
                             <option value="archived" {{ old('status', $article->status) == 'archived' ? 'selected' : '' }}>Archived (Arsip)</option>
                         </select>
                     </div>
                     
-                    @if($article->published_at)
-                    <div class="text-xs text-slate-500 dark:text-gray-400 flex items-center bg-slate-50 dark:bg-gray-900/50 p-3 rounded-lg border border-gray-100 dark:border-gray-700">
-                        <svg class="w-4 h-4 mr-1.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Dipublikasikan: <br> {{ $article->published_at->format('d M Y, H:i') }}
+                    {{-- Jadwal Publikasi --}}
+                    <div>
+                        <label for="published_at" class="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-1.5">
+                            Jadwal Publikasi <span class="text-slate-400 font-normal">(Opsional)</span>
+                        </label>
+                        <input type="datetime-local" id="published_at" name="published_at" 
+                            value="{{ old('published_at', $article->published_at ? $article->published_at->format('Y-m-d\TH:i') : '') }}"
+                            class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary focus:ring-primary text-sm px-3 py-2">
+                        @error('published_at')<p class="mt-1.5 text-sm text-red-500">{{ $message }}</p>@enderror
                     </div>
-                    @endif
 
                     <div class="pt-4 mt-2 border-t border-gray-100 dark:border-gray-700">
                         <button type="submit" class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-primary hover:bg-primary/90 dark:bg-primary-500 dark:hover:bg-primary-500/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200">
