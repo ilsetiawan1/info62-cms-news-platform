@@ -3,7 +3,22 @@
 @section('header', 'Kelola Artikel')
 
 @section('content')
-<div x-data="{ openImportModal: false }">
+<div x-data="{ 
+    openImportModal: false,
+    selectedIds: [],
+    selectAll: false,
+    toggleAll() {
+        if (this.selectAll) {
+            this.selectedIds = Array.from(document.querySelectorAll('.row-checkbox')).map(el => el.value);
+        } else {
+            this.selectedIds = [];
+        }
+    },
+    updateSelectAll() {
+        const checkboxes = document.querySelectorAll('.row-checkbox');
+        this.selectAll = checkboxes.length > 0 && this.selectedIds.length === checkboxes.length;
+    }
+}">
     <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-gray-700">
         <div>
             <h2 class="text-xl font-bold text-slate-900 dark:text-gray-50">Daftar Artikel</h2>
@@ -47,6 +62,44 @@
                     <span class="text-xs font-bold text-slate-700 dark:text-gray-300">Terbaru</span>
                 </a>
             @endif
+
+            <!-- Bulk Action Buttons Above Table -->
+            <div x-show="selectedIds.length > 0" x-transition style="display: none;" class="flex items-center gap-2">
+                @if($status === 'trash')
+                    <form action="{{ route('articles.bulk-action') }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin mengembalikan artikel yang dipilih dari Sampah?');">
+                        @csrf
+                        <template x-for="id in selectedIds" :key="id">
+                            <input type="hidden" name="ids[]" :value="id">
+                        </template>
+                        <input type="hidden" name="action" value="restore">
+                        <button type="submit" class="inline-flex items-center justify-center px-4 py-2.5 rounded-xl shadow-sm text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition-all duration-200">
+                            Restore Terpilih (<span x-text="selectedIds.length"></span>)
+                        </button>
+                    </form>
+                    
+                    <form action="{{ route('articles.bulk-action') }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus artikel yang dipilih secara PERMANEN?');">
+                        @csrf
+                        <template x-for="id in selectedIds" :key="id">
+                            <input type="hidden" name="ids[]" :value="id">
+                        </template>
+                        <input type="hidden" name="action" value="force-delete">
+                        <button type="submit" class="inline-flex items-center justify-center px-4 py-2.5 rounded-xl shadow-sm text-xs font-bold text-white bg-red-600 hover:bg-red-500 transition-all duration-200">
+                            Hapus Permanen (<span x-text="selectedIds.length"></span>)
+                        </button>
+                    </form>
+                @else
+                    <form action="{{ route('articles.bulk-action') }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin memindahkan artikel yang dipilih ke Sampah?');">
+                        @csrf
+                        <template x-for="id in selectedIds" :key="id">
+                            <input type="hidden" name="ids[]" :value="id">
+                        </template>
+                        <input type="hidden" name="action" value="delete">
+                        <button type="submit" class="inline-flex items-center justify-center px-4 py-2.5 rounded-xl shadow-sm text-xs font-bold text-white bg-red-600 hover:bg-red-500 transition-all duration-200">
+                            Hapus Terpilih (<span x-text="selectedIds.length"></span>)
+                        </button>
+                    </form>
+                @endif
+            </div>
 
             <!-- Import XML Button -->
             <button type="button" @click="openImportModal = true" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-slate-700 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-gray-700 font-semibold text-sm transition-all duration-200 shadow-sm focus:outline-none">
@@ -107,6 +160,9 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50/50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-700 text-xs uppercase tracking-wider text-slate-500 dark:text-gray-400 font-bold">
+                        <th class="px-6 py-5 w-12 text-center">
+                            <input type="checkbox" x-model="selectAll" @change="toggleAll()" class="rounded border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-primary focus:ring-primary h-4 w-4">
+                        </th>
                         <th class="px-6 py-5 w-16">Cover</th>
                         <th class="px-6 py-5">Judul Artikel</th>
                         <th class="px-6 py-5">Kategori</th>
@@ -118,7 +174,10 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                     @forelse($articles as $article)
-                        <tr class="hover:bg-slate-50/80 dark:hover:bg-gray-700/30 transition-colors group">
+                        <tr class="hover:bg-slate-50/80 dark:hover:bg-gray-700/30 transition-colors group" :class="{ 'bg-primary/5 dark:bg-gray-700/50': selectedIds.includes('{{ $article->id }}') }">
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <input type="checkbox" value="{{ $article->id }}" x-model="selectedIds" @change="updateSelectAll()" class="row-checkbox rounded border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-primary focus:ring-primary h-4 w-4">
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($article->cover_image)
                                     <div x-data="{ open: false }" class="relative">
@@ -234,7 +293,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center">
+                            <td colspan="8" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center justify-center">
                                     <div class="w-16 h-16 bg-slate-50 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 border border-slate-100 dark:border-gray-700">
                                         <svg class="w-8 h-8 text-slate-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5L18.5 7H20"></path></svg>
@@ -341,6 +400,61 @@
                 </form>
 
             </div>
+        </div>
+    </div>
+
+    <!-- Floating Bulk Action Bar -->
+    <div x-show="selectedIds.length > 0" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-y-10"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 translate-y-10"
+         style="display: none;"
+         class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 dark:bg-gray-900/95 backdrop-blur-md text-white px-6 py-4 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center gap-4 sm:gap-6 border border-slate-800 dark:border-gray-800 min-w-[300px] sm:min-w-[450px] justify-between">
+        <div class="text-sm font-semibold flex items-center gap-2">
+            <span class="flex h-3.5 w-3.5 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/40 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-primary"></span>
+            </span>
+            <span x-text="selectedIds.length" class="text-primary font-bold text-base"></span> artikel terpilih
+        </div>
+        <div class="flex items-center gap-3">
+            @if($status === 'trash')
+                <form action="{{ route('articles.bulk-action') }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin mengembalikan artikel yang dipilih dari Sampah?');">
+                    @csrf
+                    <template x-for="id in selectedIds" :key="id">
+                        <input type="hidden" name="ids[]" :value="id">
+                    </template>
+                    <input type="hidden" name="action" value="restore">
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-lg hover:shadow-emerald-500/20">
+                        Restore
+                    </button>
+                </form>
+                
+                <form action="{{ route('articles.bulk-action') }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus artikel yang dipilih secara PERMANEN?');">
+                    @csrf
+                    <template x-for="id in selectedIds" :key="id">
+                        <input type="hidden" name="ids[]" :value="id">
+                    </template>
+                    <input type="hidden" name="action" value="force-delete">
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition-all shadow-lg hover:shadow-red-500/20">
+                        Hapus Permanen
+                    </button>
+                </form>
+            @else
+                <form action="{{ route('articles.bulk-action') }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin memindahkan artikel yang dipilih ke Sampah?');">
+                    @csrf
+                    <template x-for="id in selectedIds" :key="id">
+                        <input type="hidden" name="ids[]" :value="id">
+                    </template>
+                    <input type="hidden" name="action" value="delete">
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition-all shadow-lg hover:shadow-red-500/20">
+                        Hapus ke Sampah
+                    </button>
+                </form>
+            @endif
         </div>
     </div>
 </div>
