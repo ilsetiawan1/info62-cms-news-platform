@@ -467,12 +467,24 @@ class ArticleController extends Controller
                     $content = isset($item->summary) ? (string)$item->summary : '';
                 }
 
-                // 3. Kutipan / Ringkasan (Excerpt) - Clean style/script tags first
-                $cleanContentForExcerpt = preg_replace('/<(style|script)\b[^>]*>(.*?)<\/\1>/is', '', $content);
-                $plainText = strip_tags(html_entity_decode($cleanContentForExcerpt, ENT_QUOTES, 'UTF-8'));
+                // Clean style and script tags from Content to avoid editor rendering issues
+                $content = preg_replace('/<(style|script)\b[^>]*>(.*?)<\/\1>/is', '', $content);
+                $content = trim($content);
+
+                // 3. Kutipan / Ringkasan (Excerpt) - Clean tags and cut cleanly at word boundaries
+                $plainText = strip_tags(html_entity_decode($content, ENT_QUOTES, 'UTF-8'));
                 $plainText = preg_replace('/\s+/', ' ', $plainText);
                 $plainText = trim($plainText);
-                $excerpt = mb_substr($plainText, 0, 150);
+                
+                if (mb_strlen($plainText) > 150) {
+                    $excerpt = mb_substr($plainText, 0, 150);
+                    $lastSpace = mb_strrpos($excerpt, ' ');
+                    if ($lastSpace !== false) {
+                        $excerpt = mb_substr($excerpt, 0, $lastSpace);
+                    }
+                } else {
+                    $excerpt = $plainText;
+                }
 
                 // 4. Slug / Permalink
                 $slug = $this->generateUniqueSlug($title);

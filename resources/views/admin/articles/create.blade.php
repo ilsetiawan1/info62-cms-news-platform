@@ -212,19 +212,51 @@
                 };
 
                 const title = getTagValue(itemNode, 'title');
-                const excerpt = getTagValue(itemNode, 'description') || getTagValue(itemNode, 'summary') || getTagValue(itemNode, 'excerpt') || '';
+                
+                let rawExcerpt = getTagValue(itemNode, 'description') || getTagValue(itemNode, 'summary') || getTagValue(itemNode, 'excerpt') || '';
                 
                 let content = getTagValue(itemNode, 'content:encoded') 
                            || getTagValue(itemNode, 'content') 
                            || getTagValue(itemNode, 'description') 
                            || '';
 
+                // Clean style and script tags from Content to avoid rendering plain text code
+                content = content.replace(/<(style|script)\b[^>]*>([\s\S]*?)<\/\1>/gi, '');
+                content = content.trim();
+
+                // Format excerpt cleanly (no HTML tags, decode entities, and truncate at word boundary)
+                let plainText = rawExcerpt.replace(/<\/?[^>]+(>|$)/g, ""); // strip HTML tags
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = plainText;
+                plainText = tempDiv.textContent || tempDiv.innerText || "";
+                plainText = plainText.replace(/\s+/g, " ").trim();
+
+                // Fallback to content if raw excerpt is empty
+                if (!plainText && content) {
+                    let contentText = content.replace(/<\/?[^>]+(>|$)/g, "");
+                    const tempDiv2 = document.createElement("div");
+                    tempDiv2.innerHTML = contentText;
+                    plainText = tempDiv2.textContent || tempDiv2.innerText || "";
+                    plainText = plainText.replace(/\s+/g, " ").trim();
+                }
+
+                let excerpt = plainText;
+                if (plainText.length > 150) {
+                    const truncated = plainText.substring(0, 150);
+                    const lastSpaceIdx = truncated.lastIndexOf(' ');
+                    if (lastSpaceIdx !== -1) {
+                        excerpt = truncated.substring(0, lastSpaceIdx);
+                    } else {
+                        excerpt = truncated;
+                    }
+                }
+
                 const sourceUrl = getTagValue(itemNode, 'link') 
                                || getTagValue(itemNode, 'guid') 
                                || '';
 
                 const metaTitle = getTagValue(itemNode, 'meta_title') || title;
-                const metaDescription = getTagValue(itemNode, 'meta_description') || (excerpt.substring(0, 160));
+                const metaDescription = getTagValue(itemNode, 'meta_description') || (excerpt.length > 160 ? excerpt.substring(0, 157) + '...' : excerpt);
                 const keywords = getTagValue(itemNode, 'keywords') || '';
 
                 const titleEl = document.getElementById('title');
