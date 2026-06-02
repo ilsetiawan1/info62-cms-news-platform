@@ -47,6 +47,10 @@ Route::prefix('seputaradmin')
             [\App\Http\Controllers\Admin\ArticleController::class, 'fetchFromUrl'])
             ->name('articles.fetch');
 
+        Route::post('articles/import-xml',
+            [\App\Http\Controllers\Admin\ArticleController::class, 'importXml'])
+            ->name('articles.import-xml');
+
         Route::post('articles/{id}/restore',
             [\App\Http\Controllers\Admin\ArticleController::class, 'restore'])
             ->name('articles.restore');

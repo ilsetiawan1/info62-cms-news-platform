@@ -53,7 +53,12 @@ class ArticleController extends Controller
             'trash'     => Article::onlyTrashed()->count(),
         ];
 
-        return view('admin.articles.index', compact('articles', 'status', 'counts', 'sortBy'));
+        $categories = Category::with('children')
+            ->whereNull('parent_id')
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.articles.index', compact('articles', 'status', 'counts', 'sortBy', 'categories'));
     }
 
     // ─────────────────────────────────────────────────────────
@@ -327,6 +332,234 @@ class ArticleController extends Controller
             return response()->json([
                 'error' => 'Terjadi kesalahan tidak terduga. Coba lagi atau gunakan URL yang berbeda.',
             ], 500);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // IMPORT XML
+    // ─────────────────────────────────────────────────────────
+    public function importXml(Request $request)
+    {
+        set_time_limit(0);
+
+        $request->validate([
+            'xml_file' => ['required', 'file', 'max:20480'],
+        ]);
+
+        $file = $request->file('xml_file');
+        $extension = strtolower($file->getClientOriginalExtension());
+        if ($extension !== 'xml') {
+            return redirect()->back()->with('error', 'File harus berupa dokumen XML (.xml).');
+        }
+
+        // Find a default category in case mapping fails (since category_id is NOT NULL in database)
+        $defaultCategory = Category::where('slug', 'lainnya')
+            ->orWhere('slug', 'uncategorized')
+            ->orWhere('name', 'like', '%lainnya%')
+            ->orWhere('name', 'like', '%umum%')
+            ->first();
+
+        if (!$defaultCategory) {
+            $defaultCategory = Category::first();
+        }
+        $defaultCategoryId = $defaultCategory ? $defaultCategory->id : 1;
+
+        try {
+            $xmlContent = file_get_contents($file->getRealPath());
+
+            // Remove default namespace to avoid SimpleXML element matching issues
+            $xmlContent = preg_replace('/\sxmlns=["\'][^"\']+["\']/', ' ', $xmlContent, 1);
+
+            $xml = simplexml_load_string($xmlContent, 'SimpleXMLElement', LIBXML_NOCDATA);
+
+            if ($xml === false) {
+                return redirect()->back()->with('error', 'Gagal memparsing file XML. Pastikan format XML valid.');
+            }
+
+            // Find items (support standard RSS feed and Atom structure)
+            $items = [];
+            if (isset($xml->channel->item)) {
+                $items = $xml->channel->item;
+            } elseif (isset($xml->item)) {
+                $items = $xml->item;
+            } elseif (isset($xml->entry)) {
+                $items = $xml->entry;
+            } else {
+                $items = $xml->xpath('//item') ?: ($xml->xpath('//entry') ?: []);
+            }
+
+            if (count($items) === 0) {
+                return redirect()->back()->with('error', 'Tidak ditemukan elemen <item> atau <entry> dalam file XML.');
+            }
+
+            $importedCount = 0;
+
+            foreach ($items as $item) {
+                // Check wp:post_type if available (to skip revisions, attachments, pages, menus in WXR)
+                $postType = '';
+                $namespaces = $item->getNamespaces(true);
+                if (isset($namespaces['wp'])) {
+                    $wp = $item->children($namespaces['wp']);
+                    if (isset($wp->post_type)) {
+                        $postType = (string)$wp->post_type;
+                    }
+                }
+                if (empty($postType)) {
+                    $wp = $item->children('wp', true);
+                    if (isset($wp->post_type)) {
+                        $postType = (string)$wp->post_type;
+                    }
+                }
+
+                // If post type is defined and is not 'post', skip this item
+                if (!empty($postType) && $postType !== 'post') {
+                    continue;
+                }
+
+                // 1. Judul
+                $title = isset($item->title) ? trim((string)$item->title) : '';
+                if (empty($title)) {
+                    continue; // Skip articles without titles
+                }
+
+                // 2. Isi Artikel (Content)
+                $content = '';
+                if (isset($namespaces['content'])) {
+                    $content = (string)$item->children($namespaces['content'])->encoded;
+                }
+                if (empty($content)) {
+                    $content = (string)$item->children('content', true)->encoded;
+                }
+                if (empty($content)) {
+                    $content = isset($item->description) ? (string)$item->description : '';
+                }
+                if (empty($content)) {
+                    $content = isset($item->summary) ? (string)$item->summary : '';
+                }
+
+                // 3. Kutipan / Ringkasan (Excerpt) - Clean style/script tags first
+                $cleanContentForExcerpt = preg_replace('/<(style|script)\b[^>]*>(.*?)<\/\1>/is', '', $content);
+                $plainText = strip_tags(html_entity_decode($cleanContentForExcerpt, ENT_QUOTES, 'UTF-8'));
+                $plainText = preg_replace('/\s+/', ' ', $plainText);
+                $plainText = trim($plainText);
+                $excerpt = mb_substr($plainText, 0, 150);
+
+                // 4. Slug / Permalink
+                $slug = $this->generateUniqueSlug($title);
+
+                // 5. Meta Title & Description
+                $metaTitle = $title;
+                $metaDescription = $excerpt;
+
+                // 6. Resolve Category
+                $xmlCategoryName = '';
+                if (isset($item->category)) {
+                    foreach ($item->category as $catNode) {
+                        $domain = isset($catNode['domain']) ? (string)$catNode['domain'] : '';
+                        if (empty($domain) || $domain === 'category') {
+                            $xmlCategoryName = (string)$catNode;
+                            break;
+                        }
+                    }
+                }
+
+                $finalCategoryId = null;
+                $categoryName = '';
+                if (!empty($xmlCategoryName)) {
+                    $matchedCategory = Category::where('name', 'like', $xmlCategoryName)
+                        ->orWhere('slug', 'like', Str::slug($xmlCategoryName))
+                        ->first();
+                    if ($matchedCategory) {
+                        $finalCategoryId = $matchedCategory->id;
+                        $categoryName = $matchedCategory->name;
+                    }
+                }
+
+                if (!$finalCategoryId) {
+                    $finalCategoryId = $defaultCategoryId;
+                    $categoryName = $defaultCategory ? $defaultCategory->name : '';
+                }
+
+                // 7. Keywords
+                $cleanTitleForKeywords = preg_replace('/[^\w\s]/', '', $title);
+                $words = array_slice(array_filter(explode(' ', $cleanTitleForKeywords)), 0, 3);
+                $firstThreeWords = implode(' ', $words);
+                $keywords = trim($categoryName . ($firstThreeWords ? ', ' . $firstThreeWords : ''));
+
+                // 8. Cover Image
+                $coverImage = null;
+                if (isset($item->enclosure)) {
+                    $enclosure = $item->enclosure;
+                    if (isset($enclosure['url'])) {
+                        $coverImage = (string)$enclosure['url'];
+                    }
+                }
+                if (!$coverImage && isset($namespaces['media'])) {
+                    $media = $item->children($namespaces['media']);
+                    if (isset($media->content) && isset($media->content['url'])) {
+                        $coverImage = (string)$media->content['url'];
+                    } elseif (isset($media->thumbnail) && isset($media->thumbnail['url'])) {
+                        $coverImage = (string)$media->thumbnail['url'];
+                    }
+                }
+                if (!$coverImage) {
+                    $media = $item->children('media', true);
+                    if (isset($media->content) && isset($media->content['url'])) {
+                        $coverImage = (string)$media->content['url'];
+                    } elseif (isset($media->thumbnail) && isset($media->thumbnail['url'])) {
+                        $coverImage = (string)$media->thumbnail['url'];
+                    }
+                }
+                if (!$coverImage && !empty($content)) {
+                    if (preg_match('/<img[^>]+src=["\']([^"\']+)["\']/i', $content, $matches)) {
+                        $coverImage = $matches[1];
+                    }
+                }
+                if (!$coverImage) {
+                    $coverImage = 'https://picsum.photos/seed/placeholder/800/500';
+                }
+
+                // 9. Alt Text
+                $coverImageAlt = $title;
+
+                // 10. Source URL
+                $sourceUrl = 'Imported XML File';
+                if (isset($item->link)) {
+                    $sourceUrl = (string)$item->link;
+                } elseif (isset($item->guid) && filter_var((string)$item->guid, FILTER_VALIDATE_URL)) {
+                    $sourceUrl = (string)$item->guid;
+                }
+
+                // Create the article
+                Article::create([
+                    'title'            => $title,
+                    'slug'             => $slug,
+                    'excerpt'          => $excerpt,
+                    'content'          => $content,
+                    'cover_image'      => $coverImage,
+                    'cover_image_alt'  => $coverImageAlt,
+                    'category_id'      => $finalCategoryId,
+                    'author_id'        => Auth::id(),
+                    'status'           => 'draft',
+                    'published_at'     => null,
+                    'meta_title'       => $metaTitle,
+                    'meta_description' => $metaDescription,
+                    'keywords'         => $keywords,
+                    'source_url'       => $sourceUrl,
+                    'views_count'      => 0,
+                ]);
+
+                $importedCount++;
+            }
+
+            return redirect()->route('articles.index')
+                ->with('success', "Sukses! Berhasil mengimpor {$importedCount} artikel secara massal ke dalam draf.");
+
+        } catch (\Exception $e) {
+            Log::error('Error importing XML: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses file XML: ' . $e->getMessage());
         }
     }
 
