@@ -36,6 +36,10 @@ Route::prefix('seputaradmin')
             ->name('users.toggle-status');
 
         // ── Category Management ──────────────────────
+        Route::post('categories/bulk-delete',
+            [\App\Http\Controllers\Admin\CategoryController::class, 'bulkDelete'])
+            ->name('categories.bulk-delete');
+
         Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class)
             ->except(['show']);
 
@@ -50,6 +54,10 @@ Route::prefix('seputaradmin')
         Route::post('articles/import-xml',
             [\App\Http\Controllers\Admin\ArticleController::class, 'importXml'])
             ->name('articles.import-xml');
+
+        Route::post('articles/bulk-action',
+            [\App\Http\Controllers\Admin\ArticleController::class, 'bulkAction'])
+            ->name('articles.bulk-action');
 
         Route::post('articles/{id}/restore',
             [\App\Http\Controllers\Admin\ArticleController::class, 'restore'])

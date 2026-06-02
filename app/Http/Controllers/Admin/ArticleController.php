@@ -275,6 +275,36 @@ class ArticleController extends Controller
             ->with('success', 'Artikel berhasil dihapus secara permanen.');
     }
 
+    /**
+     * Perform bulk action on selected articles.
+     */
+    public function bulkAction(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $action = $request->input('action', 'delete'); // 'delete', 'force-delete', 'restore'
+
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Tidak ada artikel yang dipilih.');
+        }
+
+        if ($action === 'force-delete') {
+            $articles = Article::onlyTrashed()->whereIn('id', $ids)->get();
+            foreach ($articles as $article) {
+                if ($article->cover_image && Storage::disk('public')->exists($article->cover_image)) {
+                    Storage::disk('public')->delete($article->cover_image);
+                }
+                $article->forceDelete();
+            }
+            return redirect()->back()->with('success', count($ids) . ' artikel berhasil dihapus secara permanen.');
+        } elseif ($action === 'restore') {
+            Article::onlyTrashed()->whereIn('id', $ids)->restore();
+            return redirect()->back()->with('success', count($ids) . ' artikel berhasil dikembalikan dari Sampah.');
+        } else {
+            Article::whereIn('id', $ids)->delete();
+            return redirect()->back()->with('success', count($ids) . ' artikel berhasil dipindahkan ke Sampah.');
+        }
+    }
+
     // ─────────────────────────────────────────────────────────
     // FETCH FROM URL (AJAX)
     // POST /seputaradmin/articles/fetch-url → articles.fetch

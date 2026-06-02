@@ -148,4 +148,22 @@ class CategoryController extends Controller
 
         return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus.');
     }
+
+    /**
+     * Delete multiple categories.
+     */
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Tidak ada kategori yang dipilih.');
+        }
+
+        // Deleting categories. Foreign key constraints:
+        // articles.category_id ON DELETE CASCADE (will delete articles in deleted categories)
+        // categories.parent_id ON DELETE SET NULL (will clear parent_id for subcategories)
+        Category::whereIn('id', $ids)->delete();
+
+        return redirect()->route('categories.index')->with('success', count($ids) . ' kategori berhasil dihapus.');
+    }
 }
