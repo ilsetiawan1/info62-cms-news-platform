@@ -3,6 +3,7 @@
 @section('header', 'Kelola Artikel')
 
 @section('content')
+<div x-data="{ openImportModal: false }">
     <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none border border-gray-100 dark:border-gray-700">
         <div>
             <h2 class="text-xl font-bold text-slate-900 dark:text-gray-50">Daftar Artikel</h2>
@@ -46,6 +47,14 @@
                     <span class="text-xs font-bold text-slate-700 dark:text-gray-300">Terbaru</span>
                 </a>
             @endif
+
+            <!-- Import XML Button -->
+            <button type="button" @click="openImportModal = true" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-slate-700 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-gray-700 font-semibold text-sm transition-all duration-200 shadow-sm focus:outline-none">
+                <svg class="w-5 h-5 mr-2 text-slate-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                </svg>
+                Import XML
+            </button>
 
             <a href="{{ route('articles.create') }}" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl shadow-sm text-sm font-semibold text-white bg-primary hover:bg-primary/90 dark:bg-primary-500 dark:hover:bg-primary-500/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-primary-500 transition-all duration-200">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
@@ -246,4 +255,93 @@
             </div>
         @endif
     </div>
+
+    <!-- Modal Pop-up Modern (Tailwind + Alpine.js) -->
+    <div x-show="openImportModal" 
+         class="fixed inset-0 z-50 overflow-y-auto" 
+         style="display: none;" 
+         role="dialog" 
+         aria-modal="true">
+        <!-- Backdrop -->
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div x-show="openImportModal"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="fixed inset-0 transition-opacity bg-slate-900/40 backdrop-blur-sm" 
+                 @click="openImportModal = false"></div>
+
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <!-- Modal Panel -->
+            <div x-show="openImportModal"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 class="inline-block align-middle bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-100">
+                
+                <form action="{{ route('articles.import-xml') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    
+                    <!-- Header -->
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                            </svg>
+                            Import Massal XML
+                        </h3>
+                        <button type="button" @click="openImportModal = false" class="text-slate-400 hover:text-slate-600 focus:outline-none">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="px-6 py-6 space-y-5">
+                        
+                        <!-- File XML Uploader -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Pilih File XML</label>
+                            <div class="flex items-center justify-center w-full">
+                                <label for="xml_file" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <svg class="w-8 h-8 mb-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                        <p class="text-sm text-slate-500 font-semibold" id="xml_filename">Klik untuk mengupload file XML</p>
+                                        <p class="text-xs text-slate-400 mt-1">Hanya file berekstensi .xml</p>
+                                    </div>
+                                    <input id="xml_file" name="xml_file" type="file" accept=".xml" class="hidden" required 
+                                        onchange="document.getElementById('xml_filename').innerText = this.files[0] ? this.files[0].name : 'Klik untuk mengupload file XML'">
+                                </label>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="px-6 py-4 bg-slate-50 border-t border-gray-100 flex justify-end gap-3 rounded-b-2xl">
+                        <button type="button" @click="openImportModal = false"
+                                class="px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                                class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white text-sm font-semibold shadow-md transition-colors">
+                            Mulai Import
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
