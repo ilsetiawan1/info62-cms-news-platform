@@ -614,7 +614,7 @@ class ArticleController extends Controller
         $counter = 1;
 
         while (true) {
-            $query = Article::where('slug', $final);
+            $query = Article::withTrashed()->where('slug', $final);
             if ($ignoreId) {
                 $query->where('id', '!=', $ignoreId);
             }
