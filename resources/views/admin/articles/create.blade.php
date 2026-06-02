@@ -221,11 +221,11 @@
                            || '';
 
                 // Clean style and script tags from Content to avoid rendering plain text code
-                content = content.replace(/<(style|script)\b[^>]*>([\s\S]*?)<\/\1>/gi, '');
+                content = content.replace(new RegExp('<(style|script)\\\\b[^\\\\u003e]*\\\\u003e([\\\\s\\\\S]*?)<\\\\/\\\\1\\\\u003e', 'gi'), '');
                 content = content.trim();
 
                 // Format excerpt cleanly (no HTML tags, decode entities, and truncate at word boundary)
-                let plainText = rawExcerpt.replace(/<\/?[^>]+(>|$)/g, ""); // strip HTML tags
+                let plainText = rawExcerpt.replace(new RegExp('<\\\\/?[^\\\\u003e]+(?:\\\\u003e|\\\\$)', 'g'), ""); // strip HTML tags
                 const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = plainText;
                 plainText = tempDiv.textContent || tempDiv.innerText || "";
@@ -233,7 +233,7 @@
 
                 // Fallback to content if raw excerpt is empty
                 if (!plainText && content) {
-                    let contentText = content.replace(/<\/?[^>]+(>|$)/g, "");
+                    let contentText = content.replace(new RegExp('<\\\\/?[^\\\\u003e]+(?:\\\\u003e|\\\\$)', 'g'), "");
                     const tempDiv2 = document.createElement("div");
                     tempDiv2.innerHTML = contentText;
                     plainText = tempDiv2.textContent || tempDiv2.innerText || "";

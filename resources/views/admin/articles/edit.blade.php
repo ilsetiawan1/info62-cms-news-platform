@@ -148,6 +148,7 @@
                     </div>
                 </div>
             </div>
+        </div>
 
         <!-- Sidebar Column (Right) -->
         <div class="w-full lg:w-80 flex-shrink-0 space-y-6">
