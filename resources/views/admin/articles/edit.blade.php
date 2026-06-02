@@ -3,6 +3,60 @@
 @section('header', 'Edit Artikel')
 
 @section('content')
+<style>
+    .ck-editor__editable_inline {
+        min-height: 320px;
+    }
+    .ck.ck-editor {
+        width: 100% !important;
+    }
+    /* Batasan maksimal lebar pada .ck-content .image dan .ck-content .ck-media__wrapper sebesar 100% agar tidak overflow */
+    .ck-content .image,
+    .ck-content .ck-media__wrapper {
+        max-width: 100% !important;
+    }
+    /* Rule CSS agar secara default video embed (iframe) memiliki max-width 700px dan terpusat (margin: auto) */
+    .ck-content .ck-media__wrapper iframe {
+        max-width: 700px !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+
+    /* ==================================================================
+       CSS ANTI-SCROLL: MEMBUAT MEDIA MINI KHUSUS DI SISI EDITOR ADMIN 
+       ================================================================== */
+
+    /* 1. Otomatis kecilkan kontainer VIDEO YouTube di dalam area edit admin */
+    .ck-editor__editable .ck-media__wrapper {
+        max-width: 450px !important; /* Dikunci mini agar admin nyaman melihat form lain */
+        margin: 15px 0 !important;   /* Rata kiri serasi dengan teks, beri jarak atas bawah */
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* Memastikan iframe video di dalam kontainer mini ikut presisi 100% dari 450px */
+    .ck-editor__editable .ck-media__wrapper iframe {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 9;
+    }
+
+    /* 2. Otomatis kecilkan FOTO yang di-paste/diupload di dalam area edit admin */
+    .ck-editor__editable .image img {
+        max-width: 350px !important; /* Foto otomatis dibuat berukuran mini di admin */
+        height: auto !important;
+        margin: 10px 0 !important;   /* Rata kiri bersama teks */
+        border-radius: 6px;
+    }
+
+    /* Mengatur agar block widget pembungkus foto dari CKEditor tidak memakan space lebar */
+    .ck-editor__editable .ck-widget.image {
+        max-width: 350px !important;
+    }
+</style>
+
     <div class="mb-6 flex items-center justify-between">
         <div>
             <h2 class="text-xl font-bold text-slate-900 dark:text-gray-50">Edit Artikel</h2>
@@ -170,6 +224,8 @@
                     Cover Image
                 </h3>
                 
+                <input type="hidden" id="cover_image_url" name="cover_image_url" value="{{ old('cover_image_url', $article->cover_image) }}">
+
                 <div class="space-y-4">
                     <div class="flex items-center justify-center w-full {{ $article->cover_image ? 'hidden' : '' }}" id="image-preview-container">
                         <label for="cover_image" class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl cursor-pointer bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors">
@@ -191,6 +247,17 @@
                     @error('cover_image')
                         <p class="mt-2 text-sm text-accent dark:text-accent-500">{{ $message }}</p>
                     @enderror
+
+                    {{-- Alt Teks Foto Cover --}}
+                    <div class="mt-4">
+                        <label for="cover_image_alt" class="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-1.5">
+                            Alt Teks Foto Cover <span class="text-slate-400 font-normal">(Opsional)</span>
+                        </label>
+                        <input type="text" id="cover_image_alt" name="cover_image_alt" value="{{ old('cover_image_alt', $article->cover_image_alt) }}"
+                            placeholder="Deskripsi singkat gambar untuk SEO..."
+                            class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary focus:ring-primary text-sm px-3 py-2">
+                        @error('cover_image_alt')<p class="mt-1.5 text-sm text-red-500">{{ $message }}</p>@enderror
+                    </div>
                 </div>
             </div>
 
@@ -248,6 +315,9 @@
         </div>
     </form>
 
+    {{-- CKEditor 5 CDN --}}
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+
     <script>
         // Auto-generate Slug logic
         document.addEventListener('DOMContentLoaded', function() {
@@ -271,6 +341,63 @@
                     slugInput.value = slug;
                 }
             });
+
+            // Initialize CKEditor 5
+            ClassicEditor
+                .create(document.querySelector('#content'), {
+                    toolbar: [
+                        'heading', '|',
+                        'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
+                        'insertTable', 'mediaEmbed', 'imageUpload', '|',
+                        'imageTextAlternative', 'toggleImageCaption', 'imageStyle:inline', 'imageStyle:block', 'imageStyle:side', '|',
+                        'undo', 'redo'
+                    ],
+                    image: {
+                        resizeOptions: [
+                            {
+                                name: 'resizeImage:original',
+                                label: 'Original',
+                                value: null
+                            },
+                            {
+                                name: 'resizeImage:25',
+                                label: '25%',
+                                value: '25'
+                            },
+                            {
+                                name: 'resizeImage:50',
+                                label: '50%',
+                                value: '50'
+                            },
+                            {
+                                name: 'resizeImage:75',
+                                label: '75%',
+                                value: '75'
+                            }
+                        ],
+                        toolbar: [
+                            'imageStyle:inline', 'imageStyle:block', 'imageStyle:side',
+                            '|',
+                            'toggleImageCaption', 'imageTextAlternative',
+                            '|',
+                            'resizeImage:25', 'resizeImage:50', 'resizeImage:75', 'resizeImage:original'
+                        ]
+                    },
+                    mediaEmbed: {
+                        previewsInData: true
+                    }
+                })
+                .then(editor => {
+                    window.editorInstance = editor;
+                    
+                    // Sync content on change
+                    editor.model.document.on('change:data', () => {
+                        document.querySelector('#content').value = editor.getData();
+                    });
+                })
+                .catch(error => {
+                    console.error('CKEditor error:', error);
+                });
         });
 
         // Image Preview Logic
@@ -296,8 +423,10 @@
             const container = document.getElementById('image-preview-container');
             const wrapper = document.getElementById('image-preview-wrapper');
             const preview = document.getElementById('image-preview');
+            const coverImageUrl = document.getElementById('cover_image_url');
 
             input.value = "";
+            if (coverImageUrl) coverImageUrl.value = "";
             preview.src = "#";
             wrapper.classList.add('hidden');
             container.classList.remove('hidden');
