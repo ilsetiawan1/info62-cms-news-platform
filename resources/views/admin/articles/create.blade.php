@@ -364,6 +364,7 @@
                     initialCategoryId: '{{ old('category_id') }}',
                     categories: {{ Js::from($categories) }},
                     parentId: '',
+                    subCategoryId: '',
                     
                     init() {
                         if (this.initialCategoryId) {
@@ -373,6 +374,7 @@
                                 const parent = this.categories.find(c => c.children && c.children.some(child => String(child.id) === String(this.initialCategoryId)));
                                 if (parent) {
                                     this.parentId = String(parent.id);
+                                    this.subCategoryId = String(this.initialCategoryId);
                                 }
                             }
                         }
@@ -391,7 +393,7 @@
 
                 {{-- Parent category --}}
                 <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kategori Utama</label>
-                <select x-model="parentId"
+                <select x-model="parentId" @change="subCategoryId = ''"
                     class="w-full rounded-xl border-gray-200 bg-white text-slate-900 focus:border-primary focus:ring-primary px-4 py-2.5 mb-3">
                     <option value="">-- Pilih Kategori Utama --</option>
                     @foreach($categories as $parent)
@@ -402,19 +404,19 @@
                 {{-- Subcategory (shown when parent has children) --}}
                 <div x-show="subcategories.length > 0" style="display:none">
                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Sub Kategori</label>
-                    <select id="category_id" name="category_id" required
+                    <select id="category_id" name="category_id" x-model="subCategoryId" :disabled="subcategories.length === 0" :required="subcategories.length > 0"
                         class="w-full rounded-xl border-gray-200 bg-white text-slate-900 focus:border-primary focus:ring-primary px-4 py-2.5">
                         <option value="">-- Pilih Sub Kategori --</option>
                         <template x-for="sub in subcategories" :key="sub.id">
                             <option :value="sub.id" x-text="sub.name"
-                                :selected="String(sub.id) === '{{ old('category_id') }}'"></option>
+                                :selected="String(sub.id) === String(subCategoryId)"></option>
                         </template>
                     </select>
                 </div>
 
                 {{-- If parent has no children, parent itself is the category --}}
                 <div x-show="subcategories.length === 0 && parentId">
-                    <input type="hidden" id="category_id" name="category_id" :value="parentId">
+                    <input type="hidden" id="category_id" name="category_id" :value="parentId" :disabled="subcategories.length > 0">
                     <p class="text-xs text-slate-400 mt-1">Kategori ini tidak memiliki sub kategori.</p>
                 </div>
 

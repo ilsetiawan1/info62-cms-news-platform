@@ -158,25 +158,28 @@
                  x-data="{
                     // Initialize with article's category. If it has a parent, use parent_id. If no parent, use its id.
                     initialCategoryId: '{{ old('category_id', $article->category_id) }}',
-                    categories: {{ Js::from($categories->where('parent_id', null)) }},
-                    allCategories: {{ Js::from($categories) }},
-                    
+                    categories: {{ Js::from($categories) }},
                     parentId: '',
+                    subCategoryId: '',
                     
                     init() {
-                        const currentCat = this.allCategories.find(c => String(c.id) === String(this.initialCategoryId));
-                        if (currentCat) {
-                            if (currentCat.parent_id) {
-                                this.parentId = String(currentCat.parent_id);
+                        if (this.initialCategoryId) {
+                            if (this.categories.some(c => String(c.id) === String(this.initialCategoryId))) {
+                                this.parentId = String(this.initialCategoryId);
                             } else {
-                                this.parentId = String(currentCat.id);
+                                const parent = this.categories.find(c => c.children && c.children.some(child => String(child.id) === String(this.initialCategoryId)));
+                                if (parent) {
+                                    this.parentId = String(parent.id);
+                                    this.subCategoryId = String(this.initialCategoryId);
+                                }
                             }
                         }
                     },
                     
                     get subcategories() {
                         if (!this.parentId) return [];
-                        return this.allCategories.filter(c => String(c.parent_id) === String(this.parentId));
+                        const parent = this.categories.find(c => String(c.id) === String(this.parentId));
+                        return parent ? parent.children : [];
                     }
                  }">
                 <h3 class="text-base font-bold text-slate-900 dark:text-gray-50 mb-4 flex items-center">
@@ -186,10 +189,10 @@
                 
                 {{-- Parent category --}}
                 <label class="block text-xs font-semibold text-slate-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Kategori Utama</label>
-                <select x-model="parentId"
+                <select x-model="parentId" @change="subCategoryId = ''"
                     class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary focus:ring-primary px-4 py-2.5 mb-3">
                     <option value="">-- Pilih Kategori Utama --</option>
-                    @foreach($categories->where('parent_id', null) as $parent)
+                    @foreach($categories as $parent)
                     <option value="{{ $parent->id }}">{{ $parent->name }}</option>
                     @endforeach
                 </select>
@@ -197,19 +200,19 @@
                 {{-- Subcategory (shown when parent has children) --}}
                 <div x-show="subcategories.length > 0" style="display:none">
                     <label class="block text-xs font-semibold text-slate-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Sub Kategori</label>
-                    <select id="category_id" name="category_id" required
+                    <select id="category_id" name="category_id" x-model="subCategoryId" :disabled="subcategories.length === 0" :required="subcategories.length > 0"
                         class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary focus:ring-primary px-4 py-2.5">
                         <option value="">-- Pilih Sub Kategori --</option>
                         <template x-for="sub in subcategories" :key="sub.id">
                             <option :value="sub.id" x-text="sub.name"
-                                :selected="String(sub.id) === String(initialCategoryId)"></option>
+                                :selected="String(sub.id) === String(subCategoryId)"></option>
                         </template>
                     </select>
                 </div>
 
                 {{-- If parent has no children, parent itself is the category --}}
                 <div x-show="subcategories.length === 0 && parentId">
-                    <input type="hidden" id="category_id" name="category_id" :value="parentId">
+                    <input type="hidden" id="category_id" name="category_id" :value="parentId" :disabled="subcategories.length > 0">
                     <p class="text-xs text-slate-400 dark:text-gray-500 mt-1">Kategori ini tidak memiliki sub kategori.</p>
                 </div>
 
