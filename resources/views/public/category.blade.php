@@ -334,12 +334,13 @@
                             <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Topik Populer</h3>
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <a href="{{ route('search', ['q' => 'Pilkada2026']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Pilkada2026</a>
-                            <a href="{{ route('search', ['q' => 'TimnasIndonesia']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#TimnasIndonesia</a>
-                            <a href="{{ route('search', ['q' => 'Crypto']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Crypto</a>
-                            <a href="{{ route('search', ['q' => 'Teknologi']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Teknologi</a>
-                            <a href="{{ route('search', ['q' => 'GayaHidup']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#GayaHidup</a>
-                            <a href="{{ route('search', ['q' => 'Otomotif']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Otomotif</a>
+                            @if(isset($popularTopics) && $popularTopics->isNotEmpty())
+                                @foreach($popularTopics as $topic)
+                                    <a href="{{ route('category.show', $topic->slug) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#{{ str_replace(' ', '', $topic->name) }}</a>
+                                @endforeach
+                            @else
+                                <span class="text-xs text-slate-500 dark:text-slate-400">Tidak ada topik populer.</span>
+                            @endif
                         </div>
                     </div>
                     @if(isset($adRightBottom) && $adRightBottom)
