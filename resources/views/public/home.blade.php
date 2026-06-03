@@ -370,12 +370,13 @@
                         <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Topik Populer</h3>
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <a href="{{ route('search', ['q' => 'Pilkada2026']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Pilkada2026</a>
-                        <a href="{{ route('search', ['q' => 'TimnasIndonesia']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#TimnasIndonesia</a>
-                        <a href="{{ route('search', ['q' => 'Crypto']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Crypto</a>
-                        <a href="{{ route('search', ['q' => 'Teknologi']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Teknologi</a>
-                        <a href="{{ route('search', ['q' => 'GayaHidup']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#GayaHidup</a>
-                        <a href="{{ route('search', ['q' => 'Otomotif']) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#Otomotif</a>
+                        @if(isset($popularTopics) && $popularTopics->isNotEmpty())
+                            @foreach($popularTopics as $topic)
+                                <a href="{{ route('category.show', $topic->slug) }}" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-colors border border-slate-100 dark:border-slate-700">#{{ str_replace(' ', '', $topic->name) }}</a>
+                            @endforeach
+                        @else
+                            <span class="text-xs text-slate-500 dark:text-slate-400">Tidak ada topik populer.</span>
+                        @endif
                     </div>
                 </div>
 
@@ -388,15 +389,15 @@
                 </div>
                 @endif
 
-                {{-- Berita Terbaru (mini list) --}}
+                {{-- Sorotan (mini list) --}}
                 <div class="grid grid-cols-12 gap-4 md:block">
                     <div class="col-span-8 sm:col-span-9 md:col-span-12 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
                         <div class="flex items-center gap-2 px-5 py-4 border-b border-slate-100 dark:border-slate-700">
-                            <span class="w-1 h-4 bg-blue-600 dark:bg-sky-500 rounded-full"></span>
-                            <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Berita Terbaru</h3>
+                            <span class="w-1 h-4 bg-amber-500 rounded-full"></span>
+                            <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Sorotan</h3>
                         </div>
                         <div class="divide-y divide-slate-100 dark:divide-slate-700/50">
-                            @foreach($latestArticles->take(5) as $latest)
+                            @foreach($sorotanArticles as $latest)
                             <a href="{{ route('article.show', $latest->slug) }}"
                                class="group flex gap-3 px-5 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                                 <div class="w-[56px] h-[46px] flex-shrink-0 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600">

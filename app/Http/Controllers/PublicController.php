@@ -36,6 +36,34 @@ class PublicController extends Controller
 
         $financialData = $this->getFinancialData();
 
+        $popularTopics = Cache::remember('popular_topics', 3600, function () {
+            $topics = Category::whereNotNull('parent_id')
+                ->whereHas('articles', function ($query) {
+                    $query->published();
+                })
+                ->withCount(['articles' => function ($query) {
+                    $query->published();
+                }])
+                ->orderByDesc('articles_count')
+                ->limit(7)
+                ->get();
+
+            if ($topics->isEmpty()) {
+                $topics = Category::whereNull('parent_id')
+                    ->whereHas('articles', function ($query) {
+                        $query->published();
+                    })
+                    ->withCount(['articles' => function ($query) {
+                        $query->published();
+                    }])
+                    ->orderByDesc('articles_count')
+                    ->limit(7)
+                    ->get();
+            }
+
+            return $topics;
+        });
+
         // Share globally to prevent undefined variable errors in layout
         view()->share([
             'adHeader'       => $adHeader,
@@ -44,6 +72,7 @@ class PublicController extends Controller
             'adRightTop'     => $adRightTop,
             'adRightBottom'  => $adRightBottom,
             'financialData'  => $financialData,
+            'popularTopics'  => $popularTopics,
         ]);
 
         return [
@@ -114,11 +143,11 @@ class PublicController extends Controller
     {
         $now = now();
 
-        // Hero: latest 5 published articles (scheduled in the past or now)
+        // Hero: latest 7 published articles (scheduled in the past or now)
         $heroSlides = Article::with(['category', 'author'])
             ->published()
             ->latest('published_at')
-            ->limit(9)
+            ->limit(7)
             ->get();
 
         $heroIds = $heroSlides->pluck('id');
@@ -128,7 +157,7 @@ class PublicController extends Controller
             ->published()
             ->whereNotIn('id', $heroIds)
             ->latest('published_at')
-            ->limit(20)
+            ->limit(10)
             ->get();
 
         // Most viewed
@@ -146,6 +175,12 @@ class PublicController extends Controller
             ->limit(8)
             ->get(['id', 'title', 'slug']);
 
+        // Sorotan (randomized published articles)
+        $sorotanArticles = Article::published()
+            ->inRandomOrder()
+            ->limit(5)
+            ->get();
+
         // Articles grouped per top category (for homepage sections)
         $categoryArticles = $navCategories->map(function ($cat) use ($heroIds, $now) {
             $catIds = collect([$cat->id])
@@ -162,7 +197,7 @@ class PublicController extends Controller
         })->filter(fn ($item) => $item['articles']->isNotEmpty())->values()->take(5);
 
         return view('public.home', array_merge(
-            compact('heroSlides', 'latestArticles', 'mostViewed', 'navCategories', 'tickerNews', 'categoryArticles'),
+            compact('heroSlides', 'latestArticles', 'mostViewed', 'navCategories', 'tickerNews', 'categoryArticles', 'sorotanArticles'),
             $this->getAds()
         ));
     }
