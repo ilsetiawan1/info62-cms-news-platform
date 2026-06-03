@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-infoseputar62.png') }}">
+
     <!-- SEO Meta Tags -->
     <title>@yield('meta_title', config('app.name', 'Info Seputar +62'))</title>
     <meta name="description" content="@yield('meta_description', 'Portal berita terpercaya Indonesia — Info Seputar +62.')">
