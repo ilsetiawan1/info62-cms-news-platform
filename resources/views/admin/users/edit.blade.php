@@ -64,7 +64,7 @@
                 <!-- Status -->
                 <div>
                     <label for="status" class="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-1.5">Status Akun</label>
-                    <select id="status" name="status" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary dark:focus:border-primary-500 focus:ring-primary dark:focus:ring-primary-500 shadow-sm transition-colors duration-200 px-4 py-2.5" {{ $user->id === Auth::id() ? 'disabled' : '' }}>
+                    <select id="status" name="status" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary dark:focus:border-primary-500 focus:ring-primary dark:focus:ring-primary-500 shadow-sm transition-colors duration-200 px-4 py-2.5 disabled:cursor-not-allowed disabled:bg-slate-50 dark:disabled:bg-gray-800 disabled:text-slate-500" {{ $user->id === Auth::id() ? 'disabled' : '' }}>
                         <option value="1" {{ old('status', $user->status) == '1' ? 'selected' : '' }}>Aktif</option>
                         <option value="0" {{ old('status', $user->status) == '0' ? 'selected' : '' }}>Nonaktif</option>
                     </select>
@@ -82,7 +82,7 @@
                 @if(Auth::user()->isSuperAdmin())
                 <div>
                     <label for="role" class="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-1.5">Role Pengguna</label>
-                    <select id="role" name="role" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary dark:focus:border-primary-500 focus:ring-primary dark:focus:ring-primary-500 shadow-sm transition-colors duration-200 px-4 py-2.5" {{ auth()->user()->id == $user->id ? 'disabled' : '' }}>
+                    <select id="role" name="role" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary dark:focus:border-primary-500 focus:ring-primary dark:focus:ring-primary-500 shadow-sm transition-colors duration-200 px-4 py-2.5 disabled:cursor-not-allowed disabled:bg-slate-50 dark:disabled:bg-gray-800 disabled:text-slate-500" {{ auth()->user()->id == $user->id ? 'disabled' : '' }}>
                         <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
                         <option value="super_admin" {{ old('role', $user->role) == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
                     </select>
