@@ -214,16 +214,14 @@ class PublicController extends Controller
             ->published()
             ->firstOrFail();
 
-        // --- View Tracking (24h cooldown per IP per article) ---
-        $ip        = request()->ip();
-        $cacheKey  = 'article_view_' . $article->id . '_' . md5($ip);
-        $alreadyViewed = cache()->has($cacheKey);
+        // --- View Tracking (Session based) ---
+        $viewedSessionKey = 'viewed_article_' . $article->id;
 
-        if (!$alreadyViewed) {
+        if (!session()->has($viewedSessionKey)) {
             // Store in article_views table
             \DB::table('article_views')->insert([
                 'article_id' => $article->id,
-                'ip_address' => $ip,
+                'ip_address' => request()->ip(),
                 'user_agent' => request()->userAgent(),
                 'created_at' => $now,
             ]);
@@ -231,8 +229,8 @@ class PublicController extends Controller
             // Increment counter on articles table
             $article->increment('views_count');
 
-            // Mark as viewed in cache for 24 hours
-            cache()->put($cacheKey, true, $now->copy()->addHours(24));
+            // Mark as viewed in session
+            session()->put($viewedSessionKey, true);
         }
 
         // Related articles: 3 from same category
