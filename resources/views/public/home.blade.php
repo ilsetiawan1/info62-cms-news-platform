@@ -48,6 +48,20 @@
                     </div>
                 </div>
 
+                {{-- Slot 1 (Desktop) --}}
+                @if(isset($adSlot1) && $adSlot1)
+                <div class="w-full flex justify-center">
+                    <div class="w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-all duration-300 hover:shadow-md hover:border-blue-400 p-1 flex flex-col">
+                        <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                            <span>Sponsor</span>
+                        </div>
+                        <a href="{{ $adSlot1->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                            <img src="{{ $adSlot1->image_url }}" alt="{{ $adSlot1->title }}" class="w-full h-auto object-cover mx-auto max-h-[280px]">
+                        </a>
+                    </div>
+                </div>
+                @endif
+
                 {{-- Trivia Nusantara --}}
                 <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm relative overflow-hidden" x-data="{
                     facts: [
@@ -144,6 +158,20 @@
                     </div>
                 </div>
 
+                {{-- Slot 2 (Desktop) --}}
+                @if(isset($adSlot2) && $adSlot2)
+                <div class="w-full flex justify-center">
+                    <div class="w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-all duration-300 hover:shadow-md hover:border-blue-400 p-1 flex flex-col">
+                        <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                            <span>Sponsor</span>
+                        </div>
+                        <a href="{{ $adSlot2->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                            <img src="{{ $adSlot2->image_url }}" alt="{{ $adSlot2->title }}" class="w-full h-auto object-cover mx-auto max-h-[280px]">
+                        </a>
+                    </div>
+                </div>
+                @endif
+
                 {{-- Logam Mulia --}}
                 <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm relative overflow-hidden">
                     <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-bl from-amber-500/10 to-transparent pointer-events-none rounded-bl-full"></div>
@@ -200,6 +228,20 @@
                 </div>
             </a>
 
+            {{-- Slot 1 (Mobile/Tablet only) --}}
+            @if(isset($adSlot1) && $adSlot1)
+            <div class="lg:hidden w-full my-6 flex justify-center">
+                <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                    <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        <span>Sponsor</span>
+                    </div>
+                    <a href="{{ $adSlot1->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                        <img src="{{ $adSlot1->image_url }}" alt="{{ $adSlot1->title }}" class="w-full h-auto object-contain mx-auto max-h-[160px] sm:max-h-[220px]">
+                    </a>
+                </div>
+            </div>
+            @endif
+
             {{-- More hero articles (compact) --}}
             @if($heroSlides->count() > 1)
             <div class="mb-8">
@@ -225,15 +267,57 @@
             @endif
             @endif
 
+            {{-- Slot 2 (Mobile/Tablet only) --}}
+            @if(isset($adSlot2) && $adSlot2)
+            <div class="lg:hidden w-full my-6 flex justify-center">
+                <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                    <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        <span>Sponsor</span>
+                    </div>
+                    <a href="{{ $adSlot2->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                        <img src="{{ $adSlot2->image_url }}" alt="{{ $adSlot2->title }}" class="w-full h-auto object-contain mx-auto max-h-[160px] sm:max-h-[220px]">
+                    </a>
+                </div>
+            </div>
+            @endif
+
+            {{-- Slot 3 (Visible on all screens - Bawah Slider) --}}
+            @if(isset($adSlot3) && $adSlot3)
+            <div class="w-full my-6 flex justify-center">
+                <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                    <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        <span>Sponsor</span>
+                    </div>
+                    <a href="{{ $adSlot3->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                        <img src="{{ $adSlot3->image_url }}" alt="{{ $adSlot3->title }}" class="w-full h-auto object-contain mx-auto max-h-[160px] sm:max-h-[220px]">
+                    </a>
+                </div>
+            </div>
+            @endif
+
             {{-- Divider + Terkini --}}
             <div class="flex items-center gap-3 mb-5">
                 <span class="w-1 h-5 bg-red-500 rounded-full flex-shrink-0"></span>
                 <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Terkini</h2>
             </div>
 
+            {{-- Slot 4 (Visible on all screens - Sela Card) --}}
+            @if(isset($adSlot4) && $adSlot4)
+            <div class="w-full my-6 flex justify-center">
+                <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                    <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        <span>Sponsor</span>
+                    </div>
+                    <a href="{{ $adSlot4->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                        <img src="{{ $adSlot4->image_url }}" alt="{{ $adSlot4->title }}" class="w-full h-auto object-contain mx-auto max-h-[160px] sm:max-h-[220px]">
+                    </a>
+                </div>
+            </div>
+            @endif
+
             {{-- Article list --}}
             <div class="grid grid-cols-12 gap-4 md:block">
-                <div class="col-span-8 sm:col-span-9 md:col-span-12 divide-y divide-slate-100 dark:divide-slate-800">
+                <div class="col-span-12 divide-y divide-slate-100 dark:divide-slate-800">
                     @foreach($latestArticles->take(10) as $art)
                     <a href="{{ route('article.show', $art->slug) }}" class="group flex gap-4 py-4 first:pt-0">
                         <div class="w-24 h-[70px] flex-shrink-0 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
@@ -254,14 +338,21 @@
                     </a>
                     @endforeach
                 </div>
-                @if(isset($adLeftTop) && $adLeftTop)
-                <div class="col-span-4 sm:col-span-3 md:hidden flex flex-col justify-start pt-2">
-                    <a href="{{ $adLeftTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
-                        <img src="{{ $adLeftTop->image_url }}" alt="{{ $adLeftTop->title }}" class="w-full h-auto max-h-[380px] object-contain mx-auto">
+            </div>
+
+            {{-- Slot 5 (Visible on all screens - Atas Terkini) --}}
+            @if(isset($adSlot5) && $adSlot5)
+            <div class="w-full my-6 flex justify-center">
+                <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                    <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        <span>Sponsor</span>
+                    </div>
+                    <a href="{{ $adSlot5->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                        <img src="{{ $adSlot5->image_url }}" alt="{{ $adSlot5->title }}" class="w-full h-auto object-contain mx-auto max-h-[160px] sm:max-h-[220px]">
                     </a>
                 </div>
-                @endif
             </div>
+            @endif
 
             {{-- Divider --}}
             <div class="my-8 border-b border-slate-200/60 dark:border-slate-800/50"></div>
@@ -269,8 +360,8 @@
             {{-- Kategori Blocks --}}
             @if(isset($categoryArticles) && $categoryArticles->isNotEmpty())
             <div class="grid grid-cols-12 gap-4 md:block">
-                <div class="col-span-8 sm:col-span-9 md:col-span-12">
-                    @foreach($categoryArticles->take(3) as $catData)
+                <div class="col-span-12">
+                    @foreach($categoryArticles->take(3) as $index => $catData)
                     @php $catArts = $catData['articles']; @endphp
                     @if($catArts->isNotEmpty())
                     <div class="mb-10">
@@ -298,15 +389,36 @@
                         </div>
                     </div>
                     @endif
+
+                    {{-- Slot 6 (Visible on all screens - Sela Terkini/Kategori Blocks) --}}
+                    @if($index === 0 && isset($adSlot6) && $adSlot6)
+                    <div class="w-full my-6 flex justify-center">
+                        <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                            <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                                <span>Sponsor</span>
+                            </div>
+                            <a href="{{ $adSlot6->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                                <img src="{{ $adSlot6->image_url }}" alt="{{ $adSlot6->title }}" class="w-full h-auto object-contain mx-auto max-h-[160px] sm:max-h-[220px]">
+                            </a>
+                        </div>
+                    </div>
+                    @endif
                     @endforeach
                 </div>
-                @if(isset($adLeftBottom) && $adLeftBottom)
-                <div class="col-span-4 sm:col-span-3 md:hidden flex flex-col justify-start pt-2">
-                    <a href="{{ $adLeftBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
-                        <img src="{{ $adLeftBottom->image_url }}" alt="{{ $adLeftBottom->title }}" class="w-full h-auto max-h-[240px] object-contain mx-auto">
+            </div>
+            @endif
+
+            {{-- Slot 7 (Visible on all screens - Atas Footer) --}}
+            @if(isset($adSlot7) && $adSlot7)
+            <div class="w-full my-6 flex justify-center">
+                <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                    <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        <span>Sponsor</span>
+                    </div>
+                    <a href="{{ $adSlot7->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                        <img src="{{ $adSlot7->image_url }}" alt="{{ $adSlot7->title }}" class="w-full h-auto object-contain mx-auto max-h-[160px] sm:max-h-[220px]">
                     </a>
                 </div>
-                @endif
             </div>
             @endif
 
@@ -315,51 +427,38 @@
         {{-- ===== SIDEBAR KANAN (col-span-12 → md:4 → lg:4) ===== --}}
         <aside class="col-span-12 md:col-span-4 lg:col-span-4">
             <div class="md:sticky md:top-[136px] flex flex-col gap-6">
-                
-                {{-- Tablet Sidebar Ad 1 (sidebar_mid on Tablet) --}}
-                @if(isset($adLeftTop) && $adLeftTop)
-                <div class="hidden md:block lg:!hidden w-full flex justify-center">
-                    <a href="{{ $adLeftTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[280px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
-                        <img src="{{ $adLeftTop->image_url }}" alt="{{ $adLeftTop->title }}" class="w-full h-auto max-h-[380px] object-contain mx-auto">
-                    </a>
-                </div>
-                @endif
 
                 {{-- Terpopuler --}}
-                <div class="grid grid-cols-12 gap-4 md:block">
-                    <div class="col-span-8 sm:col-span-9 md:col-span-12 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
-                        <div class="flex items-center gap-2 px-5 py-4 border-b border-slate-100 dark:border-slate-700">
-                            <span class="w-1 h-4 bg-red-500 rounded-full"></span>
-                            <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Terpopuler</h3>
-                        </div>
-                        <div class="divide-y divide-slate-100 dark:divide-slate-700/50">
-                            @foreach($mostViewed->take(7) as $i => $pop)
-                            <a href="{{ route('article.show', $pop->slug) }}"
-                               class="group flex items-start gap-3 px-5 py-3.5 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                                <span class="text-xl font-black leading-none flex-shrink-0 w-6 text-center mt-0.5 {{ $i === 0 ? 'text-red-500' : 'text-slate-200 dark:text-slate-700' }}">{{ $i+1 }}</span>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-[13px] font-semibold text-slate-800 dark:text-slate-200 leading-[1.4] line-clamp-3 group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors tracking-tight">{{ $pop->title }}</p>
-                                    <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">{{ $pop->published_at?->format('d M Y') }}</p>
-                                </div>
-                            </a>
-                            @endforeach
-                        </div>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+                    <div class="flex items-center gap-2 px-5 py-4 border-b border-slate-100 dark:border-slate-700">
+                        <span class="w-1 h-4 bg-red-500 rounded-full"></span>
+                        <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Terpopuler</h3>
                     </div>
-                    @if(isset($adRightTop) && $adRightTop)
-                    <div class="col-span-4 sm:col-span-3 md:hidden flex flex-col justify-start">
-                        <a href="{{ $adRightTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
-                            <img src="{{ $adRightTop->image_url }}" alt="{{ $adRightTop->title }}" class="w-full h-auto max-h-[240px] object-contain mx-auto">
+                    <div class="divide-y divide-slate-100 dark:divide-slate-700/50">
+                        @foreach($mostViewed->take(7) as $i => $pop)
+                        <a href="{{ route('article.show', $pop->slug) }}"
+                           class="group flex items-start gap-3 px-5 py-3.5 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                            <span class="text-xl font-black leading-none flex-shrink-0 w-6 text-center mt-0.5 {{ $i === 0 ? 'text-red-500' : 'text-slate-200 dark:text-slate-700' }}">{{ $i+1 }}</span>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-[13px] font-semibold text-slate-800 dark:text-slate-200 leading-[1.4] line-clamp-3 group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors tracking-tight">{{ $pop->title }}</p>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">{{ $pop->published_at?->format('d M Y') }}</p>
+                            </div>
                         </a>
+                        @endforeach
                     </div>
-                    @endif
                 </div>
 
-                {{-- Tablet Sidebar Ad 2 (article_mid on Tablet) --}}
-                @if(isset($adLeftBottom) && $adLeftBottom)
-                <div class="hidden md:block lg:!hidden w-full flex justify-center">
-                    <a href="{{ $adLeftBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[280px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
-                        <img src="{{ $adLeftBottom->image_url }}" alt="{{ $adLeftBottom->title }}" class="w-full h-auto max-h-[240px] object-contain mx-auto">
-                    </a>
+                {{-- Slot 8 (Visible on all screens - Bawah Terpopuler) --}}
+                @if(isset($adSlot8) && $adSlot8)
+                <div class="w-full flex justify-center">
+                    <div class="w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                        <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                            <span>Sponsor</span>
+                        </div>
+                        <a href="{{ $adSlot8->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                            <img src="{{ $adSlot8->image_url }}" alt="{{ $adSlot8->title }}" class="w-full h-auto object-cover mx-auto max-h-[280px]">
+                        </a>
+                    </div>
                 </div>
                 @endif
 
@@ -380,55 +479,56 @@
                     </div>
                 </div>
 
-                {{-- Tablet Sidebar Ad 3 (sidebar_top on Tablet) --}}
-                @if(isset($adRightTop) && $adRightTop)
-                <div class="hidden md:block lg:!hidden w-full flex justify-center">
-                    <a href="{{ $adRightTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[280px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
-                        <img src="{{ $adRightTop->image_url }}" alt="{{ $adRightTop->title }}" class="w-full h-auto max-h-[240px] object-contain mx-auto">
-                    </a>
+                {{-- Slot 9 (Visible on all screens - Bawah Topik Populer) --}}
+                @if(isset($adSlot9) && $adSlot9)
+                <div class="w-full flex justify-center">
+                    <div class="w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                        <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                            <span>Sponsor</span>
+                        </div>
+                        <a href="{{ $adSlot9->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                            <img src="{{ $adSlot9->image_url }}" alt="{{ $adSlot9->title }}" class="w-full h-auto object-cover mx-auto max-h-[280px]">
+                        </a>
+                    </div>
                 </div>
                 @endif
 
                 {{-- Sorotan (mini list) --}}
-                <div class="grid grid-cols-12 gap-4 md:block">
-                    <div class="col-span-8 sm:col-span-9 md:col-span-12 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
-                        <div class="flex items-center gap-2 px-5 py-4 border-b border-slate-100 dark:border-slate-700">
-                            <span class="w-1 h-4 bg-amber-500 rounded-full"></span>
-                            <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Sorotan</h3>
-                        </div>
-                        <div class="divide-y divide-slate-100 dark:divide-slate-700/50">
-                            @foreach($sorotanArticles as $latest)
-                            <a href="{{ route('article.show', $latest->slug) }}"
-                               class="group flex gap-3 px-5 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                                <div class="w-[56px] h-[46px] flex-shrink-0 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600">
-                                    @if($latest->cover_image)
-                                    <img src="{{ $latest->cover_image_url }}" alt="{{ $latest->title }}"
-                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
-                                    @endif
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-[12px] font-semibold text-slate-800 dark:text-slate-200 leading-[1.35] line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors">{{ $latest->title }}</p>
-                                    <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">{{ $latest->published_at?->format('d M Y') }}</p>
-                                </div>
-                            </a>
-                            @endforeach
-                        </div>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+                    <div class="flex items-center gap-2 px-5 py-4 border-b border-slate-100 dark:border-slate-700">
+                        <span class="w-1 h-4 bg-amber-500 rounded-full"></span>
+                        <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Sorotan</h3>
                     </div>
-                    @if(isset($adRightBottom) && $adRightBottom)
-                    <div class="col-span-4 sm:col-span-3 md:hidden flex flex-col justify-start">
-                        <a href="{{ $adRightBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
-                            <img src="{{ $adRightBottom->image_url }}" alt="{{ $adRightBottom->title }}" class="w-full h-auto max-h-[380px] object-contain mx-auto">
+                    <div class="divide-y divide-slate-100 dark:divide-slate-700/50">
+                        @foreach($sorotanArticles as $latest)
+                        <a href="{{ route('article.show', $latest->slug) }}"
+                           class="group flex gap-3 px-5 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                            <div class="w-[56px] h-[46px] flex-shrink-0 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600">
+                                @if($latest->cover_image)
+                                <img src="{{ $latest->cover_image_url }}" alt="{{ $latest->title }}"
+                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                @endif
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-[12px] font-semibold text-slate-800 dark:text-slate-200 leading-[1.35] line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors">{{ $latest->title }}</p>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">{{ $latest->published_at?->format('d M Y') }}</p>
+                            </div>
                         </a>
+                        @endforeach
                     </div>
-                    @endif
                 </div>
 
-                {{-- Tablet Sidebar Ad 4 (article_bottom on Tablet) --}}
-                @if(isset($adRightBottom) && $adRightBottom)
-                <div class="hidden md:block lg:!hidden w-full flex justify-center">
-                    <a href="{{ $adRightBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[280px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
-                        <img src="{{ $adRightBottom->image_url }}" alt="{{ $adRightBottom->title }}" class="w-full h-auto max-h-[380px] object-contain mx-auto">
-                    </a>
+                {{-- Slot 10 (Visible on all screens - Bawah Sorotan) --}}
+                @if(isset($adSlot10) && $adSlot10)
+                <div class="w-full flex justify-center">
+                    <div class="w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                        <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                            <span>Sponsor</span>
+                        </div>
+                        <a href="{{ $adSlot10->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                            <img src="{{ $adSlot10->image_url }}" alt="{{ $adSlot10->title }}" class="w-full h-auto object-cover mx-auto max-h-[280px]">
+                        </a>
+                    </div>
                 </div>
                 @endif
 
