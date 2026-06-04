@@ -228,11 +228,11 @@ class PublicController extends Controller
             return ['category' => $cat, 'articles' => $articles];
         })->filter(fn ($item) => $item['articles']->isNotEmpty())->values()->take(5);
 
-        // Random active fact for Fakta Nusantara widget
-        $fact = Fact::where('is_active', true)->inRandomOrder()->first();
+        // Active facts for Fakta Nusantara carousel
+        $facts = Fact::where('is_active', true)->inRandomOrder()->get();
 
         return view('public.home', array_merge(
-            compact('heroSlides', 'latestArticles', 'mostViewed', 'navCategories', 'tickerNews', 'categoryArticles', 'sorotanArticles', 'fact'),
+            compact('heroSlides', 'latestArticles', 'mostViewed', 'navCategories', 'tickerNews', 'categoryArticles', 'sorotanArticles', 'facts'),
             $this->getAds()
         ));
     }
