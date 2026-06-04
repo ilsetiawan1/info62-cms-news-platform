@@ -44,17 +44,37 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-1">Posisi</label>
-                    <select name="position" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-white px-4 py-2">
-                        <option value="slot1" {{ old('position') == 'slot1' ? 'selected' : '' }}>Slot 1 (Grid Kiri Atas - Kurs)</option>
-                        <option value="slot2" {{ old('position') == 'slot2' ? 'selected' : '' }}>Slot 2 (Grid Kiri Bawah - Emas)</option>
-                        <option value="slot3" {{ old('position') == 'slot3' ? 'selected' : '' }}>Slot 3 (Grid Tengah - Bawah Slider)</option>
-                        <option value="slot4" {{ old('position') == 'slot4' ? 'selected' : '' }}>Slot 4 (Grid Tengah - Sela Card)</option>
-                        <option value="slot5" {{ old('position') == 'slot5' ? 'selected' : '' }}>Slot 5 (Grid Tengah - Atas Terkini)</option>
-                        <option value="slot6" {{ old('position') == 'slot6' ? 'selected' : '' }}>Slot 6 (Grid Tengah - Sela Terkini)</option>
-                        <option value="slot7" {{ old('position') == 'slot7' ? 'selected' : '' }}>Slot 7 (Grid Tengah - Atas Footer)</option>
-                        <option value="slot8" {{ old('position') == 'slot8' ? 'selected' : '' }}>Slot 8 (Grid Kanan - Bawah Terpopuler)</option>
-                        <option value="slot9" {{ old('position') == 'slot9' ? 'selected' : '' }}>Slot 9 (Grid Kanan - Bawah Topik)</option>
-                        <option value="slot10" {{ old('position') == 'slot10' ? 'selected' : '' }}>Slot 10 (Grid Kanan - Bawah Sorotan)</option>
+                    <select name="position" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-white px-4 py-2 font-medium">
+                        <option value="slot1" {{ old('position') == 'slot1' ? 'selected' : '' }} class="{{ in_array('slot1', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                            Slot 1 (Grid Kiri Atas - Kurs) {{ in_array('slot1', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
+                        </option>
+                        <option value="slot2" {{ old('position') == 'slot2' ? 'selected' : '' }} class="{{ in_array('slot2', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                            Slot 2 (Grid Kiri Bawah - Emas) {{ in_array('slot2', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
+                        </option>
+                        <option value="slot3" {{ old('position') == 'slot3' ? 'selected' : '' }} class="{{ in_array('slot3', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                            Slot 3 (Grid Tengah - Bawah Slider) {{ in_array('slot3', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
+                        </option>
+                        <option value="slot4" {{ old('position') == 'slot4' ? 'selected' : '' }} class="{{ in_array('slot4', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                            Slot 4 (Grid Tengah - Sela Card) {{ in_array('slot4', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
+                        </option>
+                        <option value="slot5" {{ old('position') == 'slot5' ? 'selected' : '' }} class="{{ in_array('slot5', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                            Slot 5 (Grid Tengah - Atas Terkini) {{ in_array('slot5', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
+                        </option>
+                        <option value="slot6" {{ old('position') == 'slot6' ? 'selected' : '' }} class="{{ in_array('slot6', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                            Slot 6 (Grid Tengah - Sela Terkini) {{ in_array('slot6', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
+                        </option>
+                        <option value="slot7" {{ old('position') == 'slot7' ? 'selected' : '' }} class="{{ in_array('slot7', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                            Slot 7 (Grid Tengah - Atas Footer) {{ in_array('slot7', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
+                        </option>
+                        <option value="slot8" {{ old('position') == 'slot8' ? 'selected' : '' }} class="{{ in_array('slot8', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                            Slot 8 (Grid Kanan - Bawah Terpopuler) {{ in_array('slot8', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
+                        </option>
+                        <option value="slot9" {{ old('position') == 'slot9' ? 'selected' : '' }} class="{{ in_array('slot9', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                            Slot 9 (Grid Kanan - Bawah Topik) {{ in_array('slot9', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
+                        </option>
+                        <option value="slot10" {{ old('position') == 'slot10' ? 'selected' : '' }} class="{{ in_array('slot10', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                            Slot 10 (Grid Kanan - Bawah Sorotan) {{ in_array('slot10', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
+                        </option>
                     </select>
                 </div>
                 <div>
@@ -106,12 +126,12 @@
                     <!-- Left Sidebar (Column 1) -->
                     <div class="col-span-3 bg-slate-50 dark:bg-slate-800 rounded p-1 border border-slate-200 dark:border-slate-700 flex flex-col gap-1.5">
                         <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-full flex items-center justify-center text-[6px]">Kurs</div>
-                        <div id="preview-slot1" class="preview-slot h-7 bg-slate-55 dark:bg-slate-850 border border-dashed border-slate-300 dark:border-slate-600 rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300">
-                            <span>SLOT 1</span>
+                        <div id="preview-slot1" class="preview-slot h-7 border border-dashed rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300 {{ in_array('slot1', $activeSlots ?? []) ? 'occupied-slot' : 'bg-slate-55 dark:bg-slate-850 border-slate-300 dark:border-slate-600' }}">
+                            <span>SLOT 1 {{ in_array('slot1', $activeSlots ?? []) ? '(AK)' : '' }}</span>
                         </div>
                         <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-full flex items-center justify-center text-[6px]">Harga Emas</div>
-                        <div id="preview-slot2" class="preview-slot h-7 bg-slate-55 dark:bg-slate-850 border border-dashed border-slate-300 dark:border-slate-600 rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300">
-                            <span>SLOT 2</span>
+                        <div id="preview-slot2" class="preview-slot h-7 border border-dashed rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300 {{ in_array('slot2', $activeSlots ?? []) ? 'occupied-slot' : 'bg-slate-55 dark:bg-slate-850 border-slate-300 dark:border-slate-600' }}">
+                            <span>SLOT 2 {{ in_array('slot2', $activeSlots ?? []) ? '(AK)' : '' }}</span>
                         </div>
                     </div>
 
@@ -119,48 +139,48 @@
                     <div class="col-span-6 bg-slate-50/50 dark:bg-slate-800/40 rounded p-1 border border-slate-200/60 dark:border-slate-700/60 flex flex-col gap-1.5">
                         <div class="h-6 bg-slate-200 dark:bg-slate-700 rounded flex items-center justify-center text-[6px]">Hero Slider</div>
                         
-                        <div id="preview-slot3" class="preview-slot h-7 bg-slate-55 dark:bg-slate-850 border border-dashed border-slate-300 dark:border-slate-600 rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300">
-                            <span>SLOT 3</span>
+                        <div id="preview-slot3" class="preview-slot h-7 border border-dashed rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300 {{ in_array('slot3', $activeSlots ?? []) ? 'occupied-slot' : 'bg-slate-55 dark:bg-slate-850 border-slate-300 dark:border-slate-600' }}">
+                            <span>SLOT 3 {{ in_array('slot3', $activeSlots ?? []) ? '(AK)' : '' }}</span>
                         </div>
 
                         <div class="h-4 bg-slate-100 dark:bg-slate-700 rounded flex items-center justify-center text-[6px]">Artikel Grid</div>
 
-                        <div id="preview-slot4" class="preview-slot h-7 bg-slate-55 dark:bg-slate-850 border border-dashed border-slate-300 dark:border-slate-600 rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300">
-                            <span>SLOT 4</span>
+                        <div id="preview-slot4" class="preview-slot h-7 border border-dashed rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300 {{ in_array('slot4', $activeSlots ?? []) ? 'occupied-slot' : 'bg-slate-55 dark:bg-slate-850 border-slate-300 dark:border-slate-600' }}">
+                            <span>SLOT 4 {{ in_array('slot4', $activeSlots ?? []) ? '(AK)' : '' }}</span>
                         </div>
 
                         <div class="h-4 bg-slate-100 dark:bg-slate-700 rounded flex items-center justify-center text-[6px]">Terkini Header</div>
 
-                        <div id="preview-slot5" class="preview-slot h-7 bg-slate-55 dark:bg-slate-850 border border-dashed border-slate-300 dark:border-slate-600 rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300">
-                            <span>SLOT 5</span>
+                        <div id="preview-slot5" class="preview-slot h-7 border border-dashed rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300 {{ in_array('slot5', $activeSlots ?? []) ? 'occupied-slot' : 'bg-slate-55 dark:bg-slate-850 border-slate-300 dark:border-slate-600' }}">
+                            <span>SLOT 5 {{ in_array('slot5', $activeSlots ?? []) ? '(AK)' : '' }}</span>
                         </div>
 
                         <div class="h-4 bg-slate-100 dark:bg-slate-700 rounded flex items-center justify-center text-[6px]">Terkini List</div>
 
-                        <div id="preview-slot6" class="preview-slot h-7 bg-slate-55 dark:bg-slate-850 border border-dashed border-slate-300 dark:border-slate-600 rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300">
-                            <span>SLOT 6</span>
+                        <div id="preview-slot6" class="preview-slot h-7 border border-dashed rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300 {{ in_array('slot6', $activeSlots ?? []) ? 'occupied-slot' : 'bg-slate-55 dark:bg-slate-850 border-slate-300 dark:border-slate-600' }}">
+                            <span>SLOT 6 {{ in_array('slot6', $activeSlots ?? []) ? '(AK)' : '' }}</span>
                         </div>
 
-                        <div id="preview-slot7" class="preview-slot h-7 bg-slate-55 dark:bg-slate-850 border border-dashed border-slate-300 dark:border-slate-600 rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300">
-                            <span>SLOT 7</span>
+                        <div id="preview-slot7" class="preview-slot h-7 border border-dashed rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300 {{ in_array('slot7', $activeSlots ?? []) ? 'occupied-slot' : 'bg-slate-55 dark:bg-slate-850 border-slate-300 dark:border-slate-600' }}">
+                            <span>SLOT 7 {{ in_array('slot7', $activeSlots ?? []) ? '(AK)' : '' }}</span>
                         </div>
                     </div>
 
                     <!-- Right Sidebar (Column 3) -->
                     <div class="col-span-3 bg-slate-50 dark:bg-slate-800 rounded p-1 border border-slate-200 dark:border-slate-700 flex flex-col gap-1.5">
                         <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-full flex items-center justify-center text-[6px]">Terpopuler</div>
-                        <div id="preview-slot8" class="preview-slot h-7 bg-slate-55 dark:bg-slate-850 border border-dashed border-slate-300 dark:border-slate-600 rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300">
-                            <span>SLOT 8</span>
+                        <div id="preview-slot8" class="preview-slot h-7 border border-dashed rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300 {{ in_array('slot8', $activeSlots ?? []) ? 'occupied-slot' : 'bg-slate-55 dark:bg-slate-850 border-slate-300 dark:border-slate-600' }}">
+                            <span>SLOT 8 {{ in_array('slot8', $activeSlots ?? []) ? '(AK)' : '' }}</span>
                         </div>
 
                         <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-full flex items-center justify-center text-[6px]">Topik</div>
-                        <div id="preview-slot9" class="preview-slot h-7 bg-slate-55 dark:bg-slate-850 border border-dashed border-slate-300 dark:border-slate-600 rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300">
-                            <span>SLOT 9</span>
+                        <div id="preview-slot9" class="preview-slot h-7 border border-dashed rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300 {{ in_array('slot9', $activeSlots ?? []) ? 'occupied-slot' : 'bg-slate-55 dark:bg-slate-850 border-slate-300 dark:border-slate-600' }}">
+                            <span>SLOT 9 {{ in_array('slot9', $activeSlots ?? []) ? '(AK)' : '' }}</span>
                         </div>
 
                         <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-full flex items-center justify-center text-[6px]">Sorotan</div>
-                        <div id="preview-slot10" class="preview-slot h-7 bg-slate-55 dark:bg-slate-850 border border-dashed border-slate-300 dark:border-slate-600 rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300">
-                            <span>SLOT 10</span>
+                        <div id="preview-slot10" class="preview-slot h-7 border border-dashed rounded flex items-center justify-center text-[7px] text-center p-0.5 transition-all duration-300 {{ in_array('slot10', $activeSlots ?? []) ? 'occupied-slot' : 'bg-slate-55 dark:bg-slate-850 border-slate-300 dark:border-slate-600' }}">
+                            <span>SLOT 10 {{ in_array('slot10', $activeSlots ?? []) ? '(AK)' : '' }}</span>
                         </div>
                     </div>
                 </div>
@@ -171,8 +191,9 @@
                 </div>
             </div>
 
-            <div class="mt-4 text-[11px] text-slate-500 dark:text-gray-400 text-center leading-relaxed">
-                * Posisi terpilih disorot warna <span class="text-primary font-bold dark:text-primary/95">Biru</span>. Iklan akan dirender secara dinamis di sela-sela konten halaman utama.
+            <div class="mt-4 text-[11px] text-slate-550 dark:text-gray-400 space-y-1.5 leading-relaxed">
+                <div>* Posisi terpilih disorot warna <span class="text-primary font-bold dark:text-primary/95">Biru</span>.</div>
+                <div>* Posisi dengan tanda <span class="text-red-500 font-bold">AK (Aktif / Terisi)</span> berwarna merah redup menunjukkan slot tersebut sudah terisi iklan aktif.</div>
             </div>
         </div>
     </div>
@@ -185,6 +206,12 @@
         color: rgb(37 99 235) !important; /* text-blue-600 */
         border-style: solid !important;
     }
+    .occupied-slot {
+        background-color: rgba(239, 68, 68, 0.08) !important;
+        border-color: rgba(239, 68, 68, 0.35) !important;
+        color: rgb(239, 68, 68) !important;
+        border-style: dotted !important;
+    }
 </style>
 
 <script>
@@ -193,7 +220,7 @@
         if (!select) return;
         const pos = select.value;
         
-        // Reset all slots
+        // Reset all active highlights (but keep occupied styles)
         document.querySelectorAll('.preview-slot').forEach(el => {
             el.classList.remove('active-slot');
         });

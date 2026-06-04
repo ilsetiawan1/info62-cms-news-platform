@@ -17,7 +17,10 @@ class AdvertisementController extends Controller
 
     public function create()
     {
-        return view('admin.advertisements.create');
+        $activeSlots = Advertisement::where('status', 'active')
+            ->pluck('position')
+            ->toArray();
+        return view('admin.advertisements.create', compact('activeSlots'));
     }
 
     public function store(Request $request)
@@ -52,7 +55,11 @@ class AdvertisementController extends Controller
 
     public function edit(Advertisement $advertisement)
     {
-        return view('admin.advertisements.edit', compact('advertisement'));
+        $activeSlots = Advertisement::where('status', 'active')
+            ->where('id', '!=', $advertisement->id)
+            ->pluck('position')
+            ->toArray();
+        return view('admin.advertisements.edit', compact('advertisement', 'activeSlots'));
     }
 
     public function update(Request $request, Advertisement $advertisement)
