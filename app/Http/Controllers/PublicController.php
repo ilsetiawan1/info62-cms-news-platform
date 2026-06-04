@@ -39,11 +39,11 @@ class PublicController extends Controller
         $adSlot9 = $ads->get('slot9', collect())->first();
         $adSlot10 = $ads->get('slot10', collect())->first();
 
-        $adHeader = $ads->get('header', collect())->first() ?: $adSlot3;
-        $adLeftTop = $ads->get('sidebar_mid', collect())->first() ?: $adSlot1;
-        $adLeftBottom = $ads->get('article_mid', collect())->first() ?: $adSlot2;
-        $adRightTop = $ads->get('sidebar_top', collect())->first() ?: $adSlot8;
-        $adRightBottom = $ads->get('article_bottom', collect())->first() ?: $adSlot10;
+        $adHeader = $ads->get('header', collect())->first();
+        $adLeftTop = $ads->get('sidebar_mid', collect())->first();
+        $adLeftBottom = $ads->get('article_mid', collect())->first();
+        $adRightTop = $ads->get('sidebar_top', collect())->first();
+        $adRightBottom = $ads->get('article_bottom', collect())->first();
 
         $financialData = $this->getFinancialData();
 
