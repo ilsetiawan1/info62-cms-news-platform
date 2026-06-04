@@ -184,10 +184,10 @@
 <body class="bg-slate-50 dark:bg-[#0f172a] text-slate-800 dark:text-slate-200 transition-colors duration-300">
     <div id="reading-progress"></div>
     <div class="relative w-full">
-        {{-- ==================== IKLAN SAYAP KIRI BERTINGKAT (SINKRON ADMIN) ==================== --}}
+        {{-- ==================== IKLAN SAYAP KIRI BERTINGKAT (Slot 1 & 2 — Desktop Only) ==================== --}}
         <div class="hidden lg:block absolute top-0 bottom-0 pointer-events-none" style="left: calc(50% - 780px); width: 160px; z-index: 30;">
             <div class="hidden lg:flex wing-ad" style="position: sticky; top: 145px; width: 160px; height: 600px; z-index: 30; flex-direction: column; gap: 16px; pointer-events: auto;">
-                {{-- Slot Kiri Atas -> $adSlot1 (Slot 1: Grid Kiri Atas) --}}
+                {{-- Slot 1: Sayap Kiri Atas (Eksklusif Desktop) --}}
                 <div style="width: 100%; height: 380px; border-radius: 0.75rem; overflow: hidden; flex-shrink: 0;">
                     @if(isset($adSlot1) && $adSlot1)
                         <a href="{{ $adSlot1->url ?? '#' }}" target="_blank" rel="noopener" class="shadow-md" style="display: block; width: 100%; height: 100%; border-radius: 0.75rem; overflow: hidden;">
@@ -196,7 +196,7 @@
                     @endif
                 </div>
 
-                {{-- Slot Kiri Bawah -> $adSlot2 (Slot 2: Grid Kiri Bawah) --}}
+                {{-- Slot 2: Sayap Kiri Bawah (Eksklusif Desktop) --}}
                 <div style="width: 100%; height: 204px; border-radius: 0.75rem; overflow: hidden; flex-shrink: 0;">
                     @if(isset($adSlot2) && $adSlot2)
                         <a href="{{ $adSlot2->url ?? '#' }}" target="_blank" rel="noopener" class="shadow-md" style="display: block; width: 100%; height: 100%; border-radius: 0.75rem; overflow: hidden;">
@@ -207,23 +207,23 @@
             </div>
         </div>
 
-        {{-- ==================== IKLAN SAYAP KANAN BERTINGKAT (SINKRON ADMIN) ==================== --}}
+        {{-- ==================== IKLAN SAYAP KANAN BERTINGKAT (Slot 3 & 4 — Desktop Only) ==================== --}}
         <div class="hidden lg:block absolute top-0 bottom-0 pointer-events-none" style="right: calc(50% - 780px); width: 160px; z-index: 30;">
             <div class="hidden lg:flex wing-ad" style="position: sticky; top: 145px; width: 160px; height: 600px; z-index: 30; flex-direction: column; gap: 16px; pointer-events: auto;">
-                {{-- Slot Kanan Atas -> $adSlot8 (Slot 8: Grid Kanan - Bawah Terpopuler) --}}
+                {{-- Slot 3: Sayap Kanan Atas (Eksklusif Desktop) --}}
                 <div style="width: 100%; height: 204px; border-radius: 0.75rem; overflow: hidden; flex-shrink: 0;">
-                    @if(isset($adSlot8) && $adSlot8)
-                        <a href="{{ $adSlot8->url ?? '#' }}" target="_blank" rel="noopener" class="shadow-md" style="display: block; width: 100%; height: 100%; border-radius: 0.75rem; overflow: hidden;">
-                            <img src="{{ $adSlot8->image_url }}" alt="{{ $adSlot8->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    @if(isset($adSlot3) && $adSlot3)
+                        <a href="{{ $adSlot3->url ?? '#' }}" target="_blank" rel="noopener" class="shadow-md" style="display: block; width: 100%; height: 100%; border-radius: 0.75rem; overflow: hidden;">
+                            <img src="{{ $adSlot3->image_url }}" alt="{{ $adSlot3->title }}" style="width: 100%; height: 100%; object-fit: cover;">
                         </a>
                     @endif
                 </div>
 
-                {{-- Slot Kanan Bawah -> $adSlot10 (Slot 10: Grid Kanan - Bawah Sorotan) --}}
+                {{-- Slot 4: Sayap Kanan Bawah (Eksklusif Desktop) --}}
                 <div style="width: 100%; height: 380px; border-radius: 0.75rem; overflow: hidden; flex-shrink: 0;">
-                    @if(isset($adSlot10) && $adSlot10)
-                        <a href="{{ $adSlot10->url ?? '#' }}" target="_blank" rel="noopener" class="shadow-md" style="display: block; width: 100%; height: 100%; border-radius: 0.75rem; overflow: hidden;">
-                            <img src="{{ $adSlot10->image_url }}" alt="{{ $adSlot10->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    @if(isset($adSlot4) && $adSlot4)
+                        <a href="{{ $adSlot4->url ?? '#' }}" target="_blank" rel="noopener" class="shadow-md" style="display: block; width: 100%; height: 100%; border-radius: 0.75rem; overflow: hidden;">
+                            <img src="{{ $adSlot4->image_url }}" alt="{{ $adSlot4->title }}" style="width: 100%; height: 100%; object-fit: cover;">
                         </a>
                     @endif
                 </div>

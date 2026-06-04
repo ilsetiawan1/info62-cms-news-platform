@@ -48,19 +48,7 @@
                     </div>
                 </div>
 
-                {{-- Slot 1 (Desktop) --}}
-                @if(isset($adSlot1) && $adSlot1)
-                <div class="w-full flex justify-center">
-                    <div class="w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-all duration-300 hover:shadow-md hover:border-blue-400 p-1 flex flex-col">
-                        <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                            <span>Sponsor</span>
-                        </div>
-                        <a href="{{ $adSlot1->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
-                            <img src="{{ $adSlot1->image_url }}" alt="{{ $adSlot1->title }}" class="w-full h-auto object-cover mx-auto max-h-[280px]">
-                        </a>
-                    </div>
-                </div>
-                @endif
+                {{-- Slot 1 sudah eksklusif di Sayap Kiri Atas desktop — tidak dirender ulang di sini --}}
 
                 {{-- Trivia Nusantara --}}
                 <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm relative overflow-hidden" x-data="{
@@ -158,19 +146,7 @@
                     </div>
                 </div>
 
-                {{-- Slot 2 (Desktop) --}}
-                @if(isset($adSlot2) && $adSlot2)
-                <div class="w-full flex justify-center">
-                    <div class="w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-all duration-300 hover:shadow-md hover:border-blue-400 p-1 flex flex-col">
-                        <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                            <span>Sponsor</span>
-                        </div>
-                        <a href="{{ $adSlot2->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
-                            <img src="{{ $adSlot2->image_url }}" alt="{{ $adSlot2->title }}" class="w-full h-auto object-cover mx-auto max-h-[280px]">
-                        </a>
-                    </div>
-                </div>
-                @endif
+                {{-- Slot 2 sudah eksklusif di Sayap Kiri Bawah desktop — tidak dirender ulang di sini --}}
 
                 {{-- Logam Mulia --}}
                 <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm relative overflow-hidden">
@@ -228,7 +204,7 @@
                 </div>
             </a>
 
-            {{-- Slot 1 (Mobile/Tablet only) --}}
+            {{-- Slot 1: Mobile/Tablet fallback (Desktop sudah di Sayap Kiri Atas) --}}
             @if(isset($adSlot1) && $adSlot1)
             <div class="lg:hidden w-full my-6 flex justify-center">
                 <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
@@ -267,7 +243,7 @@
             @endif
             @endif
 
-            {{-- Slot 2 (Mobile/Tablet only) --}}
+            {{-- Slot 2: Mobile/Tablet fallback (Desktop sudah di Sayap Kiri Bawah) --}}
             @if(isset($adSlot2) && $adSlot2)
             <div class="lg:hidden w-full my-6 flex justify-center">
                 <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
@@ -281,9 +257,9 @@
             </div>
             @endif
 
-            {{-- Slot 3 (Visible on all screens - Bawah Slider) --}}
+            {{-- Slot 3: Mobile/Tablet fallback (Desktop sudah di Sayap Kanan Atas) --}}
             @if(isset($adSlot3) && $adSlot3)
-            <div class="w-full my-6 flex justify-center">
+            <div class="lg:hidden w-full my-6 flex justify-center">
                 <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
                     <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
                         <span>Sponsor</span>
@@ -301,9 +277,9 @@
                 <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Terkini</h2>
             </div>
 
-            {{-- Slot 4 (Visible on all screens - Sela Card) --}}
+            {{-- Slot 4: Mobile/Tablet fallback (Desktop sudah di Sayap Kanan Bawah) --}}
             @if(isset($adSlot4) && $adSlot4)
-            <div class="w-full my-6 flex justify-center">
+            <div class="lg:hidden w-full my-6 flex justify-center">
                 <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
                     <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
                         <span>Sponsor</span>
