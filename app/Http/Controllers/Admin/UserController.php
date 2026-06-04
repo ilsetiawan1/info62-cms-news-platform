@@ -102,12 +102,9 @@ class UserController extends Controller
             $user->role = $validated['role'];
         }
 
-        // Prevent super_admin from downgrading themselves if they are the only one
-        if ($user->id === Auth::id() && $user->role !== 'super_admin') {
-            $superAdminCount = User::where('role', 'super_admin')->count();
-            if ($superAdminCount <= 1) {
-                return redirect()->back()->with('error', 'Tidak dapat mengubah role karena Anda adalah satu-satunya Super Admin.');
-            }
+        // Prevent logged in user from changing their own role
+        if ($user->id === Auth::id() && isset($validated['role']) && $validated['role'] !== $user->getOriginal('role')) {
+            return back()->with('error', 'Gagal! Anda tidak diperbolehkan mengubah atau menurunkan Role Superadmin Anda sendiri demi keamanan sistem.');
         }
 
         $user->save();
