@@ -187,31 +187,21 @@
         {{-- ==================== IKLAN SAYAP KIRI BERTINGKAT (SINKRON ADMIN) ==================== --}}
         <div class="hidden lg:block absolute top-0 bottom-0 pointer-events-none" style="left: calc(50% - 780px); width: 160px; z-index: 30;">
             <div class="hidden lg:flex wing-ad" style="position: sticky; top: 145px; width: 160px; height: 600px; z-index: 30; flex-direction: column; gap: 16px; pointer-events: auto;">
-                {{-- Slot Kiri Atas (Tinggi 380px -> position: sidebar_top) --}}
-                <div class="shadow-md" style="width: 100%; height: 380px; border-radius: 0.75rem; background-color: #fee2e2; border: 1px dashed #fca5a5; display: flex; flex-direction: column; overflow: hidden;">
-                    @if(isset($adLeftTop) && $adLeftTop)
-                        <a href="{{ $adLeftTop->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
-                            <img src="{{ $adLeftTop->image_url }}" alt="{{ $adLeftTop->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {{-- Slot Kiri Atas -> $adSlot1 (Slot 1: Grid Kiri Atas) --}}
+                <div style="width: 100%; height: 380px; border-radius: 0.75rem; overflow: hidden; flex-shrink: 0;">
+                    @if(isset($adSlot1) && $adSlot1)
+                        <a href="{{ $adSlot1->url ?? '#' }}" target="_blank" rel="noopener" class="shadow-md" style="display: block; width: 100%; height: 100%; border-radius: 0.75rem; overflow: hidden;">
+                            <img src="{{ $adSlot1->image_url }}" alt="{{ $adSlot1->title }}" style="width: 100%; height: 100%; object-fit: cover;">
                         </a>
-                    @else
-                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #991b1b; font-family: sans-serif;">
-                            <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KIRI TOP</span>
-                            <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 380</span>
-                        </div>
                     @endif
                 </div>
 
-                {{-- Slot Kiri Bawah (Tinggi 204px -> position: article_mid) --}}
-                <div class="shadow-md" style="width: 100%; height: 204px; border-radius: 0.75rem; background-color: #fef2f2; border: 1px dashed #fecaca; display: flex; flex-direction: column; overflow: hidden;">
-                    @if(isset($adLeftBottom) && $adLeftBottom)
-                        <a href="{{ $adLeftBottom->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
-                            <img src="{{ $adLeftBottom->image_url }}" alt="{{ $adLeftBottom->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {{-- Slot Kiri Bawah -> $adSlot2 (Slot 2: Grid Kiri Bawah) --}}
+                <div style="width: 100%; height: 204px; border-radius: 0.75rem; overflow: hidden; flex-shrink: 0;">
+                    @if(isset($adSlot2) && $adSlot2)
+                        <a href="{{ $adSlot2->url ?? '#' }}" target="_blank" rel="noopener" class="shadow-md" style="display: block; width: 100%; height: 100%; border-radius: 0.75rem; overflow: hidden;">
+                            <img src="{{ $adSlot2->image_url }}" alt="{{ $adSlot2->title }}" style="width: 100%; height: 100%; object-fit: cover;">
                         </a>
-                    @else
-                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #991b1b; font-family: sans-serif;">
-                            <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KIRI BTM</span>
-                            <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 204</span>
-                        </div>
                     @endif
                 </div>
             </div>
@@ -220,31 +210,21 @@
         {{-- ==================== IKLAN SAYAP KANAN BERTINGKAT (SINKRON ADMIN) ==================== --}}
         <div class="hidden lg:block absolute top-0 bottom-0 pointer-events-none" style="right: calc(50% - 780px); width: 160px; z-index: 30;">
             <div class="hidden lg:flex wing-ad" style="position: sticky; top: 145px; width: 160px; height: 600px; z-index: 30; flex-direction: column; gap: 16px; pointer-events: auto;">
-                {{-- Slot Kanan Atas (Tinggi 204px -> position: sidebar_mid) --}}
-                <div class="shadow-md" style="width: 100%; height: 204px; border-radius: 0.75rem; background-color: #eff6ff; border: 1px dashed #bfdbfe; display: flex; flex-direction: column; overflow: hidden;">
-                    @if(isset($adRightTop) && $adRightTop)
-                        <a href="{{ $adRightTop->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
-                            <img src="{{ $adRightTop->image_url }}" alt="{{ $adRightTop->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {{-- Slot Kanan Atas -> $adSlot8 (Slot 8: Grid Kanan - Bawah Terpopuler) --}}
+                <div style="width: 100%; height: 204px; border-radius: 0.75rem; overflow: hidden; flex-shrink: 0;">
+                    @if(isset($adSlot8) && $adSlot8)
+                        <a href="{{ $adSlot8->url ?? '#' }}" target="_blank" rel="noopener" class="shadow-md" style="display: block; width: 100%; height: 100%; border-radius: 0.75rem; overflow: hidden;">
+                            <img src="{{ $adSlot8->image_url }}" alt="{{ $adSlot8->title }}" style="width: 100%; height: 100%; object-fit: cover;">
                         </a>
-                    @else
-                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #1e3a8a; font-family: sans-serif;">
-                            <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KANAN TOP</span>
-                            <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 204</span>
-                        </div>
                     @endif
                 </div>
 
-                {{-- Slot Kanan Bawah (Tinggi 380px -> position: article_bottom) --}}
-                <div class="shadow-md" style="width: 100%; height: 380px; border-radius: 0.75rem; background-color: #dbeafe; border: 1px dashed #93c5fd; display: flex; flex-direction: column; overflow: hidden;">
-                    @if(isset($adRightBottom) && $adRightBottom)
-                        <a href="{{ $adRightBottom->url ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%;">
-                            <img src="{{ $adRightBottom->image_url }}" alt="{{ $adRightBottom->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {{-- Slot Kanan Bawah -> $adSlot10 (Slot 10: Grid Kanan - Bawah Sorotan) --}}
+                <div style="width: 100%; height: 380px; border-radius: 0.75rem; overflow: hidden; flex-shrink: 0;">
+                    @if(isset($adSlot10) && $adSlot10)
+                        <a href="{{ $adSlot10->url ?? '#' }}" target="_blank" rel="noopener" class="shadow-md" style="display: block; width: 100%; height: 100%; border-radius: 0.75rem; overflow: hidden;">
+                            <img src="{{ $adSlot10->image_url }}" alt="{{ $adSlot10->title }}" style="width: 100%; height: 100%; object-fit: cover;">
                         </a>
-                    @else
-                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: #1e3a8a; font-family: sans-serif;">
-                            <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.05em;">IKLAN KANAN BTM</span>
-                            <span style="font-size: 10px; font-weight: 700; opacity: 0.6; margin-top: 0.25rem;">160 × 380</span>
-                        </div>
                     @endif
                 </div>
             </div>
