@@ -78,14 +78,19 @@
                     @enderror
                 </div>
 
-                <!-- Role (Only for Super Admin) -->
+                 <!-- Role (Only for Super Admin) -->
                 @if(Auth::user()->isSuperAdmin())
                 <div>
                     <label for="role" class="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-1.5">Role Pengguna</label>
-                    <select id="role" name="role" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary dark:focus:border-primary-500 focus:ring-primary dark:focus:ring-primary-500 shadow-sm transition-colors duration-200 px-4 py-2.5">
+                    <select id="role" name="role" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary dark:focus:border-primary-500 focus:ring-primary dark:focus:ring-primary-500 shadow-sm transition-colors duration-200 px-4 py-2.5" {{ auth()->user()->id == $user->id ? 'disabled' : '' }}>
                         <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
                         <option value="super_admin" {{ old('role', $user->role) == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
                     </select>
+                    @if(auth()->user()->id == $user->id)
+                        <p class="mt-1 text-xs text-slate-400">Anda tidak bisa mengubah role sendiri.</p>
+                        <!-- Hidden input to still submit the true role -->
+                        <input type="hidden" name="role" value="{{ $user->role }}">
+                    @endif
                     @error('role')
                         <p class="mt-2 text-sm text-accent dark:text-accent-500">{{ $message }}</p>
                     @enderror
