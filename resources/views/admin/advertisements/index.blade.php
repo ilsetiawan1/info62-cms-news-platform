@@ -36,10 +36,16 @@
                     <td class="px-6 py-4">
                         @php
                             $friendlyPositions = [
-                                'sidebar_mid' => 'Sayap Kiri Atas (160x380)',
-                                'article_mid' => 'Sayap Kiri Bawah (160x204)',
-                                'sidebar_top' => 'Sayap Kanan Atas (160x204)',
-                                'article_bottom' => 'Sayap Kanan Bawah (160x380)',
+                                'slot1' => 'Slot 1 (Grid Kiri Atas)',
+                                'slot2' => 'Slot 2 (Grid Kiri Bawah)',
+                                'slot3' => 'Slot 3 (Grid Tengah - Bawah Slider)',
+                                'slot4' => 'Slot 4 (Grid Tengah - Sela Card)',
+                                'slot5' => 'Slot 5 (Grid Tengah - Atas Terkini)',
+                                'slot6' => 'Slot 6 (Grid Tengah - Sela Terkini)',
+                                'slot7' => 'Slot 7 (Grid Tengah - Atas Footer)',
+                                'slot8' => 'Slot 8 (Grid Kanan - Bawah Terpopuler)',
+                                'slot9' => 'Slot 9 (Grid Kanan - Bawah Topik)',
+                                'slot10' => 'Slot 10 (Grid Kanan - Bawah Sorotan)',
                             ];
                         @endphp
                         <span class="px-2.5 py-1 bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-300 rounded text-xs font-semibold">
