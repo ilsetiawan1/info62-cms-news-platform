@@ -51,17 +51,51 @@
                 {{-- Slot 1 sudah eksklusif di Sayap Kiri Atas desktop — tidak dirender ulang di sini --}}
 
                 {{-- Trivia Nusantara --}}
-                {{-- Fakta Nusantara (Dinamis dari DB) --}}
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm relative overflow-hidden">
+                {{-- Fakta Nusantara (Dinamis Auto-Rotate dari DB) --}}
+                @php
+                    $factsArray = $facts->pluck('content')->toArray();
+                    if (empty($factsArray)) {
+                        $factsArray = ['Indonesia adalah negara kepulauan terbesar di dunia dengan lebih dari 17.000 pulau.'];
+                    }
+                @endphp
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm relative overflow-hidden" 
+                     x-data="{
+                         facts: {{ Js::from($factsArray) }},
+                         factIdx: 0,
+                         init() {
+                             if (this.facts.length > 1) {
+                                 setInterval(() => {
+                                     this.factIdx = (this.factIdx + 1) % this.facts.length;
+                                 }, 12000);
+                             }
+                         }
+                     }">
                     <div class="flex items-center gap-2 mb-3 pb-2 border-b border-slate-100 dark:border-slate-700/50">
                         <span class="text-red-500 text-sm">💡</span>
                         <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Fakta Nusantara</h3>
                     </div>
-                    <p class="text-[12px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium min-h-[72px]">
-                        {{ $fact?->content ?? 'Indonesia adalah negara kepulauan terbesar di dunia dengan lebih dari 17.000 pulau.' }}
+                    <p class="text-[12px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium min-h-[72px] transition-all duration-500" 
+                       x-text="facts[factIdx]">
                     </p>
-                    <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-700/50">
-                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500">Fakta Nusantara</span>
+                    <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-100 dark:border-slate-700/50">
+                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500" 
+                              x-text="`${factIdx + 1} / ${facts.length}`">1 / 1</span>
+                        <div class="flex items-center gap-1.5" x-show="facts.length > 1">
+                            <button @click="factIdx = (factIdx - 1 + facts.length) % facts.length" 
+                                    class="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-700 transition-colors"
+                                    aria-label="Fakta sebelumnya">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                            </button>
+                            <button @click="factIdx = (factIdx + 1) % facts.length" 
+                                    class="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-700 transition-colors"
+                                    aria-label="Fakta berikutnya">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
