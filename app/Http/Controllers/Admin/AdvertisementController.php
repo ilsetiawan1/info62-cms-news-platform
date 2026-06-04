@@ -98,4 +98,23 @@ class AdvertisementController extends Controller
 
         return redirect()->route('advertisements.index')->with('success', 'Iklan berhasil dihapus.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Tidak ada iklan yang dipilih.');
+        }
+
+        $advertisements = Advertisement::whereIn('id', $ids)->get();
+
+        foreach ($advertisements as $advertisement) {
+            if ($advertisement->image_path && Storage::disk('public')->exists($advertisement->image_path)) {
+                Storage::disk('public')->delete($advertisement->image_path);
+            }
+            $advertisement->delete();
+        }
+
+        return redirect()->route('advertisements.index')->with('success', count($ids) . ' iklan berhasil dihapus.');
+    }
 }

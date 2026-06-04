@@ -25,6 +25,10 @@ Route::prefix('seputaradmin')
             ->name('admin.dashboard');
 
         // ── Advertisement Management ─────────────────
+        Route::post('advertisements/bulk-delete',
+            [\App\Http\Controllers\Admin\AdvertisementController::class, 'bulkDelete'])
+            ->name('advertisements.bulk-delete');
+
         Route::resource('advertisements', \App\Http\Controllers\Admin\AdvertisementController::class)
             ->except(['show']);
 
