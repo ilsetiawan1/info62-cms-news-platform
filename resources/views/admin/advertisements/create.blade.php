@@ -44,44 +44,48 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-1">Posisi</label>
-                    <select name="position" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-white px-4 py-2 font-medium">
-                        <option value="slot1" {{ old('position') == 'slot1' ? 'selected' : '' }} class="{{ in_array('slot1', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                    <select name="position" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-white px-4 py-2 font-semibold">
+                        <option value="slot1" {{ old('position') == 'slot1' ? 'selected' : '' }} class="{{ in_array('slot1', $activeSlots ?? []) ? 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 font-semibold' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold' }}">
                             Slot 1 (Grid Kiri Atas - Kurs) {{ in_array('slot1', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
                         </option>
-                        <option value="slot2" {{ old('position') == 'slot2' ? 'selected' : '' }} class="{{ in_array('slot2', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                        <option value="slot2" {{ old('position') == 'slot2' ? 'selected' : '' }} class="{{ in_array('slot2', $activeSlots ?? []) ? 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 font-semibold' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold' }}">
                             Slot 2 (Grid Kiri Bawah - Emas) {{ in_array('slot2', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
                         </option>
-                        <option value="slot3" {{ old('position') == 'slot3' ? 'selected' : '' }} class="{{ in_array('slot3', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                        <option value="slot3" {{ old('position') == 'slot3' ? 'selected' : '' }} class="{{ in_array('slot3', $activeSlots ?? []) ? 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 font-semibold' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold' }}">
                             Slot 3 (Grid Tengah - Bawah Slider) {{ in_array('slot3', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
                         </option>
-                        <option value="slot4" {{ old('position') == 'slot4' ? 'selected' : '' }} class="{{ in_array('slot4', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                        <option value="slot4" {{ old('position') == 'slot4' ? 'selected' : '' }} class="{{ in_array('slot4', $activeSlots ?? []) ? 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 font-semibold' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold' }}">
                             Slot 4 (Grid Tengah - Sela Card) {{ in_array('slot4', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
                         </option>
-                        <option value="slot5" {{ old('position') == 'slot5' ? 'selected' : '' }} class="{{ in_array('slot5', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                        <option value="slot5" {{ old('position') == 'slot5' ? 'selected' : '' }} class="{{ in_array('slot5', $activeSlots ?? []) ? 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 font-semibold' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold' }}">
                             Slot 5 (Grid Tengah - Atas Terkini) {{ in_array('slot5', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
                         </option>
-                        <option value="slot6" {{ old('position') == 'slot6' ? 'selected' : '' }} class="{{ in_array('slot6', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                        <option value="slot6" {{ old('position') == 'slot6' ? 'selected' : '' }} class="{{ in_array('slot6', $activeSlots ?? []) ? 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 font-semibold' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold' }}">
                             Slot 6 (Grid Tengah - Sela Terkini) {{ in_array('slot6', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
                         </option>
-                        <option value="slot7" {{ old('position') == 'slot7' ? 'selected' : '' }} class="{{ in_array('slot7', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                        <option value="slot7" {{ old('position') == 'slot7' ? 'selected' : '' }} class="{{ in_array('slot7', $activeSlots ?? []) ? 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 font-semibold' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold' }}">
                             Slot 7 (Grid Tengah - Atas Footer) {{ in_array('slot7', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
                         </option>
-                        <option value="slot8" {{ old('position') == 'slot8' ? 'selected' : '' }} class="{{ in_array('slot8', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                        <option value="slot8" {{ old('position') == 'slot8' ? 'selected' : '' }} class="{{ in_array('slot8', $activeSlots ?? []) ? 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 font-semibold' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold' }}">
                             Slot 8 (Grid Kanan - Bawah Terpopuler) {{ in_array('slot8', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
                         </option>
-                        <option value="slot9" {{ old('position') == 'slot9' ? 'selected' : '' }} class="{{ in_array('slot9', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                        <option value="slot9" {{ old('position') == 'slot9' ? 'selected' : '' }} class="{{ in_array('slot9', $activeSlots ?? []) ? 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 font-semibold' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold' }}">
                             Slot 9 (Grid Kanan - Bawah Topik) {{ in_array('slot9', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
                         </option>
-                        <option value="slot10" {{ old('position') == 'slot10' ? 'selected' : '' }} class="{{ in_array('slot10', $activeSlots ?? []) ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-emerald-600 dark:text-emerald-400 font-semibold' }}">
+                        <option value="slot10" {{ old('position') == 'slot10' ? 'selected' : '' }} class="{{ in_array('slot10', $activeSlots ?? []) ? 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 font-semibold' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold' }}">
                             Slot 10 (Grid Kanan - Bawah Sorotan) {{ in_array('slot10', $activeSlots ?? []) ? '● (Aktif / Terisi)' : '○ (Tersedia)' }}
                         </option>
                     </select>
                 </div>
-                <div>
+                <div x-data="{ status: '{{ old('status', 'active') }}' }">
                     <label class="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-1">Status</label>
-                    <select name="status" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-white px-4 py-2">
-                        <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Aktif</option>
-                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inaktif</option>
+                    <select name="status" x-model="status" 
+                        class="w-full rounded-xl px-4 py-2 font-semibold border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        :class="status === 'active' 
+                            ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900' 
+                            : 'bg-red-50 text-red-800 border-red-200 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900'">
+                        <option value="active" class="bg-white dark:bg-gray-900 text-slate-900 dark:text-white font-semibold">Aktif</option>
+                        <option value="inactive" class="bg-white dark:bg-gray-900 text-slate-900 dark:text-white font-semibold">Inaktif</option>
                     </select>
                 </div>
             </div>

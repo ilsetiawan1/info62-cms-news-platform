@@ -55,6 +55,7 @@
                         <th class="px-6 py-4">Judul & Link</th>
                         <th class="px-6 py-4">Posisi</th>
                         <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4">Tanggal</th>
                         <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -97,6 +98,9 @@
                                 <span class="px-2.5 py-1 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 rounded text-xs font-semibold">Inaktif</span>
                             @endif
                         </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-gray-400">
+                            {{ $ad->created_at->format('d M Y') }}
+                        </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">
                                 <a href="{{ route('advertisements.edit', $ad->id) }}" class="p-2 text-blue-500 hover:bg-blue-50 rounded-lg dark:hover:bg-blue-900/20">
@@ -112,7 +116,7 @@
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="6" class="px-6 py-10 text-center text-slate-500">Belum ada data iklan.</td></tr>
+                    <tr><td colspan="7" class="px-6 py-10 text-center text-slate-500">Belum ada data iklan.</td></tr>
                     @endforelse
                 </tbody>
             </table>
