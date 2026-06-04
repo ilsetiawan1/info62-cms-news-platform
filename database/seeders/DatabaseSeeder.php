@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ArticleSeeder::class,
             DummyPortalSeeder::class,
+            FactSeeder::class,
         ]);
     }
 }
