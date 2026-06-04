@@ -8,13 +8,41 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // 4 Stat Cards
-        $totalArticles = \App\Models\Article::count();
-        $totalViews = \App\Models\ArticleView::count();
-        $activeCategories = \App\Models\Category::has('articles')->count();
-        $totalUsers = \App\Models\User::count(); // The 4th Stat Card: Total Pengguna
+        $filter = $request->input('filter', 'all');
+        $startDate = null;
+        $endDate = now()->endOfDay();
+
+        if ($filter === 'today') {
+            $startDate = now()->startOfDay();
+        } elseif ($filter === '7_days') {
+            $startDate = now()->subDays(6)->startOfDay();
+        } elseif ($filter === '30_days') {
+            $startDate = now()->subDays(29)->startOfDay();
+        }
+
+        // Apply filters to stat cards
+        $totalArticlesQuery = \App\Models\Article::query();
+        $totalViewsQuery = \App\Models\ArticleView::query();
+        $activeCategoriesQuery = \App\Models\Category::query();
+        $totalUsersQuery = \App\Models\User::query();
+
+        if ($startDate) {
+            $totalArticlesQuery->whereBetween('created_at', [$startDate, $endDate]);
+            $totalViewsQuery->whereBetween('created_at', [$startDate, $endDate]);
+            $activeCategoriesQuery->whereHas('articles', function ($q) use ($startDate, $endDate) {
+                $q->whereBetween('created_at', [$startDate, $endDate]);
+            });
+            $totalUsersQuery->whereBetween('created_at', [$startDate, $endDate]);
+        } else {
+            $activeCategoriesQuery->has('articles');
+        }
+
+        $totalArticles = $totalArticlesQuery->count();
+        $totalViews = $totalViewsQuery->count();
+        $activeCategories = $activeCategoriesQuery->count();
+        $totalUsers = $totalUsersQuery->count();
 
         // Visitor Trend over the last 7 days (ArticleView)
         $visitorTrend = \App\Models\ArticleView::select(
@@ -63,7 +91,8 @@ class DashboardController extends Controller
             'trendLabels',
             'trendData',
             'recentActivities',
-            'popularArticles'
+            'popularArticles',
+            'filter'
         ));
     }
 }

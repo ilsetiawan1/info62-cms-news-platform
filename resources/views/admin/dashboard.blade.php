@@ -16,6 +16,21 @@
         </div>
     </div>
 
+    <!-- Filter Rentang Waktu -->
+    <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white rounded-2xl border border-gray-100 p-4 shadow-[0_4px_20px_rgb(0,0,0,0.02)]">
+        <span class="text-sm font-semibold text-slate-700">Filter Statistik</span>
+        <form method="GET" action="{{ route('admin.dashboard') }}" class="w-full sm:w-auto flex items-center gap-2">
+            <label for="filter" class="text-xs text-slate-500 font-medium whitespace-nowrap">Rentang Waktu:</label>
+            <select name="filter" id="filter" onchange="this.form.submit()" 
+                    class="w-full sm:w-48 rounded-xl border-gray-200 bg-white text-slate-700 shadow-sm text-sm focus:border-primary focus:ring-primary py-2 pl-3 pr-10 transition-colors">
+                <option value="all" {{ $filter == 'all' ? 'selected' : '' }}>Semua Waktu</option>
+                <option value="today" {{ $filter == 'today' ? 'selected' : '' }}>Hari Ini</option>
+                <option value="7_days" {{ $filter == '7_days' ? 'selected' : '' }}>7 Hari Terakhir</option>
+                <option value="30_days" {{ $filter == '30_days' ? 'selected' : '' }}>30 Hari Terakhir</option>
+            </select>
+        </form>
+    </div>
+
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         
