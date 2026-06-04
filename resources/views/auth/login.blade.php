@@ -51,11 +51,6 @@
                 <div>
                     <div class="flex justify-between items-center mb-1.5">
                         <label for="password" class="block text-sm font-medium text-slate-700 dark:text-gray-200">Password</label>
-                        @if (Route::has('password.request'))
-                            <a class="text-sm font-medium text-primary dark:text-primary-500 hover:text-primary/80 dark:hover:text-primary-500/80 transition-colors" href="{{ route('password.request') }}">
-                                Lupa password?
-                            </a>
-                        @endif
                     </div>
                     <input id="password" type="password" name="password" required autocomplete="current-password"
                         class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-900 dark:text-gray-50 focus:border-primary dark:focus:border-primary-500 focus:ring-primary dark:focus:ring-primary-500 shadow-sm transition-colors duration-200 px-4 py-2.5">
