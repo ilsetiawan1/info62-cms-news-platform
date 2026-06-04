@@ -318,7 +318,7 @@
                     <!-- Desktop & Tablet Category Navigation -->
                     <nav class="hidden md:flex items-center justify-between py-2.5 relative z-[100] w-full">
                         <div class="flex items-center gap-1 flex-wrap lg:flex-nowrap">
-                            <a href="{{ route('home') }}" class="flex-shrink-0 px-4 py-1.5 rounded-full text-[13px] font-bold tracking-wide transition-all whitespace-nowrap {{ request()->routeIs('home') && !request('cat') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">Semua</a>
+                            <a href="{{ route('home') }}" class="flex flex-shrink-0 items-center justify-center text-center px-4 h-8 rounded-full text-[13px] font-bold tracking-wide transition-all whitespace-nowrap {{ request()->routeIs('home') && !request('cat') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">Semua</a>
 
                             @foreach($navCategories as $index => $cat)
                                 <div class="desktop-cat-item flex-shrink-0
@@ -327,7 +327,7 @@
                                     @elseif($index >= 4) hidden lg:block
                                     @endif">
                                     <a href="{{ route('category.show', $cat->slug) }}"
-                                       class="flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold tracking-wide transition-all whitespace-nowrap
+                                       class="flex items-center justify-center text-center px-4 h-8 rounded-full text-[13px] font-semibold tracking-wide transition-all whitespace-nowrap
                                               {{ request()->is('kategori/'.$cat->slug.'*') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white' }}">
                                         {{ $cat->name }}
                                     </a>
