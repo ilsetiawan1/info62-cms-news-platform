@@ -32,6 +32,10 @@ Route::prefix('seputaradmin')
         Route::resource('advertisements', \App\Http\Controllers\Admin\AdvertisementController::class)
             ->except(['show']);
 
+        // ── Fakta Nusantara Management ────────────
+        Route::resource('facts', \App\Http\Controllers\Admin\FactController::class)
+            ->except(['show']);
+
         // ── User Management ──────────────────────────
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class)
             ->except(['show']);
