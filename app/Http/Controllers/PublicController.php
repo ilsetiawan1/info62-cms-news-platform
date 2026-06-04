@@ -28,11 +28,22 @@ class PublicController extends Controller
                 ->groupBy('position');
         });
 
-        $adHeader = $ads->get('header', collect())->first();
-        $adLeftTop = $ads->get('sidebar_mid', collect())->first();
-        $adLeftBottom = $ads->get('article_mid', collect())->first();
-        $adRightTop = $ads->get('sidebar_top', collect())->first();
-        $adRightBottom = $ads->get('article_bottom', collect())->first();
+        $adSlot1 = $ads->get('slot1', collect())->first();
+        $adSlot2 = $ads->get('slot2', collect())->first();
+        $adSlot3 = $ads->get('slot3', collect())->first();
+        $adSlot4 = $ads->get('slot4', collect())->first();
+        $adSlot5 = $ads->get('slot5', collect())->first();
+        $adSlot6 = $ads->get('slot6', collect())->first();
+        $adSlot7 = $ads->get('slot7', collect())->first();
+        $adSlot8 = $ads->get('slot8', collect())->first();
+        $adSlot9 = $ads->get('slot9', collect())->first();
+        $adSlot10 = $ads->get('slot10', collect())->first();
+
+        $adHeader = $ads->get('header', collect())->first() ?: $adSlot3;
+        $adLeftTop = $ads->get('sidebar_mid', collect())->first() ?: $adSlot1;
+        $adLeftBottom = $ads->get('article_mid', collect())->first() ?: $adSlot2;
+        $adRightTop = $ads->get('sidebar_top', collect())->first() ?: $adSlot8;
+        $adRightBottom = $ads->get('article_bottom', collect())->first() ?: $adSlot10;
 
         $financialData = $this->getFinancialData();
 
@@ -66,6 +77,16 @@ class PublicController extends Controller
 
         // Share globally to prevent undefined variable errors in layout
         view()->share([
+            'adSlot1'        => $adSlot1,
+            'adSlot2'        => $adSlot2,
+            'adSlot3'        => $adSlot3,
+            'adSlot4'        => $adSlot4,
+            'adSlot5'        => $adSlot5,
+            'adSlot6'        => $adSlot6,
+            'adSlot7'        => $adSlot7,
+            'adSlot8'        => $adSlot8,
+            'adSlot9'        => $adSlot9,
+            'adSlot10'       => $adSlot10,
             'adHeader'       => $adHeader,
             'adLeftTop'      => $adLeftTop,
             'adLeftBottom'   => $adLeftBottom,
@@ -76,6 +97,16 @@ class PublicController extends Controller
         ]);
 
         return [
+            'adSlot1'        => $adSlot1,
+            'adSlot2'        => $adSlot2,
+            'adSlot3'        => $adSlot3,
+            'adSlot4'        => $adSlot4,
+            'adSlot5'        => $adSlot5,
+            'adSlot6'        => $adSlot6,
+            'adSlot7'        => $adSlot7,
+            'adSlot8'        => $adSlot8,
+            'adSlot9'        => $adSlot9,
+            'adSlot10'       => $adSlot10,
             'adHeader'       => $adHeader,
             'adLeftTop'      => $adLeftTop,
             'adLeftBottom'   => $adLeftBottom,
