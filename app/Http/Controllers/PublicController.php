@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Advertisement;
+use App\Models\Fact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -227,8 +228,11 @@ class PublicController extends Controller
             return ['category' => $cat, 'articles' => $articles];
         })->filter(fn ($item) => $item['articles']->isNotEmpty())->values()->take(5);
 
+        // Random active fact for Fakta Nusantara widget
+        $fact = Fact::where('is_active', true)->inRandomOrder()->first();
+
         return view('public.home', array_merge(
-            compact('heroSlides', 'latestArticles', 'mostViewed', 'navCategories', 'tickerNews', 'categoryArticles', 'sorotanArticles'),
+            compact('heroSlides', 'latestArticles', 'mostViewed', 'navCategories', 'tickerNews', 'categoryArticles', 'sorotanArticles', 'fact'),
             $this->getAds()
         ));
     }
