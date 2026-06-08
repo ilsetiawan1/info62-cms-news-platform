@@ -3,20 +3,49 @@
 @section('header', 'Fakta Nusantara')
 
 @section('content')
-<div class="p-6">
+<div class="p-6" x-data="{ 
+    selectedIds: [], 
+    selectAll: false,
+    toggleAll() {
+        if (this.selectAll) {
+            this.selectedIds = Array.from(document.querySelectorAll('.row-checkbox')).map(el => el.value);
+        } else {
+            this.selectedIds = [];
+        }
+    },
+    updateSelectAll() {
+        const checkboxes = document.querySelectorAll('.row-checkbox');
+        this.selectAll = checkboxes.length > 0 && this.selectedIds.length === checkboxes.length;
+    }
+}">
     {{-- Header --}}
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-bold text-slate-800">Fakta Nusantara</h1>
             <p class="text-sm text-slate-500 mt-1">Kelola data fakta yang tampil secara acak di halaman publik.</p>
         </div>
-        <a href="{{ route('facts.create') }}"
-           class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:opacity-90 transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Tambah Fakta
-        </a>
+        <div class="flex items-center gap-3">
+            <!-- Bulk Action Buttons Above Table -->
+            <div x-show="selectedIds.length > 0" x-transition style="display: none;" class="flex items-center gap-2">
+                <form action="{{ route('facts.bulk-delete') }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus fakta yang dipilih?');">
+                    @csrf
+                    <template x-for="id in selectedIds" :key="id">
+                        <input type="hidden" name="ids[]" :value="id">
+                    </template>
+                    <button type="submit" class="inline-flex items-center justify-center px-4 py-2.5 rounded-xl shadow-sm text-xs font-bold text-white bg-red-600 hover:bg-red-500 transition-all duration-200">
+                        Hapus Terpilih (<span x-text="selectedIds.length"></span>)
+                    </button>
+                </form>
+            </div>
+
+            <a href="{{ route('facts.create') }}"
+               class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:opacity-90 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Tambah Fakta
+            </a>
+        </div>
     </div>
 
     {{-- Flash Messages --}}
@@ -36,6 +65,9 @@
         <table class="w-full text-sm">
             <thead class="bg-slate-50 border-b border-slate-200">
                 <tr>
+                    <th class="px-5 py-3.5 w-12 text-center">
+                        <input type="checkbox" x-model="selectAll" @change="toggleAll()" class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4">
+                    </th>
                     <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider w-8">#</th>
                     <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Isi Fakta</th>
                     <th class="px-5 py-3.5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-28">Status</th>
@@ -45,7 +77,10 @@
             </thead>
             <tbody class="divide-y divide-slate-100">
                 @forelse($facts as $fact)
-                <tr class="hover:bg-slate-50 transition-colors">
+                <tr class="hover:bg-slate-50 transition-colors" :class="{ 'bg-primary/5': selectedIds.includes('{{ $fact->id }}') }">
+                    <td class="px-5 py-4 text-center">
+                        <input type="checkbox" value="{{ $fact->id }}" x-model="selectedIds" @change="updateSelectAll()" class="row-checkbox rounded border-gray-300 text-primary focus:ring-primary h-4 w-4">
+                    </td>
                     <td class="px-5 py-4 text-slate-400 text-xs">{{ $loop->iteration + ($facts->currentPage() - 1) * $facts->perPage() }}</td>
                     <td class="px-5 py-4 text-slate-800 leading-relaxed">{{ Str::limit($fact->content, 120) }}</td>
                     <td class="px-5 py-4 text-center">
@@ -77,7 +112,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="px-5 py-12 text-center text-slate-400">
+                    <td colspan="6" class="px-5 py-12 text-center text-slate-400">
                         <div class="flex flex-col items-center gap-2">
                             <svg class="w-10 h-10 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -94,6 +129,36 @@
             {{ $facts->links() }}
         </div>
         @endif
+    </div>
+
+    <!-- Floating Bulk Action Bar for Facts -->
+    <div x-show="selectedIds.length > 0" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-y-10"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 translate-y-10"
+         style="display: none;"
+         class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 backdrop-blur-md text-white px-6 py-4 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center gap-4 sm:gap-6 border border-slate-850 min-w-[300px] sm:min-w-[450px] justify-between">
+        <div class="text-sm font-semibold flex items-center gap-2">
+            <span class="flex h-3.5 w-3.5 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/40 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-primary"></span>
+            </span>
+            <span x-text="selectedIds.length" class="text-primary font-bold text-base"></span> data fakta terpilih
+        </div>
+        <div class="flex items-center gap-3">
+            <form action="{{ route('facts.bulk-delete') }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus fakta yang dipilih?');">
+                @csrf
+                <template x-for="id in selectedIds" :key="id">
+                    <input type="hidden" name="ids[]" :value="id">
+                </template>
+                <button type="submit" class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition-all shadow-lg hover:shadow-red-500/20">
+                    Hapus Terpilih
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 @endsection

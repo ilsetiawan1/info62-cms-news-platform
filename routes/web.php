@@ -33,6 +33,10 @@ Route::prefix('seputaradmin')
             ->except(['show']);
 
         // ── Fakta Nusantara Management ────────────
+        Route::post('facts/bulk-delete',
+            [\App\Http\Controllers\Admin\FactController::class, 'bulkDelete'])
+            ->name('facts.bulk-delete');
+
         Route::resource('facts', \App\Http\Controllers\Admin\FactController::class)
             ->except(['show']);
 

@@ -57,4 +57,16 @@ class FactController extends Controller
         $fact->delete();
         return redirect()->route('facts.index')->with('success', 'Fakta berhasil dihapus.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Tidak ada fakta yang dipilih.');
+        }
+
+        Fact::whereIn('id', $ids)->delete();
+
+        return redirect()->route('facts.index')->with('success', count($ids) . ' data fakta berhasil dihapus.');
+    }
 }
