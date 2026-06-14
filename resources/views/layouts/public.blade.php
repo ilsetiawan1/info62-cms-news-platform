@@ -5,8 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/logo-infoseputar62.png') }}">
+    <!-- Favicon & PWA -->
+    <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="theme-color" content="#0f172a">
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('ServiceWorker registered with scope:', reg.scope))
+                    .catch(err => console.error('ServiceWorker registration failed:', err));
+            });
+        }
+
+        // PWA Install Event Handler
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install buttons once the app is confirmed installable
+            const btnDesktop = document.getElementById('pwa-install-btn-desktop');
+            const btnMobile = document.getElementById('pwa-install-btn-mobile');
+            if (btnDesktop) btnDesktop.classList.remove('hidden');
+            if (btnMobile) btnMobile.classList.remove('hidden');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnDesktop = document.getElementById('pwa-install-btn-desktop');
+            const btnMobile = document.getElementById('pwa-install-btn-mobile');
+
+            const triggerInstall = async () => {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to install prompt: ${outcome}`);
+                deferredPrompt = null;
+                if (btnDesktop) btnDesktop.classList.add('hidden');
+                if (btnMobile) btnMobile.classList.add('hidden');
+            };
+
+            if (btnDesktop) btnDesktop.addEventListener('click', triggerInstall);
+            if (btnMobile) btnMobile.addEventListener('click', triggerInstall);
+        });
+
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed successfully');
+            const btnDesktop = document.getElementById('pwa-install-btn-desktop');
+            const btnMobile = document.getElementById('pwa-install-btn-mobile');
+            if (btnDesktop) btnDesktop.classList.add('hidden');
+            if (btnMobile) btnMobile.classList.add('hidden');
+        });
+    </script>
 
     <!-- SEO Meta Tags -->
     <title>@yield('meta_title', config('app.name', 'Info Seputar +62'))</title>
@@ -283,6 +337,13 @@
                             <input type="text" name="q" placeholder="Cari berita..." value="{{ request('q') }}" required class="bg-transparent border-none outline-none text-sm text-slate-700 dark:text-zinc-200 placeholder-slate-400 w-40 focus:w-56 transition-all duration-300 p-0 ml-2 focus:ring-0">
                         </form>
 
+                        <!-- PWA Install Button (Desktop) -->
+                        <button id="pwa-install-btn-desktop" class="hidden p-2.5 rounded-full text-blue-600 hover:bg-blue-50 dark:text-sky-400 dark:hover:bg-sky-950/30 transition-colors" aria-label="Install App">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                        </button>
+
                         <!-- Dark Mode Toggle -->
                         <button onclick="toggleDarkMode()" class="p-2.5 rounded-full text-slate-600 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors" aria-label="Toggle dark mode">
                             <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -452,6 +513,14 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     Beranda
                 </a>
+
+                <!-- PWA Install Button (Mobile) -->
+                <button id="pwa-install-btn-mobile" class="hidden w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Instal Aplikasi
+                </button>
 
                 <div class="pt-4 pb-2 px-2">
                     <p class="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest">Kategori</p>
@@ -645,6 +714,95 @@
             if (window.innerWidth >= 1024 && sidebarOpen) closeSidebar();
         });
     </script>
+    @if(request()->has('debug_pwa'))
+    <!-- PWA Diagnostics Panel (Uses Inline Styles for Guaranteed Rendering) -->
+    <div id="pwa-diagnostic-panel" style="position: fixed; bottom: 16px; right: 16px; z-index: 99999; max-width: 380px; width: calc(100% - 32px); background-color: #0f172a; color: #ffffff; border-radius: 16px; padding: 20px; border: 1px solid #334155; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4); font-family: 'Inter', sans-serif; box-sizing: border-box; transition: all 0.3s ease;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+            <h3 style="font-size: 14px; font-weight: 700; color: #38bdf8; margin: 0;">PWA Verification Panel</h3>
+            <button onclick="document.getElementById('pwa-diagnostic-panel').remove()" style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 14px; padding: 0; line-height: 1;">✕</button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background-color: rgba(30, 41, 59, 0.5); padding: 10px; border-radius: 8px; border: 1px solid #1e293b;">
+                <span style="font-weight: 500; color: #cbd5e1;">Service Worker:</span>
+                <span id="diag-sw-status" style="font-weight: 700; color: #fbbf24;">Checking...</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background-color: rgba(30, 41, 59, 0.5); padding: 10px; border-radius: 8px; border: 1px solid #1e293b;">
+                <span style="font-weight: 500; color: #cbd5e1;">Manifest File:</span>
+                <span id="diag-manifest-status" style="font-weight: 700; color: #fbbf24;">Checking...</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background-color: rgba(30, 41, 59, 0.5); padding: 10px; border-radius: 8px; border: 1px solid #1e293b;">
+                <span style="font-weight: 500; color: #cbd5e1;">PWA Install State:</span>
+                <span id="diag-install-status" style="font-weight: 700; color: #fbbf24;">Checking...</span>
+            </div>
+            <div style="background-color: rgba(30, 41, 59, 0.5); padding: 12px; border-radius: 8px; border: 1px solid #1e293b; display: flex; flex-direction: column; gap: 6px;">
+                <div style="font-weight: 700; color: #94a3b8; border-bottom: 1px solid #1e293b; padding-bottom: 4px; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;">Manifest Identity</div>
+                <div style="display: flex; justify-content: space-between;"><span style="color: #94a3b8;">Name:</span><span id="diag-manifest-name" style="color: #cbd5e1;">-</span></div>
+                <div style="display: flex; justify-content: space-between;"><span style="color: #94a3b8;">Short Name:</span><span id="diag-manifest-short" style="color: #cbd5e1;">-</span></div>
+                <div style="display: flex; justify-content: space-between;"><span style="color: #94a3b8;">Theme Color:</span><span id="diag-manifest-theme" style="color: #cbd5e1;">-</span></div>
+                <div style="display: flex; justify-content: space-between;"><span style="color: #94a3b8;">Start URL:</span><span id="diag-manifest-url" style="color: #cbd5e1;">-</span></div>
+            </div>
+        </div>
+        <script>
+            // Check Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistration().then(reg => {
+                    const swStatus = document.getElementById('diag-sw-status');
+                    if (reg) {
+                        swStatus.textContent = 'ACTIVE';
+                        swStatus.style.color = '#10b981';
+                    } else {
+                        swStatus.textContent = 'NOT FOUND';
+                        swStatus.style.color = '#ef4444';
+                    }
+                });
+            } else {
+                const swStatus = document.getElementById('diag-sw-status');
+                swStatus.textContent = 'UNSUPPORTED';
+                swStatus.style.color = '#ef4444';
+            }
+
+            // Check Manifest
+            fetch('/manifest.json')
+                .then(res => {
+                    const manifestStatus = document.getElementById('diag-manifest-status');
+                    if (res.ok) {
+                        manifestStatus.textContent = 'LOADED (200 OK)';
+                        manifestStatus.style.color = '#10b981';
+                        return res.json();
+                    } else {
+                        manifestStatus.textContent = 'ERROR ' + res.status;
+                        manifestStatus.style.color = '#ef4444';
+                    }
+                })
+                .then(data => {
+                    if (data) {
+                        document.getElementById('diag-manifest-name').textContent = data.name || '-';
+                        document.getElementById('diag-manifest-short').textContent = data.short_name || '-';
+                        document.getElementById('diag-manifest-theme').textContent = data.theme_color || '-';
+                        document.getElementById('diag-manifest-url').textContent = data.start_url || '-';
+                    }
+                })
+                .catch(err => {
+                    const manifestStatus = document.getElementById('diag-manifest-status');
+                    manifestStatus.textContent = 'FETCH FAILED';
+                    manifestStatus.style.color = '#ef4444';
+                });
+
+            // Check Install State
+            window.addEventListener('beforeinstallprompt', () => {
+                const installStatus = document.getElementById('diag-install-status');
+                installStatus.textContent = 'INSTALLABLE';
+                installStatus.style.color = '#10b981';
+            });
+            window.addEventListener('appinstalled', () => {
+                const installStatus = document.getElementById('diag-install-status');
+                installStatus.textContent = 'INSTALLED';
+                installStatus.style.color = '#10b981';
+            });
+        </script>
+    </div>
+    @endif
+
     @stack('scripts')
 </body>
 </html>
