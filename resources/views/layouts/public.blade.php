@@ -328,7 +328,13 @@
 
                         <!-- Dropdown Menu for Overflow Categories -->
                         @if($navCategories->count() > 4)
-                            <div class="relative flex-shrink-0" x-data="{ openMore: false }">
+                            <div class="relative flex-shrink-0" x-data="{ openMore: false }" x-init="$watch('openMore', value => {
+                                if (value) {
+                                    document.body.classList.add('overflow-hidden');
+                                } else {
+                                    document.body.classList.remove('overflow-hidden');
+                                }
+                            })">
                                 <button @click="openMore = !openMore" @click.away="openMore = false"
                                         class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all select-none"
                                         aria-label="More categories">
@@ -344,7 +350,7 @@
                                      x-transition:leave="transition ease-in duration-75"
                                      x-transition:leave-start="transform opacity-100 scale-100"
                                      x-transition:leave-end="transform opacity-0 scale-95"
-                                     class="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden divide-y divide-slate-100 dark:divide-slate-700/50 z-[120]"
+                                     class="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl max-h-[70vh] overflow-y-auto overscroll-contain divide-y divide-slate-100 dark:divide-slate-700/50 z-[120]"
                                      style="display: none;">
                                     @foreach($navCategories as $index => $cat)
                                         @if($index >= 4)
@@ -374,7 +380,13 @@
                     </nav>
 
                     <!-- Mobile Category Navigation (Dropdown Select Menu) -->
-                    <div class="md:hidden py-2" x-data="{ openCatDropdown: false }">
+                    <div class="md:hidden py-2" x-data="{ openCatDropdown: false }" x-init="$watch('openCatDropdown', value => {
+                        if (value) {
+                            document.body.classList.add('overflow-hidden');
+                        } else {
+                            document.body.classList.remove('overflow-hidden');
+                        }
+                    })">
                         <div class="flex items-center justify-between gap-2 relative">
                             <a href="{{ route('home') }}" class="px-4 py-1.5 rounded-full text-[13px] font-bold tracking-wide transition-all whitespace-nowrap {{ request()->routeIs('home') && !request('cat') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 bg-slate-100/50 dark:bg-slate-800/40' }}">Semua</a>
                             
@@ -403,7 +415,7 @@
                              x-transition:leave="transition ease-in duration-75"
                              x-transition:leave-start="transform opacity-100 scale-100"
                              x-transition:leave-end="transform opacity-0 scale-95"
-                             class="absolute left-4 right-4 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl overflow-hidden divide-y divide-slate-100 dark:divide-slate-700/50 z-[110]"
+                             class="absolute left-4 right-4 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl max-h-[70vh] overflow-y-auto overscroll-contain divide-y divide-slate-100 dark:divide-slate-700/50 z-[110]"
                              style="display: none;">
                             @foreach($navCategories as $cat)
                                 <div class="px-2 py-1 bg-white dark:bg-slate-800">
