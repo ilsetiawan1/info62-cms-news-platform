@@ -36,6 +36,10 @@ Route::prefix('seputaradmin')
         Route::resource('facts', \App\Http\Controllers\Admin\FactController::class)
             ->except(['show']);
 
+        // ── Sosial Media Management ──────────────────
+        Route::resource('socials', \App\Http\Controllers\Admin\SocialMediaController::class)
+            ->except(['show']);
+
         // ── User Management ──────────────────────────
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class)
             ->except(['show']);

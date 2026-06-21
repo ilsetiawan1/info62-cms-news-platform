@@ -76,6 +76,10 @@ class PublicController extends Controller
             return $topics;
         });
 
+        $socialMedia = Cache::remember('active_social_media', 3600, function () {
+            return \App\Models\SocialMedia::where('is_active', true)->get();
+        });
+
         // Share globally to prevent undefined variable errors in layout
         view()->share([
             'adSlot1'        => $adSlot1,
@@ -95,6 +99,7 @@ class PublicController extends Controller
             'adRightBottom'  => $adRightBottom,
             'financialData'  => $financialData,
             'popularTopics'  => $popularTopics,
+            'socialMedia'    => $socialMedia,
         ]);
 
         return [
