@@ -520,10 +520,10 @@
 
     <!-- ===== FOOTER ===== -->
     <footer class="relative z-50 bg-white dark:bg-[#0c1626] border-t border-slate-200 dark:border-slate-800 mt-16 text-slate-600 dark:text-slate-400">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 lg:flex lg:flex-row lg:justify-between lg:items-start lg:gap-8">
                 <!-- Brand Info -->
-                <div class="md:col-span-12 lg:col-span-5">
+                <div class="md:col-span-12 lg:max-w-[400px] lg:flex-shrink-0">
                     <a href="{{ route('home') }}" class="flex items-center gap-2 mb-6">
                         <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Info Seputar +62" class="h-10 rounded-md w-auto dark:brightness-0 dark:invert">
                     </a>
@@ -545,7 +545,7 @@
                 </div>
 
                 <!-- Footer Links -->
-                <div class="md:col-span-4 lg:col-span-2">
+                <div class="md:col-span-4">
                     <h4 class="text-[11px] font-black text-slate-900 dark:text-zinc-100 uppercase tracking-widest mb-5">Kategori</h4>
                     <ul class="space-y-3">
                         @foreach(collect($navCategories)->take(5) as $cat)
@@ -555,7 +555,7 @@
                 </div>
 
                 <!-- Footer Links -->
-                <div class="md:col-span-4 lg:col-span-2">
+                <div class="md:col-span-4">
                     <h4 class="text-[11px] font-black text-slate-900 dark:text-zinc-100 uppercase tracking-widest mb-5">Jaringan</h4>
                     <ul class="space-y-3">
                         <li><a href="{{ route('jaringan.show', 'yogyakarta') }}" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Info Seputar Yogyakarta</a></li>
@@ -567,7 +567,7 @@
                 </div>
 
                 <!-- Corporate -->
-                <div class="md:col-span-4 lg:col-span-3">
+                <div class="md:col-span-4">
                     <h4 class="text-[11px] font-black text-slate-900 dark:text-zinc-100 uppercase tracking-widest mb-5">Korporat</h4>
                     <ul class="space-y-3">
                         <li><a href="{{ route('page.show', 'tentang-kami') }}" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Tentang Kami</a></li>
