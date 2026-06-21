@@ -261,12 +261,17 @@
                 </button>
             </div>
 
-            {{-- Mobile/Tablet Ad Top (sidebar_mid) --}}
-            @if(isset($adLeftTop) && $adLeftTop)
+            {{-- Slot 1: Mobile/Tablet fallback (Desktop sudah di Sayap Kiri Atas) --}}
+            @if(isset($adSlot1) && $adSlot1)
             <div class="lg:hidden mb-6 w-full flex justify-center">
-                <a href="{{ $adLeftTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[728px] h-[90px] sm:h-[120px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
-                    <img src="{{ $adLeftTop->image_url }}" alt="{{ $adLeftTop->title }}" class="w-full h-full object-contain mx-auto">
-                </a>
+                <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                    <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        <span>Sponsor</span>
+                    </div>
+                    <a href="{{ $adSlot1->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                        <img src="{{ $adSlot1->image_url }}" alt="{{ $adSlot1->title }}" class="w-full h-auto object-contain mx-auto max-h-[160px] sm:max-h-[220px]">
+                    </a>
+                </div>
             </div>
             @endif
 
@@ -277,12 +282,17 @@
             </div>
             @endif
 
-            {{-- Mobile/Tablet Ad Mid (article_mid) --}}
-            @if(isset($adLeftBottom) && $adLeftBottom)
+            {{-- Slot 2: Mobile/Tablet fallback (Desktop sudah di Sayap Kiri Bawah) --}}
+            @if(isset($adSlot2) && $adSlot2)
             <div class="lg:hidden mb-6 w-full flex justify-center">
-                <a href="{{ $adLeftBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[728px] h-[90px] sm:h-[120px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
-                    <img src="{{ $adLeftBottom->image_url }}" alt="{{ $adLeftBottom->title }}" class="w-full h-full object-contain mx-auto">
-                </a>
+                <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                    <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        <span>Sponsor</span>
+                    </div>
+                    <a href="{{ $adSlot2->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                        <img src="{{ $adSlot2->image_url }}" alt="{{ $adSlot2->title }}" class="w-full h-auto object-contain mx-auto max-h-[160px] sm:max-h-[220px]">
+                    </a>
+                </div>
             </div>
             @endif
 
@@ -291,12 +301,17 @@
                 {!! $article->content !!}
             </div>
 
-            {{-- Mobile/Tablet Ad Bottom (article_bottom) --}}
-            @if(isset($adRightBottom) && $adRightBottom)
+            {{-- Slot 3: Mobile/Tablet fallback (Desktop sudah di Sayap Kanan Atas) --}}
+            @if(isset($adSlot3) && $adSlot3)
             <div class="lg:hidden my-6 w-full flex justify-center">
-                <a href="{{ $adRightBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[728px] h-[90px] sm:h-[120px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
-                    <img src="{{ $adRightBottom->image_url }}" alt="{{ $adRightBottom->title }}" class="w-full h-full object-contain mx-auto">
-                </a>
+                <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                    <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        <span>Sponsor</span>
+                    </div>
+                    <a href="{{ $adSlot3->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                        <img src="{{ $adSlot3->image_url }}" alt="{{ $adSlot3->title }}" class="w-full h-auto object-contain mx-auto max-h-[160px] sm:max-h-[220px]">
+                    </a>
+                </div>
             </div>
             @endif
 
@@ -329,17 +344,36 @@
             </div>
             @endif
 
+            {{-- Slot 7 (Visible on all screens - Atas Footer) --}}
+            @if(isset($adSlot7) && $adSlot7)
+            <div class="w-full my-6 flex justify-center">
+                <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                    <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        <span>Sponsor</span>
+                    </div>
+                    <a href="{{ $adSlot7->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                        <img src="{{ $adSlot7->image_url }}" alt="{{ $adSlot7->title }}" class="w-full h-auto object-contain mx-auto max-h-[160px] sm:max-h-[220px]">
+                    </a>
+                </div>
+            </div>
+            @endif
+
         </main>
 
         {{-- ===== SIDEBAR KANAN (3 cols) ===== --}}
         <aside class="col-span-12 md:col-span-4 lg:col-span-3">
             <div class="md:sticky md:top-[136px] flex flex-col gap-6">
-                {{-- Mobile/Tablet Sidebar Ad Top (sidebar_top) --}}
-                @if(isset($adRightTop) && $adRightTop)
-                <div class="lg:hidden w-full flex justify-center">
-                    <a href="{{ $adRightTop->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[728px] h-[90px] sm:h-[120px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
-                        <img src="{{ $adRightTop->image_url }}" alt="{{ $adRightTop->title }}" class="w-full h-full object-contain mx-auto">
-                    </a>
+                {{-- Slot 4: Mobile/Tablet fallback (Desktop sudah di Sayap Kanan Bawah) --}}
+                @if(isset($adSlot4) && $adSlot4)
+                <div class="lg:hidden w-full flex justify-center mb-6">
+                    <div class="w-full max-w-[728px] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                        <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                            <span>Sponsor</span>
+                        </div>
+                        <a href="{{ $adSlot4->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                            <img src="{{ $adSlot4->image_url }}" alt="{{ $adSlot4->title }}" class="w-full h-auto object-contain mx-auto max-h-[160px] sm:max-h-[220px]">
+                        </a>
+                    </div>
                 </div>
                 @endif
 
@@ -360,6 +394,20 @@
                     </div>
                 </div>
 
+                {{-- Slot 8 (Visible on all screens - Bawah Terpopuler) --}}
+                @if(isset($adSlot8) && $adSlot8)
+                <div class="w-full flex justify-center">
+                    <div class="w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                        <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                            <span>Sponsor</span>
+                        </div>
+                        <a href="{{ $adSlot8->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                            <img src="{{ $adSlot8->image_url }}" alt="{{ $adSlot8->title }}" class="w-full h-auto object-cover mx-auto max-h-[280px]">
+                        </a>
+                    </div>
+                </div>
+                @endif
+
                 {{-- Topik Populer --}}
                 <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
                     <div class="flex items-center gap-2 mb-4">
@@ -377,12 +425,31 @@
                     </div>
                 </div>
 
-                {{-- Mobile/Tablet Sidebar Ad Bottom (article_bottom) --}}
-                @if(isset($adRightBottom) && $adRightBottom)
-                <div class="lg:hidden w-full flex justify-center">
-                    <a href="{{ $adRightBottom->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full max-w-[728px] h-[90px] sm:h-[120px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/40 p-1 shadow-sm">
-                        <img src="{{ $adRightBottom->image_url }}" alt="{{ $adRightBottom->title }}" class="w-full h-full object-contain mx-auto">
-                    </a>
+                {{-- Slot 9 (Visible on all screens - Bawah Topik Populer) --}}
+                @if(isset($adSlot9) && $adSlot9)
+                <div class="w-full flex justify-center">
+                    <div class="w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                        <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                            <span>Sponsor</span>
+                        </div>
+                        <a href="{{ $adSlot9->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                            <img src="{{ $adSlot9->image_url }}" alt="{{ $adSlot9->title }}" class="w-full h-auto object-cover mx-auto max-h-[280px]">
+                        </a>
+                    </div>
+                </div>
+                @endif
+
+                {{-- Slot 10 (Visible on all screens - Bawah Sidebar) --}}
+                @if(isset($adSlot10) && $adSlot10)
+                <div class="w-full flex justify-center">
+                    <div class="w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-1 flex flex-col">
+                        <div class="flex items-center justify-between px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                            <span>Sponsor</span>
+                        </div>
+                        <a href="{{ $adSlot10->url ?? '#' }}" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60">
+                            <img src="{{ $adSlot10->image_url }}" alt="{{ $adSlot10->title }}" class="w-full h-auto object-cover mx-auto max-h-[280px]">
+                        </a>
+                    </div>
                 </div>
                 @endif
 
