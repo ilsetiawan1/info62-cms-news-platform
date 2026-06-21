@@ -525,7 +525,7 @@
                 <!-- Brand Info -->
                 <div class="col-span-2 md:col-span-12 lg:max-w-[400px] lg:flex-shrink-0">
                     <a href="{{ route('home') }}" class="flex items-center gap-2 mb-6">
-                        <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Info Seputar +62" class="h-10 rounded-md w-auto dark:brightness-0 dark:invert">
+                        <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Info Seputar +62" class="h-10 rounded-md w-auto">
                     </a>
                     <p class="text-sm leading-relaxed max-w-md mb-8">
                         Portal berita digital terdepan di Indonesia yang menyajikan informasi terkini, akurat, dan mendalam dengan antarmuka yang mengutamakan kenyamanan pembaca.
