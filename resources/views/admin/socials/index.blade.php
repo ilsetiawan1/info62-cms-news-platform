@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('header', 'Fakta Nusantara')
+@section('header', 'Sosial Media')
 
 @section('content')
 <div x-data="{ 
@@ -22,14 +22,14 @@
     {{-- Header --}}
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800">Fakta Nusantara</h1>
-            <p class="text-sm text-slate-500 mt-1">Kelola data fakta yang tampil secara acak di halaman publik.</p>
+            <h1 class="text-2xl font-bold text-slate-800">Sosial Media</h1>
+            <p class="text-sm text-slate-500 mt-1">Kelola tautan sosial media yang tampil di footer halaman publik.</p>
         </div>
         <div class="flex items-center gap-3">
             {{-- Search Bar --}}
-            <form action="{{ route('facts.index') }}" method="GET" class="relative">
+            <form action="{{ route('socials.index') }}" method="GET" class="relative">
                 <input type="hidden" name="status" value="{{ $status }}">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari fakta..."
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari sosial media..."
                        class="pl-10 pr-4 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 bg-white focus:ring-primary focus:border-primary w-64">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -39,12 +39,12 @@
             </form>
 
             @if($status !== 'trash')
-            <a href="{{ route('facts.create') }}"
+            <a href="{{ route('socials.create') }}"
                class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:opacity-90 transition shrink-0">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
-                Tambah Fakta
+                Tambah Sosial Media
             </a>
             @endif
         </div>
@@ -52,19 +52,19 @@
 
     {{-- Tab Filter Status --}}
     <div class="flex border-b border-slate-200 mb-6 gap-2">
-        <a href="{{ route('facts.index', ['status' => 'all', 'search' => request('search')]) }}"
+        <a href="{{ route('socials.index', ['status' => 'all', 'search' => request('search')]) }}"
            class="px-4 py-2.5 text-sm font-semibold border-b-2 transition-all {{ $status === 'all' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700' }}">
             Semua ({{ $counts['all'] }})
         </a>
-        <a href="{{ route('facts.index', ['status' => 'active', 'search' => request('search')]) }}"
+        <a href="{{ route('socials.index', ['status' => 'active', 'search' => request('search')]) }}"
            class="px-4 py-2.5 text-sm font-semibold border-b-2 transition-all {{ $status === 'active' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700' }}">
             Aktif ({{ $counts['active'] }})
         </a>
-        <a href="{{ route('facts.index', ['status' => 'inactive', 'search' => request('search')]) }}"
+        <a href="{{ route('socials.index', ['status' => 'inactive', 'search' => request('search')]) }}"
            class="px-4 py-2.5 text-sm font-semibold border-b-2 transition-all {{ $status === 'inactive' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700' }}">
             Nonaktif ({{ $counts['inactive'] }})
         </a>
-        <a href="{{ route('facts.index', ['status' => 'trash', 'search' => request('search')]) }}"
+        <a href="{{ route('socials.index', ['status' => 'trash', 'search' => request('search')]) }}"
            class="px-4 py-2.5 text-sm font-semibold border-b-2 transition-all {{ $status === 'trash' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700' }}">
             Sampah ({{ $counts['trash'] }})
         </a>
@@ -91,34 +91,34 @@
                         <input type="checkbox" x-model="selectAll" @change="toggleAll()" class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4">
                     </th>
                     <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider w-8">#</th>
-                    <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Isi Fakta</th>
+                    <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Platform</th>
+                    <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">URL Link</th>
                     <th class="px-5 py-3.5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-28">Status</th>
-                    <th class="px-5 py-3.5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-32">Tanggal</th>
                     <th class="px-5 py-3.5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-32">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-                @forelse($facts as $fact)
-                <tr class="hover:bg-slate-50 transition-colors" :class="{ 'bg-primary/5': selectedIds.includes('{{ $fact->id }}') }">
+                @forelse($socials as $social)
+                <tr class="hover:bg-slate-50 transition-colors" :class="{ 'bg-primary/5': selectedIds.includes('{{ $social->id }}') }">
                     <td class="px-5 py-4 text-center">
-                        <input type="checkbox" value="{{ $fact->id }}" x-model="selectedIds" @change="updateSelectAll()" class="row-checkbox rounded border-gray-300 text-primary focus:ring-primary h-4 w-4">
+                        <input type="checkbox" value="{{ $social->id }}" x-model="selectedIds" @change="updateSelectAll()" class="row-checkbox rounded border-gray-300 text-primary focus:ring-primary h-4 w-4">
                     </td>
-                    <td class="px-5 py-4 text-slate-400 text-xs">{{ $loop->iteration + ($facts->currentPage() - 1) * $facts->perPage() }}</td>
-                    <td class="px-5 py-4 text-slate-800 leading-relaxed">{{ Str::limit($fact->content, 120) }}</td>
+                    <td class="px-5 py-4 text-slate-400 text-xs">{{ $loop->iteration + ($socials->currentPage() - 1) * $socials->perPage() }}</td>
+                    <td class="px-5 py-4 font-semibold text-slate-800">{{ $social->platform }}</td>
+                    <td class="px-5 py-4 text-slate-600">
+                        <a href="{{ $social->url }}" target="_blank" class="hover:text-blue-600 transition-colors break-all">{{ $social->url }}</a>
+                    </td>
                     <td class="px-5 py-4 text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold
-                            {{ $fact->is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500' }}">
-                            {{ $fact->is_active ? 'Aktif' : 'Nonaktif' }}
+                            {{ $social->is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500' }}">
+                            {{ $social->is_active ? 'Aktif' : 'Nonaktif' }}
                         </span>
-                    </td>
-                    <td class="px-5 py-4 text-center text-slate-400 text-xs">
-                        {{ $status === 'trash' ? $fact->deleted_at->format('d M Y') : $fact->created_at->format('d M Y') }}
                     </td>
                     <td class="px-5 py-4 text-center">
                         <div class="flex items-center justify-center gap-2">
                             @if($status === 'trash')
                                 {{-- Restore Button --}}
-                                <form action="{{ route('facts.restore', $fact->id) }}" method="POST" class="inline-block">
+                                <form action="{{ route('socials.restore', $social->id) }}" method="POST" class="inline-block">
                                     @csrf
                                     <button type="submit" class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Kembalikan">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,7 +127,7 @@
                                     </button>
                                 </form>
                                 {{-- Force Delete Button --}}
-                                <form action="{{ route('facts.force-delete', $fact->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus fakta ini secara permanen?')">
+                                <form action="{{ route('socials.force-delete', $social->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus sosial media ini secara permanen?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus Permanen">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,15 +137,15 @@
                                 </form>
                             @else
                                 {{-- Edit --}}
-                                <a href="{{ route('facts.edit', $fact) }}"
+                                <a href="{{ route('socials.edit', $social) }}"
                                    class="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                     </svg>
                                 </a>
                                 {{-- Move to Trash --}}
-                                <form action="{{ route('facts.destroy', $fact) }}" method="POST"
-                                      onsubmit="return confirm('Apakah Anda yakin ingin memindahkan fakta ini ke Sampah?')">
+                                <form action="{{ route('socials.destroy', $social) }}" method="POST"
+                                      onsubmit="return confirm('Apakah Anda yakin ingin memindahkan sosial media ini ke Sampah?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Buang ke Sampah">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -162,18 +162,18 @@
                     <td colspan="6" class="px-5 py-12 text-center text-slate-400">
                         <div class="flex flex-col items-center gap-2">
                             <svg class="w-10 h-10 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
                             </svg>
-                            <span class="text-sm">Tidak ada data fakta.</span>
+                            <span class="text-sm">Tidak ada data sosial media.</span>
                         </div>
                     </td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
-        @if($facts->hasPages())
+        @if($socials->hasPages())
         <div class="px-5 py-4 border-t border-slate-100">
-            {{ $facts->links() }}
+            {{ $socials->links() }}
         </div>
         @endif
     </div>
@@ -193,11 +193,11 @@
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/40 opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-primary"></span>
             </span>
-            <span x-text="selectedIds.length" class="text-primary font-bold text-base"></span> fakta terpilih
+            <span x-text="selectedIds.length" class="text-primary font-bold text-base"></span> sosial media terpilih
         </div>
         <div class="flex items-center gap-3">
             @if($status === 'trash')
-                <form action="{{ route('facts.bulk-action') }}" method="POST" class="inline-block">
+                <form action="{{ route('socials.bulk-action') }}" method="POST" class="inline-block">
                     @csrf
                     <input type="hidden" name="action" value="restore">
                     <template x-for="id in selectedIds" :key="id">
@@ -207,7 +207,7 @@
                         Kembalikan
                     </button>
                 </form>
-                <form action="{{ route('facts.bulk-action') }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus permanen fakta yang dipilih?')">
+                <form action="{{ route('socials.bulk-action') }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus permanen sosial media yang dipilih?')">
                     @csrf
                     <input type="hidden" name="action" value="force-delete">
                     <template x-for="id in selectedIds" :key="id">
@@ -218,7 +218,7 @@
                     </button>
                 </form>
             @else
-                <form action="{{ route('facts.bulk-action') }}" method="POST" class="inline-block" onsubmit="return confirm('Pindahkan fakta terpilih ke Sampah?')">
+                <form action="{{ route('socials.bulk-action') }}" method="POST" class="inline-block" onsubmit="return confirm('Pindahkan sosial media terpilih ke Sampah?')">
                     @csrf
                     <input type="hidden" name="action" value="delete">
                     <template x-for="id in selectedIds" :key="id">

@@ -328,7 +328,13 @@
 
                         <!-- Dropdown Menu for Overflow Categories -->
                         @if($navCategories->count() > 4)
-                            <div class="relative flex-shrink-0" x-data="{ openMore: false }">
+                            <div class="relative flex-shrink-0" x-data="{ openMore: false }" x-init="$watch('openMore', value => {
+                                if (value) {
+                                    document.body.classList.add('overflow-hidden');
+                                } else {
+                                    document.body.classList.remove('overflow-hidden');
+                                }
+                            })">
                                 <button @click="openMore = !openMore" @click.away="openMore = false"
                                         class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all select-none"
                                         aria-label="More categories">
@@ -344,7 +350,7 @@
                                      x-transition:leave="transition ease-in duration-75"
                                      x-transition:leave-start="transform opacity-100 scale-100"
                                      x-transition:leave-end="transform opacity-0 scale-95"
-                                     class="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden divide-y divide-slate-100 dark:divide-slate-700/50 z-[120]"
+                                     class="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl max-h-[70vh] overflow-y-auto overscroll-contain divide-y divide-slate-100 dark:divide-slate-700/50 z-[120]"
                                      style="display: none;">
                                     @foreach($navCategories as $index => $cat)
                                         @if($index >= 4)
@@ -374,7 +380,13 @@
                     </nav>
 
                     <!-- Mobile Category Navigation (Dropdown Select Menu) -->
-                    <div class="md:hidden py-2" x-data="{ openCatDropdown: false }">
+                    <div class="md:hidden py-2" x-data="{ openCatDropdown: false }" x-init="$watch('openCatDropdown', value => {
+                        if (value) {
+                            document.body.classList.add('overflow-hidden');
+                        } else {
+                            document.body.classList.remove('overflow-hidden');
+                        }
+                    })">
                         <div class="flex items-center justify-between gap-2 relative">
                             <a href="{{ route('home') }}" class="px-4 py-1.5 rounded-full text-[13px] font-bold tracking-wide transition-all whitespace-nowrap {{ request()->routeIs('home') && !request('cat') ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 bg-slate-100/50 dark:bg-slate-800/40' }}">Semua</a>
                             
@@ -403,7 +415,7 @@
                              x-transition:leave="transition ease-in duration-75"
                              x-transition:leave-start="transform opacity-100 scale-100"
                              x-transition:leave-end="transform opacity-0 scale-95"
-                             class="absolute left-4 right-4 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl overflow-hidden divide-y divide-slate-100 dark:divide-slate-700/50 z-[110]"
+                             class="absolute left-4 right-4 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl max-h-[70vh] overflow-y-auto overscroll-contain divide-y divide-slate-100 dark:divide-slate-700/50 z-[110]"
                              style="display: none;">
                             @foreach($navCategories as $cat)
                                 <div class="px-2 py-1 bg-white dark:bg-slate-800">
@@ -508,32 +520,67 @@
 
     <!-- ===== FOOTER ===== -->
     <footer class="relative z-50 bg-white dark:bg-[#0c1626] border-t border-slate-200 dark:border-slate-800 mt-16 text-slate-600 dark:text-slate-400">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <div class="grid grid-cols-2 md:grid-cols-12 gap-12 lg:flex lg:flex-row lg:justify-between lg:items-start lg:gap-8">
                 <!-- Brand Info -->
-                <div class="md:col-span-12 lg:col-span-5">
+                <div class="col-span-2 md:col-span-12 lg:max-w-[400px] lg:flex-shrink-0">
                     <a href="{{ route('home') }}" class="flex items-center gap-2 mb-6">
-                        <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Info Seputar +62" class="h-10 rounded-md w-auto dark:brightness-0 dark:invert">
+                        <img src="{{ asset('images/logo-infoseputar62.png') }}" alt="Info Seputar +62" class="h-10 rounded-md w-auto">
                     </a>
                     <p class="text-sm leading-relaxed max-w-md mb-8">
                         Portal berita digital terdepan di Indonesia yang menyajikan informasi terkini, akurat, dan mendalam dengan antarmuka yang mengutamakan kenyamanan pembaca.
                     </p>
 
                     <div class="flex gap-3">
-                        <a href="#" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 transition-colors">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-500 hover:text-white transition-colors">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                        </a>
+                        @if(isset($socialMedia) && $socialMedia->isNotEmpty())
+                            @foreach($socialMedia as $social)
+                                @php
+                                    $platform = strtolower($social->platform);
+                                    $hoverClass = 'hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600';
+                                    $svg = '';
+
+                                    if (str_contains($platform, 'facebook')) {
+                                        $hoverClass = 'hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600';
+                                        $svg = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>';
+                                    } elseif (str_contains($platform, 'twitter') || str_contains($platform, 'x')) {
+                                        $hoverClass = 'hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black';
+                                        $svg = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>';
+                                    } elseif (str_contains($platform, 'instagram')) {
+                                        $hoverClass = 'hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-500 hover:text-white';
+                                        $svg = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>';
+                                    } elseif (str_contains($platform, 'youtube')) {
+                                        $hoverClass = 'hover:bg-red-600 hover:text-white dark:hover:bg-red-600';
+                                        $svg = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.163a3.003 3.003 0 00-2.11-2.107C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.388.511a3.003 3.003 0 00-2.11 2.107C0 8.053 0 12 0 12s0 3.947.502 5.837a3.003 3.003 0 002.11 2.107c1.883.511 9.388.511 9.388.511s7.505 0 9.388-.511a3.003 3.003 0 002.11-2.107c.502-1.89.502-5.837.502-5.837s0-3.947-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>';
+                                    } elseif (str_contains($platform, 'tiktok')) {
+                                        $hoverClass = 'hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black';
+                                        $svg = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.86-.74-3.99-1.72-.08-.07-.17-.17-.25-.25v6.59c.02 2.64-.99 5.28-3.02 6.94-2.03 1.66-4.91 2.21-7.39 1.44-2.48-.77-4.52-2.76-5.26-5.23-.74-2.47-.2-5.24 1.45-7.25 1.65-2.01 4.24-2.98 6.78-2.61v4.13c-1.39-.27-2.88.08-3.91 1.05-1.03.97-1.48 2.5-1.16 3.88.32 1.38 1.47 2.5 2.87 2.76 1.4.26 2.91-.25 3.73-1.4.82-1.15.93-2.74.88-4.11V.02z"/></svg>';
+                                    } elseif (str_contains($platform, 'telegram')) {
+                                        $hoverClass = 'hover:bg-sky-500 hover:text-white dark:hover:bg-sky-500';
+                                        $svg = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.66-.52.36-1 .53-1.42.52-.47-.01-1.37-.27-2.03-.49-.82-.27-1.47-.41-1.42-.87.03-.24.36-.49.99-.75 3.87-1.68 6.45-2.79 7.74-3.33 3.68-1.53 4.44-1.8 4.94-1.81.11 0 .35.03.5.16.13.1.17.24.19.34.02.14.02.47-.01.62z"/></svg>';
+                                    }
+                                @endphp
+                                @if($svg)
+                                    <a href="{{ $social->url }}" target="_blank" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-zinc-400 {{ $hoverClass }} transition-colors" title="{{ $social->platform }}">
+                                        {!! $svg !!}
+                                    </a>
+                                @endif
+                            @endforeach
+                        @else
+                            <a href="#" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 transition-colors">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-500 hover:text-white transition-colors">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                            </a>
+                        @endif
                     </div>
                 </div>
 
                 <!-- Footer Links -->
-                <div class="md:col-span-4 lg:col-span-2">
+                <div class="col-span-1 md:col-span-4">
                     <h4 class="text-[11px] font-black text-slate-900 dark:text-zinc-100 uppercase tracking-widest mb-5">Kategori</h4>
                     <ul class="space-y-3">
                         @foreach(collect($navCategories)->take(5) as $cat)
@@ -543,7 +590,7 @@
                 </div>
 
                 <!-- Footer Links -->
-                <div class="md:col-span-4 lg:col-span-2">
+                <div class="col-span-1 md:col-span-4">
                     <h4 class="text-[11px] font-black text-slate-900 dark:text-zinc-100 uppercase tracking-widest mb-5">Jaringan</h4>
                     <ul class="space-y-3">
                         <li><a href="{{ route('jaringan.show', 'yogyakarta') }}" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Info Seputar Yogyakarta</a></li>
@@ -555,7 +602,7 @@
                 </div>
 
                 <!-- Corporate -->
-                <div class="md:col-span-4 lg:col-span-3">
+                <div class="col-span-2 sm:col-span-1 md:col-span-4">
                     <h4 class="text-[11px] font-black text-slate-900 dark:text-zinc-100 uppercase tracking-widest mb-5">Korporat</h4>
                     <ul class="space-y-3">
                         <li><a href="{{ route('page.show', 'tentang-kami') }}" class="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Tentang Kami</a></li>
