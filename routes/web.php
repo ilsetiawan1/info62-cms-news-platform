@@ -33,10 +33,22 @@ Route::prefix('seputaradmin')
             ->except(['show']);
 
         // ── Fakta Nusantara Management ────────────
+        Route::post('facts/bulk-action', [\App\Http\Controllers\Admin\FactController::class, 'bulkAction'])
+            ->name('facts.bulk-action');
+        Route::post('facts/{id}/restore', [\App\Http\Controllers\Admin\FactController::class, 'restore'])
+            ->name('facts.restore');
+        Route::delete('facts/{id}/force-delete', [\App\Http\Controllers\Admin\FactController::class, 'forceDelete'])
+            ->name('facts.force-delete');
         Route::resource('facts', \App\Http\Controllers\Admin\FactController::class)
             ->except(['show']);
 
         // ── Sosial Media Management ──────────────────
+        Route::post('socials/bulk-action', [\App\Http\Controllers\Admin\SocialMediaController::class, 'bulkAction'])
+            ->name('socials.bulk-action');
+        Route::post('socials/{id}/restore', [\App\Http\Controllers\Admin\SocialMediaController::class, 'restore'])
+            ->name('socials.restore');
+        Route::delete('socials/{id}/force-delete', [\App\Http\Controllers\Admin\SocialMediaController::class, 'forceDelete'])
+            ->name('socials.force-delete');
         Route::resource('socials', \App\Http\Controllers\Admin\SocialMediaController::class)
             ->except(['show']);
 
